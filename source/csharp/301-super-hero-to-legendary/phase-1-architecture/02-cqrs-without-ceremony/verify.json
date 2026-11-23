@@ -1,0 +1,14 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "ReceiveStock: ok\nReceiveStock: ok\nShipStock: ok\nShipStock: failed (Only 3 in stock, cannot ship 9.)\nReceiveStock: failed (Quantity must be positive.)\nPEN level: 3\nLow stock (below 5): CUP=3, PEN=3"
+    }
+  ],
+  "skip_lesson_check": []
+}

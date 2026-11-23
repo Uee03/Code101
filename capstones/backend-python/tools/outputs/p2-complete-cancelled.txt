@@ -1,0 +1,8 @@
+HTTP/1.1 409 Conflict
+date: Mon, 23 Nov 2026 08:33:44 GMT
+server: uvicorn
+content-length: 246
+content-type: application/problem+json
+x-trace-id: 4c68cb19bb8d40ef94e1ce6a6b244fcb
+
+{"type":"https://code101.example/problems/conflict","title":"Conflict","status":409,"detail":"a cancelled task cannot be completed","instance":"/v1/tasks/1288943f-6b79-40c0-a233-c6bedb1331c4/complete","traceId":"4c68cb19bb8d40ef94e1ce6a6b244fcb"}

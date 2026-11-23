@@ -1,0 +1,1 @@
+{"requires":["python"],"steps":[{"name":"iterator demo","cwd":"code","cmd":"{python} main.py","expect_stdout":"3\n[2, 1]\n[]\n['One', 'Two']"},{"name":"exercise solution","cwd":"exercise/solution","cmd":"{python} exercise.py","expect_stdout":"Read, Docs; exhausted"}]}

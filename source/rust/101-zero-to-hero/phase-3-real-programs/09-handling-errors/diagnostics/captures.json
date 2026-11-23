@@ -1,0 +1,32 @@
+{
+  "run": {
+    "stdout": "Number:\nPlease use digits, for example 12.\nNumber:\nAccepted: 12.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Quantity (1-99):\nUse a quantity from 1 to 99.\nQuantity (1-99):\nUse a quantity from 1 to 99.\nQuantity (1-99):\nAccepted quantity: 3\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "Option checkpoint": {
+    "stdout": "No second item\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Quantity (1-99):\nAccepted quantity: -2\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)\n --> src\\main.rs:3:42\n  |\n1 | fn main() {\n  | --------- this function should return `Result` or `Option` to accept `?`\n2 |     let mut text = String::new();\n3 |     std::io::stdin().read_line(&mut text)?;\n  |                                          ^ cannot use the `?` operator in a function that returns `()`\n  |\nhelp: consider adding return type\n  |\n1 ~ fn main() -> Result<(), Box<dyn std::error::Error>> {\n2 |     let mut text = String::new();\n3 |     std::io::stdin().read_line(&mut text)?;\n4 +     Ok(())\n  |\n\nFor more information about this error, try `rustc --explain E0277`.\nerror: could not compile `handling_errors` (bin \"handling_errors\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "eof": {
+    "stdout": "Number:\n",
+    "stderr": "Error: Custom { kind: UnexpectedEof, error: \"Input ended\" }\n",
+    "exit": 1
+  }
+}

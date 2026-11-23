@@ -1,0 +1,25 @@
+<a class="skip-link" href="#main" (click)="skipToMain($event)" i18n="@@skip.link">Skip to main content</a>
+
+<header class="bar">
+  <a routerLink="/" class="brand">Task board</a>
+  <nav aria-label="Main" i18n-aria-label="@@nav.label">
+    <a routerLink="/board" routerLinkActive="active" ariaCurrentWhenActive="page" i18n="@@nav.board">Board</a>
+    <a routerLink="/tasks" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" i18n="@@nav.tasks">Tasks</a>
+    <a routerLink="/tasks/new" routerLinkActive="active" ariaCurrentWhenActive="page" i18n="@@nav.new">New task</a>
+    <a routerLink="/explorer" routerLinkActive="active" ariaCurrentWhenActive="page" i18n="@@nav.explorer">API explorer</a>
+    @if (auth; as session) {
+      @if (session.user(); as user) {
+        <span>{{ user.displayName }}</span>
+        <button type="button" (click)="session.signOut()" i18n="@@nav.signout">Sign out</button>
+      } @else {
+        <a routerLink="/login" i18n="@@nav.signin">Sign in</a>
+      }
+    }
+  </nav>
+</header>
+
+<main id="main" class="page" tabindex="-1">
+  <router-outlet />
+</main>
+
+<div class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ announcer.message() }}</div>

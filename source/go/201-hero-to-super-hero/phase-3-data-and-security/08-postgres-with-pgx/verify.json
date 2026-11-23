@@ -1,0 +1,18 @@
+{
+  "requires": ["go", "docker"],
+  "steps": [
+    {"name": "env", "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\"", "cwd": "code"},
+    {"name": "db-up", "cmd": "docker compose up -d --wait", "cwd": "code", "timeout": 240},
+    {"name": "tidy", "cmd": "go mod tidy", "cwd": "code", "timeout": 240},
+    {"name": "run", "cwd": "code", "timeout": 120,
+     "cmd": "{python} -c \"import os, subprocess, sys; env = dict(os.environ, DATABASE_URL='postgres://app:change-me-locally@127.0.0.1:5433/wallet?sslmode=disable'); sys.exit(subprocess.call(['go', 'run', '.'], env=env))\"",
+     "expect_stdout": "connected: db=wallet user=app\ncreated ada (id 1) balance 10000\ncreated linus (id 2) balance 2500\ntransfer ok\n1 ada 7000\n2 linus 5500\nbig transfer: insufficient funds\n1 ada 7000\n2 linus 5500\nduplicate owner: owner already has an account\ndeposit ok: new balance 7500\ndeposit rejected: amount must be positive\ndeposit rejected: account not found\nget 99: account not found"},
+    {"name": "test", "cwd": "code", "timeout": 120,
+     "cmd": "{python} -c \"import os, subprocess, sys; env = dict(os.environ, DATABASE_URL='postgres://app:change-me-locally@127.0.0.1:5433/wallet?sslmode=disable'); sys.exit(subprocess.call(['go', 'test', './...'], env=env))\"",
+     "expect_contains": ["ok"]}
+  ],
+  "cleanup": [
+    {"name": "db-down", "cmd": "docker compose down -v --remove-orphans", "cwd": "code"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

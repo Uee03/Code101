@@ -1,0 +1,3 @@
+<resources>
+    <string name="offline_pending">Pending: %1$s</string>
+</resources>

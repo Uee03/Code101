@@ -1,0 +1,19 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: main.py",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Delivery: 2026-12-01\nTotal: 3.75\nBoxes for 7 jars, 3 per box: 3"
+    },
+    {
+      "name": "solution: main.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Seconds: 180"
+    }
+  ]
+}

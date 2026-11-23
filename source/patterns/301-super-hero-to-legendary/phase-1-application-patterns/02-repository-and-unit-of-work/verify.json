@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "seeded 3 tasks\nfailed: write failed for task 2\nafter rollback: task 1 is still alice\nbefore commit: repo says carol, database says alice\nafter commit: database says carol\nopen tasks for carol: [1, 2]"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "seeded 3 tasks\nfailed: write failed for task 2\nafter rollback: task 1 is still alice\nbefore commit: repo says carol, database says alice\nafter commit: database says carol\nopen tasks for carol: [1, 2]"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "committed: a=5, b=5\nrolled back: negative balance for b\nunchanged: a=5, b=5"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "committed: a=5, b=5\nrolled back: negative balance for b\nunchanged: a=5, b=5"
+    }
+  ]
+}

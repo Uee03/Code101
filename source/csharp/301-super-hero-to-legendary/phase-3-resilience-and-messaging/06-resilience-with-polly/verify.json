@@ -1,0 +1,15 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "timeout": 240,
+      "expect_stdout": "retry 1 after call 1 failed\nretry 2 after call 2 failed\nretry demo: ok on call 3 (3 calls)\ntimeout demo: TimeoutRejectedException after the 100 ms limit\nbreaker call 1: dependency failed\nbreaker call 2: dependency failed\nbreaker call 3: dependency failed\nbreaker call 4: dependency failed\nbreaker call 5: rejected without calling the dependency\nbreaker call 6: rejected without calling the dependency\ndependency calls: 4, circuit state: Open\nafter the break duration: ok on call 1, circuit Closed\nbulkhead: 3 completed, 2 rejected\ncombined demo: ok on call 3"
+    }
+  ],
+  "skip_lesson_check": []
+}

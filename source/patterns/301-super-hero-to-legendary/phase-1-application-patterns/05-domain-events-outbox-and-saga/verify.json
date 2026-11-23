@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "failed: crash before commit\nafter failure: task 1 is todo, outbox rows: 0\nafter commit: task 1 is done, outbox rows: 1\nnotify: task 1 completed (event 1)\nrelay: crashed after publish, before marking\nevent 1 published flag: False\nnotify: skipped duplicate event 1\nprogress: skipped duplicate event 1\nevent 1 published flag: True\nnotify: task 2 completed (event 2)\nlead: project PLAT completed\nsaga: freeze_tasks done\nsaga: notify_members done\nsaga: mark_archived failed (archive flag rejected)\nsaga: notify_members compensated\nsaga: freeze_tasks compensated\nsaga result: False, frozen=False, mails=archiving, archive cancelled\nsaga: freeze_tasks done\nsaga: notify_members done\nsaga: mark_archived done\nsaga result: True, frozen=True, mails=archiving"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "failed: crash before commit\nafter failure: task 1 is todo, outbox rows: 0\nafter commit: task 1 is done, outbox rows: 1\nnotify: task 1 completed (event 1)\nrelay: crashed after publish, before marking\nevent 1 published flag: False\nnotify: skipped duplicate event 1\nprogress: skipped duplicate event 1\nevent 1 published flag: True\nnotify: task 2 completed (event 2)\nlead: project PLAT completed\nsaga: freeze_tasks done\nsaga: notify_members done\nsaga: mark_archived failed (archive flag rejected)\nsaga: notify_members compensated\nsaga: freeze_tasks compensated\nsaga result: False, frozen=False, mails=archiving, archive cancelled\nsaga: freeze_tasks done\nsaga: notify_members done\nsaga: mark_archived done\nsaga result: True, frozen=True, mails=archiving"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "total points: 9\nduplicates ignored: 2"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "total points: 9\nduplicates ignored: 2"
+    }
+  ]
+}

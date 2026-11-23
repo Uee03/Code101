@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/files",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "Read 3 lines:\n- buy bread\n- call Sam\n- read chapter 11\nError: cannot open missing-file.txt for reading\nDone"
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/files",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "1. wash car\n2. pay rent\nCould not read: cannot open archive.txt for reading\nDone"
+    }
+  ],
+  "skip_lesson_check": []
+}

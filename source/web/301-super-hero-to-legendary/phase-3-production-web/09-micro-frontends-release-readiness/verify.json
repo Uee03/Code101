@@ -1,0 +1,33 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "run demo",
+      "cwd": "code",
+      "cmd": "node dist/demo.js",
+      "expect_stdout": "tasks: loaded\nmounted: Tasks board for team core\nunmounted: true\nbilling: failed contract-mismatch (remote speaks contract 1, host needs 2)\nreports: failed timeout (no answer within 50 ms)\nsearch: failed import-error (network down)\nprofile: failed invalid-module (mount is not a function)\nrollout 0%: 0 of 1000\nrollout 100%: 1000 of 1000\nrollout 50% within tolerance: true\nsticky: true\nramp is a subset: true\nkill switch: 0 of 1000\nallow list at 0%: true"
+    },
+    {
+      "name": "check release candidate",
+      "cwd": "code",
+      "cmd": "node dist/check-release.js data/release-candidate.json",
+      "expect_exit": 1,
+      "expect_stdout": "PASS quality.tests: Type check, unit tests and end-to-end smoke tests pass\nPASS quality.budgets: Performance budgets pass\nFAIL security.audit: No high or critical dependency findings\nPASS security.secrets: Secret scan is clean\nPASS security.actions-pinned: CI actions are pinned to commit SHAs\nPASS security.csp-reports: No report-only CSP violations in the last 7 days\nPASS a11y.axe: No critical automated accessibility issues\nPASS a11y.keyboard: The main task works with the keyboard alone\nPASS ops.rollback-plan: A rollback plan exists\nWARN ops.rollback-tested: Rollback was tested in the last 90 days\nPASS ops.dashboard: A dashboard link is attached\nPASS ops.oncall: On-call acknowledged the release\nPASS ops.canary: Unflagged changes start at 10 percent or less\nPASS docs.breaking-adr: Breaking API changes link a decision record\nPASS docs.changelog: A changelog entry exists\n1 blocker(s) failing, 1 warning(s). NOT ready to release 2026.11.3"
+    },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "check second release candidate",
+      "cwd": "work",
+      "cmd": "node dist/check-release.js data/release-candidate-2.json",
+      "expect_exit": 1,
+      "expect_stdout": "PASS quality.tests: Type check, unit tests and end-to-end smoke tests pass\nPASS quality.budgets: Performance budgets pass\nPASS security.audit: No high or critical dependency findings\nPASS security.secrets: Secret scan is clean\nWARN security.actions-pinned: CI actions are pinned to commit SHAs\nWARN security.csp-reports: No report-only CSP violations in the last 7 days\nFAIL a11y.axe: No critical automated accessibility issues\nFAIL a11y.keyboard: The main task works with the keyboard alone\nFAIL ops.rollback-plan: A rollback plan exists\nWARN ops.rollback-tested: Rollback was tested in the last 90 days\nFAIL ops.dashboard: A dashboard link is attached\nFAIL ops.oncall: On-call acknowledged the release\nFAIL ops.canary: Unflagged changes start at 10 percent or less\nFAIL docs.breaking-adr: Breaking API changes link a decision record\nPASS docs.changelog: A changelog entry exists\n7 blocker(s) failing, 3 warning(s). NOT ready to release 2026.12.0"
+    }
+  ]
+}

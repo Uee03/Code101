@@ -1,0 +1,8 @@
+HTTP/1.1 422 Unprocessable Content
+date: Mon, 23 Nov 2026 08:33:44 GMT
+server: uvicorn
+content-length: 304
+content-type: application/problem+json
+x-trace-id: c2a84af4c4664785b2dcfd4c48fa66f8
+
+{"type":"https://code101.example/problems/validation-error","title":"Validation failed","status":422,"detail":"user a11ce000-0000-4000-8000-000000000001 is not a member of the project team","instance":"/v1/tasks/7a500000-0000-4000-8000-000000000007/reassign","traceId":"c2a84af4c4664785b2dcfd4c48fa66f8"}

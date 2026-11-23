@@ -1,0 +1,17 @@
+[
+  {
+    "id": "capital",
+    "prompt": "What is the capital of France? Answer with one word.",
+    "must_contain": ["paris"]
+  },
+  {
+    "id": "translate",
+    "prompt": "Translate 'good morning' into Spanish. Answer with the translation only.",
+    "must_contain": ["buenos d"]
+  },
+  {
+    "id": "count",
+    "prompt": "Write the numbers from 1 to 5, separated by commas.",
+    "must_contain": ["1", "2", "3", "4", "5"]
+  }
+]

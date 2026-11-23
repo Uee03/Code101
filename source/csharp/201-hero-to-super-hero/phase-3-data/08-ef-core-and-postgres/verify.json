@@ -1,0 +1,66 @@
+{
+  "requires": [
+    "dotnet",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "env-file",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "database-up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 240
+    },
+    {
+      "name": "restore-tools",
+      "cwd": "code",
+      "cmd": "dotnet tool restore"
+    },
+    {
+      "name": "create-migration",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5433;Database=notes;Username=notes_app;Password=notes_local_only\"&& dotnet ef migrations add InitialCreate",
+      "timeout": 300
+    },
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5433;Database=notes;Username=notes_app;Password=notes_local_only\"&& dotnet run --project . --nologo",
+      "timeout": 300,
+      "expect_stdout": "Seeded: 2 notebooks, 4 notes, 3 tags\nHome: Buy milk\nWork: Email Ada, Plan sprint, Write report\nTag urgent: Email Ada, Write report\nNo-tracking entries: 0\nTracked entries: 4\nState after edit: Modified\nSaved changes: 1\nMarked done by one UPDATE: 3"
+    },
+    {
+      "name": "apply-solution-files",
+      "cwd": ".",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('exercise/solution', 'code', dirs_exist_ok=True)\""
+    },
+    {
+      "name": "create-second-migration",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5433;Database=notes;Username=notes_app;Password=notes_local_only\"&& dotnet ef migrations add AddPriority",
+      "timeout": 300
+    },
+    {
+      "name": "solution-run",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5433;Database=notes;Username=notes_app;Password=notes_local_only\"&& dotnet run --project . --nologo",
+      "timeout": 300,
+      "expect_stdout": "Seeded: 2 notebooks, 4 notes, 3 tags\nHome: Buy milk\nWork: Email Ada, Plan sprint, Write report\nTag urgent: Email Ada, Write report\nNo-tracking entries: 0\nTracked entries: 4\nState after edit: Modified\nSaved changes: 1\nMarked done by one UPDATE: 3\nNotes with a priority: 2"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "database-down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/.gitignore"
+  ]
+}

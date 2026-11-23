@@ -1,0 +1,6 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "notes": "Written, not run. Static text/source comparison only. No Ollama command, download, API call or program is authorised here. Empty steps are intentional, not evidence of runtime correctness."
+}

@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "[note: Rust]\n[reminder: 5 min]"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "entry: note: Rust\nentry: reminder: 5 min"
+    }
+  ]
+}

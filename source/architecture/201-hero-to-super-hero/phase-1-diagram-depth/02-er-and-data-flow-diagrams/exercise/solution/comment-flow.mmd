@@ -1,0 +1,15 @@
+flowchart LR
+    U(["Team member"])
+    P1("1 Check token and team access")
+    P2("2 Save the comment")
+    P3("3 Audit trigger records the change")
+    D1[("D1 tasks")]
+    D2[("D2 comments")]
+    D3[("D3 audit_log")]
+    U -->|"comment text, bearer token"| P1
+    D1 -->|"task and its team"| P1
+    P1 -->|"checked comment"| P2
+    P2 -->|"new comment row"| D2
+    P2 -->|"change facts"| P3
+    P3 -->|"audit row"| D3
+    P2 -->|"created comment"| U

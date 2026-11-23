@@ -1,0 +1,34 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example with in-memory storage",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "added #1 \"Write hexagon lesson\" at 1700000000\nadded #2 \"Review ports\" at 1700000000\nrejected: title is empty\ncompleted #1\nopen: [\"Review ports\"]"
+    },
+    {
+      "name": "example with failing storage",
+      "cwd": "code",
+      "cmd": "cargo run --quiet -- failing",
+      "timeout": 300,
+      "expect_stdout": "rejected: storage failed: disk offline\nrejected: storage failed: disk offline\nrejected: title is empty\nfailed: storage failed: disk offline\nfailed: storage failed: disk offline"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "[\"a@100\", \"b@110\", \"c@120\"]\nnext: 130"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Hello, C#!\nI can run a program."
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Recipe: fruit bowl\n1 apple\n1 banana"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+stateDiagram-v2
+  [*] --> todo
+  todo --> in_progress : start
+  in_progress --> blocked : awaiting review
+  blocked --> in_progress : review received
+  in_progress --> done : complete

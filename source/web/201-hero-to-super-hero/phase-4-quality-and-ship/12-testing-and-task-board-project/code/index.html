@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task board</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Task board</h1>
+  </header>
+
+  <main class="shell">
+    <form id="add-form" class="add-form" novalidate>
+      <div class="add-form__field">
+        <label for="title">New task</label>
+        <p id="title-hint" class="hint">Up to 80 characters.</p>
+        <p id="title-error" class="error" hidden></p>
+        <input id="title" name="title" type="text" maxlength="80" autocomplete="off" aria-describedby="title-hint title-error">
+      </div>
+      <button class="button" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Add task</span>
+      </button>
+    </form>
+
+    <p id="status" class="status" role="status"></p>
+
+    <div id="board" class="board"></div>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

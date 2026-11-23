@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: main.py",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "1 Add | 2 List | 3 Total | 4 Quit\nChoice: Description: Amount in cents (250 = 2.50): Saved.\n1 Add | 2 List | 3 Total | 4 Quit\nChoice: Tea: 2.50\n1 Add | 2 List | 3 Total | 4 Quit\nChoice: Total: 2.50\n1 Add | 2 List | 3 Total | 4 Quit\nChoice: Goodbye!",
+      "stdin": "1\nTea\n250\n2\n3\n4\n"
+    },
+    {
+      "name": "solution: main.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} main.py",
+      "expect_stdout": "1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nChoice: Description: Amount in cents (250 = 2.50): Saved.\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nChoice: Expense count: 1\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nChoice: Goodbye!",
+      "stdin": "1\nTea\n250\n5\n4\n"
+    }
+  ]
+}

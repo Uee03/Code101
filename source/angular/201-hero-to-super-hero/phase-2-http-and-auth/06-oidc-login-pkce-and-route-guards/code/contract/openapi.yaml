@@ -1,0 +1,483 @@
+openapi: 3.1.1
+info:
+  title: Tasks and Teams API (mini copy for the Angular 201 lessons)
+  version: 1.0.0
+  summary: Eight operations and their schemas, copied from the platform contract in capstones/platform.
+  description: |
+    This is a small copy of the shared contract, enough for lessons 05 to 10.
+    The full file (27 operations) is owned by capstones/platform and is copied verbatim in capstones/web-angular.
+    Conventions: version prefix /v1, errors are RFC 9457 problem details, lists use cursor pagination,
+    single resources carry a strong ETag (the quoted version), updates need If-Match,
+    creates accept an optional Idempotency-Key.
+servers:
+  - url: http://localhost:8000
+    description: Local backend (the mock API of lesson 04 or any platform backend, port 8000)
+tags:
+  - name: Platform
+  - name: Teams
+  - name: Projects
+  - name: Tasks
+security:
+  - oidc: [tasks:read]
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags: [Platform]
+      summary: Liveness and database check
+      security: []
+      responses:
+        '200':
+          description: The service and its database are reachable.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+  /v1/me:
+    get:
+      operationId: getMe
+      tags: [Platform]
+      summary: The calling user, roles, scopes and team memberships
+      responses:
+        '200':
+          description: The caller.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+  /v1/teams:
+    get:
+      operationId: listTeams
+      tags: [Teams]
+      summary: Teams the caller belongs to (admins see every team)
+      parameters:
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+        - name: q
+          in: query
+          description: Case-insensitive prefix of the team name.
+          schema: { type: string, minLength: 1, maxLength: 100 }
+      responses:
+        '200':
+          description: One page of teams.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TeamPage' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/teams/{teamId}/projects:
+    parameters:
+      - { $ref: '#/components/parameters/TeamId' }
+    get:
+      operationId: listProjects
+      tags: [Projects]
+      summary: Projects of a team
+      parameters:
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+        - name: archived
+          in: query
+          description: Default false (hide archived projects).
+          schema: { type: boolean, default: false }
+      responses:
+        '200':
+          description: One page of projects.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProjectPage' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /v1/projects/{projectId}/tasks:
+    parameters:
+      - { $ref: '#/components/parameters/ProjectId' }
+    get:
+      operationId: listTasks
+      tags: [Tasks]
+      summary: Tasks of a project, filtered and paged
+      parameters:
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Cursor' }
+        - name: status
+          in: query
+          description: Repeat the parameter to match several statuses.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items: { $ref: '#/components/schemas/TaskStatus' }
+        - name: q
+          in: query
+          description: Case-insensitive substring of the title.
+          schema: { type: string, minLength: 1, maxLength: 100 }
+      responses:
+        '200':
+          description: One page of tasks.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TaskPage' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    post:
+      operationId: createTask
+      tags: [Tasks]
+      summary: Create a task
+      security:
+        - oidc: [tasks:write]
+      parameters:
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreate' }
+      responses:
+        '201':
+          description: Created.
+          headers:
+            Location: { $ref: '#/components/headers/Location' }
+            ETag: { $ref: '#/components/headers/ETag' }
+            Idempotent-Replayed: { $ref: '#/components/headers/IdempotentReplayed' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/UnprocessableContent' }
+  /v1/tasks/{taskId}:
+    parameters:
+      - { $ref: '#/components/parameters/TaskId' }
+    get:
+      operationId: getTask
+      tags: [Tasks]
+      summary: One task and its ETag
+      responses:
+        '200':
+          description: The task.
+          headers:
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateTask
+      tags: [Tasks]
+      summary: Change fields, status, assignee or due date (JSON Merge Patch)
+      description: |
+        Send only the fields to change. `null` clears `assigneeId` and `dueDate`.
+        Setting `status` to `done` stamps `completedAt`; any other status clears it.
+        The platform file also lists `application/merge-patch+json` as a second request type; this copy keeps only `application/json`.
+      security:
+        - oidc: [tasks:write]
+      parameters:
+        - { $ref: '#/components/parameters/IfMatch' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskUpdate' }
+      responses:
+        '200':
+          description: The updated task with its new ETag.
+          headers:
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '412': { $ref: '#/components/responses/PreconditionFailed' }
+        '422': { $ref: '#/components/responses/UnprocessableContent' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      description: |
+        Keycloak realm `tasksteams`. Web clients use the authorization code flow with PKCE (S256).
+        The API only validates the bearer access token.
+      openIdConnectUrl: http://localhost:8180/realms/tasksteams/.well-known/openid-configuration
+  parameters:
+    TeamId:
+      name: teamId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    Limit:
+      name: limit
+      in: query
+      description: Page size.
+      schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+    Cursor:
+      name: cursor
+      in: query
+      description: Opaque value copied from `page.nextCursor`. Do not build or parse it.
+      schema: { type: string, minLength: 1, maxLength: 512 }
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      description: The `ETag` of the version being changed, quotes included, for example `"3"`.
+      schema: { type: string, minLength: 3, maxLength: 20 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: |
+        A unique value (a UUID is fine) per create. Same key and same body replays the first response;
+        same key and a different body gives 422.
+      schema: { type: string, minLength: 8, maxLength: 128 }
+  headers:
+    ETag:
+      description: Strong validator, the quoted resource `version`, for example `"3"`.
+      schema: { type: string }
+    Location:
+      description: Absolute URL of the created resource.
+      schema: { type: string, format: uri }
+    IdempotentReplayed:
+      description: "`true` when the response is a replay of an earlier request with the same Idempotency-Key."
+      schema: { type: string, enum: ['true'] }
+    RetryAfter:
+      description: Seconds to wait before retrying.
+      schema: { type: integer }
+    WWWAuthenticate:
+      description: The Bearer challenge, for example `Bearer realm="tasksteams"`.
+      schema: { type: string }
+  responses:
+    BadRequest:
+      description: Malformed JSON, a bad query parameter or a bad cursor.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Unauthorized:
+      description: Missing, expired or invalid bearer token.
+      headers:
+        WWW-Authenticate: { $ref: '#/components/headers/WWWAuthenticate' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Forbidden:
+      description: The token is valid but the role, scope or team membership does not allow this.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    NotFound:
+      description: The resource does not exist, or the caller may not know that it exists.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    Conflict:
+      description: Duplicate name or key, a business rule, or an Idempotency-Key still in progress.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    PreconditionFailed:
+      description: The If-Match value is stale. Fetch the resource again and retry.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    PreconditionRequired:
+      description: The request must include If-Match.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+    UnprocessableContent:
+      description: The JSON is well formed but a field is invalid, or an Idempotency-Key was reused with another body.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/ValidationProblem' }
+    TooManyRequests:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After: { $ref: '#/components/headers/RetryAfter' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Problem:
+      type: object
+      description: RFC 9457 problem details with two extension members, `traceId` and `code`.
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: Stable identifier of the problem type.
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string }
+        instance: { type: string, description: The request path. }
+        traceId: { type: string, description: Correlates with the server log. }
+        code:
+          type: string
+          description: Optional machine-readable code, for example `last_lead`.
+    ValidationProblem:
+      allOf:
+        - $ref: '#/components/schemas/Problem'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                required: [pointer, detail]
+                properties:
+                  pointer:
+                    type: string
+                    description: JSON Pointer (RFC 6901) to the invalid field in the request body.
+                  detail: { type: string }
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        version: { type: string, examples: ['1.0.0'] }
+        database: { type: string, enum: [up, down] }
+    PageInfo:
+      type: object
+      required: [limit, nextCursor]
+      properties:
+        limit: { type: integer }
+        nextCursor:
+          type: [string, 'null']
+          description: "`null` on the last page."
+    Role:
+      type: string
+      enum: [admin, member]
+    TeamRole:
+      type: string
+      enum: [lead, member]
+    TaskStatus:
+      type: string
+      enum: [todo, in_progress, blocked, done, cancelled]
+    TaskPriority:
+      type: string
+      enum: [low, medium, high, urgent]
+    Me:
+      type: object
+      required: [id, username, email, displayName, roles, scopes, teams]
+      properties:
+        id: { type: string, format: uuid }
+        username: { type: string }
+        email: { type: string, format: email }
+        displayName: { type: string }
+        roles:
+          type: array
+          items: { $ref: '#/components/schemas/Role' }
+        scopes:
+          type: array
+          items: { type: string }
+        teams:
+          type: array
+          items:
+            type: object
+            required: [teamId, name, role]
+            properties:
+              teamId: { type: string, format: uuid }
+              name: { type: string }
+              role: { $ref: '#/components/schemas/TeamRole' }
+    Team:
+      type: object
+      required: [id, name, description, memberCount, createdBy, version, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        name: { type: string, minLength: 1, maxLength: 80 }
+        description: { type: string, maxLength: 500 }
+        memberCount: { type: integer, readOnly: true }
+        createdBy: { type: string, format: uuid, readOnly: true }
+        version: { type: integer, minimum: 1, readOnly: true }
+        createdAt: { type: string, format: date-time, readOnly: true }
+        updatedAt: { type: string, format: date-time, readOnly: true }
+    TeamPage:
+      type: object
+      required: [items, page]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Team' } }
+        page: { $ref: '#/components/schemas/PageInfo' }
+    Project:
+      type: object
+      required: [id, teamId, key, name, description, archived, version, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        teamId: { type: string, format: uuid, readOnly: true }
+        key:
+          type: string
+          pattern: '^[A-Z][A-Z0-9]{1,9}$'
+          description: Short uppercase code, unique inside the team.
+        name: { type: string, minLength: 1, maxLength: 120 }
+        description: { type: string, maxLength: 2000 }
+        archived: { type: boolean }
+        version: { type: integer, minimum: 1, readOnly: true }
+        createdAt: { type: string, format: date-time, readOnly: true }
+        updatedAt: { type: string, format: date-time, readOnly: true }
+    ProjectPage:
+      type: object
+      required: [items, page]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Project' } }
+        page: { $ref: '#/components/schemas/PageInfo' }
+    Task:
+      type: object
+      required: [id, projectId, title, description, status, priority, assigneeId, dueDate, completedAt, createdBy, version, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        projectId: { type: string, format: uuid, readOnly: true }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 10000 }
+        status: { $ref: '#/components/schemas/TaskStatus' }
+        priority: { $ref: '#/components/schemas/TaskPriority' }
+        assigneeId: { type: [string, 'null'], format: uuid }
+        dueDate: { type: [string, 'null'], format: date }
+        completedAt: { type: [string, 'null'], format: date-time, readOnly: true }
+        createdBy: { type: string, format: uuid, readOnly: true }
+        version: { type: integer, minimum: 1, readOnly: true }
+        createdAt: { type: string, format: date-time, readOnly: true }
+        updatedAt: { type: string, format: date-time, readOnly: true }
+    TaskCreate:
+      type: object
+      required: [title]
+      additionalProperties: false
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 10000, default: '' }
+        priority: { $ref: '#/components/schemas/TaskPriority' }
+        assigneeId: { type: [string, 'null'], format: uuid }
+        dueDate: { type: [string, 'null'], format: date }
+    TaskUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 10000 }
+        status: { $ref: '#/components/schemas/TaskStatus' }
+        priority: { $ref: '#/components/schemas/TaskPriority' }
+        assigneeId: { type: [string, 'null'], format: uuid }
+        dueDate: { type: [string, 'null'], format: date }
+    TaskPage:
+      type: object
+      required: [items, page]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Task' } }
+        page: { $ref: '#/components/schemas/PageInfo' }

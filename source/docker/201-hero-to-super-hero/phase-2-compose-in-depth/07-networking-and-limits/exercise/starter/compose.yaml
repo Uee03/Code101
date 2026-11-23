@@ -1,0 +1,37 @@
+name: code101-net
+
+services:
+  api:
+    build: .
+    image: code101-net-api:201
+    ports:
+      - "8080:8000"
+    # TODO 1: bind the published port to loopback only (127.0.0.1)
+    # TODO 2: attach api to two networks, frontend and backend
+    # TODO 3: limit api to 0.50 CPUs and 256M of memory with deploy.resources.limits
+
+  edge:
+    build: .
+    image: code101-net-edge:201
+    command: ["sleep", "infinity"]
+    networks:
+      - frontend
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    # TODO 4: remove the ports lines of db (the database must not be published) and attach it only to backend
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+networks:
+  frontend:
+  # TODO 5: declare backend as an internal network (internal: true)
+
+volumes:
+  db_data:

@@ -1,0 +1,21 @@
+name: code101-hardened
+
+services:
+  web:
+    build: .
+    image: code101-hardened:201
+    ports:
+      - "127.0.0.1:8080:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    volumes:
+      - app_data:/data
+
+volumes:
+  app_data:

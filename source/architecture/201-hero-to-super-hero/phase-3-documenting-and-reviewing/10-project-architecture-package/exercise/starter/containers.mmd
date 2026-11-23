@@ -1,0 +1,14 @@
+flowchart LR
+    member(["Member"])
+    staff(["Librarian"])
+    subgraph lib["Community Library system"]
+        web["TODO container name<br/>TODO what it does"]
+        api["TODO container name<br/>TODO what it does"]
+        db[("TODO container name<br/>TODO what it stores")]
+    end
+    mail["E-mail service, external"]
+    member -->|"uses"| web
+    staff -->|"uses"| web
+    web -->|"TODO protocol"| api
+    api -->|"TODO protocol"| db
+    api -->|"TODO what is sent"| mail

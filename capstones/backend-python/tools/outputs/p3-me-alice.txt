@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:37:08 GMT
+server: uvicorn
+content-length: 318
+content-type: application/json
+x-trace-id: 459f402bc1354ca9b09e9e44828fe244
+
+{"id":"a11ce000-0000-4000-8000-000000000001","username":"alice","email":"alice@tasksteams.test","displayName":"Alice Admin","roles":["admin"],"scopes":["email","openid","profile","tasks:admin","tasks:read","tasks:write"],"teams":[{"teamId":"7ea00000-0000-4000-8000-000000000001","name":"Platform Team","role":"lead"}]}

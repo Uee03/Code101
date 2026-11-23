@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: .
+    image: code101/tasksteams-backend-dotnet:1.0
+    environment:
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=tasks_app;Password=${TASKS_APP_PASSWORD};Timeout=5"
+      Auth__Issuer: "http://localhost:${KEYCLOAK_PORT:-8180}/realms/tasksteams"
+      Auth__MetadataAddress: "http://keycloak:8080/realms/tasksteams/.well-known/openid-configuration"
+      Auth__RequireHttpsMetadata: "false"
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+    read_only: true
+    mem_limit: 256m
+    pids_limit: 200
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - tasksteams

@@ -1,0 +1,11 @@
+HTTP/1.1 201 Created
+date: Mon, 23 Nov 2026 08:33:42 GMT
+server: uvicorn
+location: http://localhost:8000/v1/tasks/e8787266-112f-4a3c-a9b1-9e2bea4b62ec
+etag: "1"
+idempotent-replayed: true
+content-length: 388
+content-type: application/json
+x-trace-id: 5710b1901bba4716a58a70c730dd5804
+
+{"id":"e8787266-112f-4a3c-a9b1-9e2bea4b62ec","title":"Review the OpenAPI file","status":"todo","dueDate":"2027-03-15","version":1,"priority":"high","createdAt":"2026-11-23T08:33:42.843808Z","createdBy":"b0b00000-0000-4000-8000-000000000002","projectId":"9a000000-0000-4000-8000-000000000001","updatedAt":"2026-11-23T08:33:42.843808Z","assigneeId":null,"completedAt":null,"description":""}

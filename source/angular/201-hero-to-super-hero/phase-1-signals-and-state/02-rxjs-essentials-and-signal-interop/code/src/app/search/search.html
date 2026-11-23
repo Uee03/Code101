@@ -1,0 +1,31 @@
+<section aria-labelledby="search-heading">
+  <h2 id="search-heading">Search as you type</h2>
+
+  <label for="q">Search tasks (try "explain", "x" or "boom")</label>
+  <input id="q" #box type="search" autocomplete="off" [value]="query()" (input)="query.set(box.value)">
+
+  <p>Requests sent: {{ requests() }}. Network: {{ online() ? 'online' : 'offline' }}. Open for {{ seconds() }} s.</p>
+
+  <div role="status">
+    @switch (state().status) {
+      @case ('idle') {
+        <p class="hint">Type at least two characters.</p>
+      }
+      @case ('loading') {
+        <p>Searching...</p>
+      }
+      @case ('error') {
+        <p class="error">{{ state().message }}</p>
+      }
+      @case ('done') {
+        <ul>
+          @for (hit of state().hits; track hit.id) {
+            <li>{{ hit.title }}</li>
+          } @empty {
+            <li>Nothing found.</li>
+          }
+        </ul>
+      }
+    }
+  </div>
+</section>

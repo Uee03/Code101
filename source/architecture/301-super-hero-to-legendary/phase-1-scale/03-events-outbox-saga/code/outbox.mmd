@@ -1,0 +1,16 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant O as Orders service
+    participant D as Orders database
+    participant P as Outbox publisher
+    participant B as Broker
+    C->>O: POST order with Idempotency-Key
+    O->>D: one transaction saves the order and an outbox row
+    D-->>O: committed
+    O-->>C: 202 Accepted with a status URL
+    P->>D: read unsent outbox rows
+    P->>B: publish OrderPlaced
+    B-->>P: confirmed
+    P->>D: mark the row as sent
+    Note over P,B: A crash after the confirm and before the mark causes a second publish, so consumers must be idempotent

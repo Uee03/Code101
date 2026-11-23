@@ -1,0 +1,37 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "run SQL once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": " member_id | name \n-----------+------\n         1 | Ava\n         2 | Ben\n         3 | Cora\n(3 rows)\n\n loan_id | member_id |    title     \n---------+-----------+--------------\n       1 |         1 | Field Notes\n       2 |         1 | Quiet Rivers\n       3 |         2 | City Maps\n(3 rows)"
+    },
+    {
+      "name": "exercise solution once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": " loan_id | member_id |    title     \n---------+-----------+--------------\n       4 |         2 | Forest Walks\n(1 row)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

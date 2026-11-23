@@ -1,0 +1,20 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: files_demo.py",
+      "cwd": "code",
+      "cmd": "{python} files_demo.py",
+      "expect_stdout": "Remember the milk.\nbread: 2\napples: 3"
+    },
+    {
+      "name": "solution: journal.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} journal.py",
+      "expect_stdout": "Journal entry: Walked by the river.",
+      "stdin": "Walked by the river.\n"
+    }
+  ]
+}

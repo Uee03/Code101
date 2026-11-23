@@ -1,0 +1,10 @@
+{
+  "repository": "team/orders",
+  "keep_latest": 1,
+  "images": [
+    {"tag": "2.0.0", "pushed": "2026-03-01", "environments": []},
+    {"tag": "2.1.0", "pushed": "2026-04-01", "environments": ["prod"]},
+    {"tag": "2.2.0", "pushed": "2026-05-01", "environments": []},
+    {"tag": "2.3.0", "pushed": "2026-06-01", "environments": []}
+  ]
+}

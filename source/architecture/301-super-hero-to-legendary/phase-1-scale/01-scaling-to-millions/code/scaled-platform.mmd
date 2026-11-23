@@ -1,0 +1,23 @@
+flowchart LR
+    users(["Users"])
+    cdn["CDN for static app files, proposal"]
+    lb["Load balancer, proposal"]
+    subgraph apis["Stateless backend API instances, proposal"]
+        a1["API instance 1"]
+        a2["API instance 2"]
+        an["API instance N"]
+    end
+    cache["Shared cache, optional proposal"]
+    pri[("PostgreSQL primary: all writes")]
+    rep[("Read replica: tolerant reads")]
+    kc["Keycloak, external"]
+    users -->|"static files"| cdn
+    users -->|"API calls with bearer token"| lb
+    lb --> a1
+    lb --> a2
+    lb --> an
+    a1 & a2 & an -->|"writes and reads that follow a write"| pri
+    a1 & a2 & an -->|"list and report reads"| rep
+    a1 & a2 & an -->|"cached copies"| cache
+    pri -->|"asynchronous replication"| rep
+    a1 -.->|"signing keys, cached per instance"| kc

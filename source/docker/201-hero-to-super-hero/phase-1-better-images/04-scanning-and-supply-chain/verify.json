@@ -1,0 +1,13 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "build", "cwd": "code", "cmd": "docker build --build-arg VCS_REF=demo -t code101-supply:201 .", "timeout": 600 },
+    { "name": "run", "cwd": "code", "cmd": "docker run --rm code101-supply:201", "expect_stdout": "Hello from an image that has been scanned" },
+    { "name": "labels", "cwd": "code", "cmd": "docker inspect --format \"{{json .Config.Labels}}\" code101-supply:201", "expect_stdout": "{\"org.opencontainers.image.description\":\"Docker 201 supply-chain demo\",\"org.opencontainers.image.revision\":\"demo\",\"org.opencontainers.image.source\":\"https://github.com/Uee03/Code101\",\"org.opencontainers.image.title\":\"code101-supply\"}" }
+  ],
+  "cleanup": [
+    { "name": "remove image", "cmd": "docker image rm code101-supply:201" }
+  ],
+  "skip_lesson_check": ["code/.trivyignore"]
+}

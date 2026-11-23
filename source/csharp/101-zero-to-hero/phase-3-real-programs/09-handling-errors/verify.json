@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "oops\n3\nword\n",
+      "expect_stdout": "Quantity (positive whole number):\nPlease enter a positive whole number:\nOptional number (try a word):\nThat was not a whole number.\nFinished the optional-number step.\nAccepted: 3"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "old\n25\n",
+      "expect_stdout": "Age (0-130):\nTry an age from 0 to 130:\nAge: 25"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

@@ -1,0 +1,346 @@
+$ python tools/prepare_sdk.py
+Android SDK configured; local.properties is not shipped.
+
+$ python tools/apply_exercise.py
+Exercise solution installed as English UK resources; both variants build in one APK.
+
+$ cmd /c gradlew.bat openApiGenerate --console=plain
+Starting a Gradle Daemon, 17 stopped Daemons could not be reused, use --status for details
+
+> Task :openApiGenerate
+[main] WARN  o.o.codegen.DefaultCodegen - OpenAPI 3.1 support is still in beta. To report an issue related to 3.1 spec, please kindly open an issue in the Github repo: https://github.com/openAPITools/openapi-generator.
+[main] INFO  o.o.codegen.DefaultGenerator - Generating with dryRun=false
+[main] INFO  o.o.codegen.DefaultGenerator - OpenAPI Generator: kotlin (client)
+[main] INFO  o.o.codegen.DefaultGenerator - Generator 'kotlin' is considered stable.
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Environment variable KOTLIN_POST_PROCESS_FILE not defined so the Kotlin code may not be properly formatted. To define it, try 'export KOTLIN_POST_PROCESS_FILE="/usr/local/bin/ktlint -F"' (Linux/Mac)
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - NOTE: To enable file post-processing, 'enablePostProcessFile' must be set to `true` (--enable-post-process-file for CLI).
+[main] INFO  o.o.codegen.InlineModelResolver - Inline schema created as ValidationProblem_allOf_errors. To have complete control of the model name, set the `title` field or use the modelNameMapping option (e.g. --model-name-mappings ValidationProblem_allOf_errors=NewModel,ModelA=NewModelA in CLI) or inlineSchemaNameMapping option (--inline-schema-name-mappings ValidationProblem_allOf_errors=NewModel,ModelA=NewModelA in CLI).
+[main] INFO  o.o.codegen.InlineModelResolver - Inline schema created as Me_teams_inner. To have complete control of the model name, set the `title` field or use the modelNameMapping option (e.g. --model-name-mappings Me_teams_inner=NewModel,ModelA=NewModelA in CLI) or inlineSchemaNameMapping option (--inline-schema-name-mappings Me_teams_inner=NewModel,ModelA=NewModelA in CLI).
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Problem implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ValidationProblem implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Health implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model PageInfo implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Role implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamRole implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskStatus implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskPriority implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model AuditEntityType implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model UserSummary implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model UserPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Me implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Team implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Member implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model MemberPut implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model MemberPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Project implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ReassignRequest implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Comment implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model CommentCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model CommentPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model AuditEntry implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model AuditPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ValidationProblem_allOf_errors implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Me_teams_inner implements interface(s): []
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\AuditEntityType.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\AuditEntityType.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\AuditEntry.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\AuditEntry.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\AuditPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\AuditPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Comment.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Comment.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\CommentCreate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\CommentCreate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\CommentPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\CommentPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Health.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Health.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Me.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Me.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\MeTeamsInner.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\MeTeamsInner.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Member.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Member.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\MemberPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\MemberPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\MemberPut.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\MemberPut.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\PageInfo.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\PageInfo.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Problem.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Problem.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Project.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Project.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ProjectCreate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ProjectCreate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ProjectPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ProjectPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ProjectUpdate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ProjectUpdate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ReassignRequest.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ReassignRequest.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Role.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Role.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Task.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Task.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TaskCreate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TaskCreate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TaskPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TaskPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TaskPriority.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TaskPriority.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TaskStatus.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TaskStatus.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TaskUpdate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TaskUpdate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\Team.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\Team.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TeamCreate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TeamCreate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TeamPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TeamPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TeamRole.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TeamRole.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\TeamUpdate.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TeamUpdate.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\UserPage.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\UserPage.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\UserSummary.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\UserSummary.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ValidationProblem.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ValidationProblem.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\model\ValidationProblemAllOfErrors.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ValidationProblemAllOfErrors.md (Skipped by modelDocs options supplied by user.)
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Health implements interface(s): []
+[main] INFO  o.o.codegen.utils.ExamplesUtils - Found one or more content media type(s) with examples in response, but none was application/json. Examples can currently only be generated for application/json media type.
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Me implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model UserPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Team implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Team implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Team implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TeamUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model MemberPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Member implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model MemberPut implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Project implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Project implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Project implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ProjectUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model TaskUpdate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Task implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model ReassignRequest implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model CommentPage implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model Comment implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model CommentCreate implements interface(s): []
+[main] INFO  o.o.c.l.AbstractKotlinCodegen - Model AuditPage implements interface(s): []
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\AuditApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\AuditApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\AuditApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\CommentsApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\CommentsApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\CommentsApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\MembersApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\MembersApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\MembersApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\PlatformApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\PlatformApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\PlatformApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\ProjectsApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\ProjectsApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\ProjectsApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\TasksApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\TasksApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TasksApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\com\code101\tasks\generated\api\TeamsApi.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\test\kotlin\com\code101\tasks\generated\api\TeamsApiTest.kt (Skipped by apiTests options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\docs\TeamsApi.md (Skipped by apiDocs options supplied by user.)
+[main] INFO  o.o.codegen.DefaultGenerator - Skipping generation of Webhooks.
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\README.md (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\build.gradle (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\settings.gradle (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Ignored F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\ApiClient.kt (Ignored by rule in ignore file.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\ResponseExt.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\CollectionFormats.kt
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\Serializer.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\AtomicBooleanAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\AtomicIntegerAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\AtomicLongAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\URIAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\URLAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\BigIntegerAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\BigDecimalAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\LocalDateAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\LocalDateTimeAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\OffsetDateTimeAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\UUIDAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\src\main\kotlin\org\openapitools\client\infrastructure\StringBuilderAdapter.kt (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\proguard-rules.pro (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - Skipped F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\.openapi-generator-ignore (Skipped by supportingFiles options supplied by user.)
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\.openapi-generator\VERSION
+[main] INFO  o.o.codegen.TemplateManager - writing file F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\final-5\code\app\src\main\kotlin-generated\.openapi-generator\FILES
+################################################################################
+# Thanks for using OpenAPI Generator.                                          #
+# Please consider donating to help us maintain this project ?                 #
+# https://opencollective.com/openapi_generator/donate                          #
+#                                                                              #
+# This generator's contributed by Jim Schubert (https://github.com/jimschubert)#
+# Please support his work directly via https://patreon.com/jimschubert ?      #
+################################################################################
+
+BUILD SUCCESSFUL in 12s
+1 actionable task: 1 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.0/userguide/configuration_cache_enabling.html
+
+$ cmd /c gradlew.bat assembleDebug --console=plain
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :app:processDebugNavigationResources
+> Task :app:javaPreCompileDebug
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:parseDebugLocalResources
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:generateDebugRFile
+> Task :app:generateDebugGlobalSynthetics
+> Task :app:checkDebugDuplicateClasses
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeExtDexDebug
+> Task :app:mergeLibDexDebug
+> Task :app:checkDebugAarMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:compileDebugNavigationResources
+> Task :app:mergeDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac
+> Task :app:compressDebugJavaRes
+> Task :app:hiltCollectClassesDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:hiltAggregateDepsDebug
+> Task :app:hiltJavaCompileDebug
+> Task :app:transformDebugClassesWithAsm
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+BUILD SUCCESSFUL in 59s
+42 actionable tasks: 42 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.0/userguide/configuration_cache_enabling.html
+
+$ python tools/inspect_debug.py
+Debug APK exists; application id, redirect scheme, network config and 10 icons checked.
+
+$ python tools/inspect_schema.py
+Room schema v1 exported: account, comments, outbox, projects, tasks, teams.
+
+$ cmd /c gradlew.bat bundleRelease -PapiBaseUrl=https://tasks.example.invalid -x lintVitalRelease --console=plain
+> Task :app:preBuild UP-TO-DATE
+
+> Task :app:preReleaseBuild
+NOT FOR STORE: release bundle uses the local debug key
+
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:processReleaseNavigationResources
+> Task :app:compileReleaseNavigationResources
+> Task :app:generateReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:processApplicationManifestReleaseForBundle
+> Task :app:checkReleaseAarMetadata
+> Task :app:packageReleaseResources
+> Task :app:parseReleaseLocalResources
+> Task :app:processReleaseManifestForPackage
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:mergeReleaseArtProfile
+> Task :app:generateReleaseBuildConfig
+> Task :app:generateReleaseRFile
+> Task :app:mergeReleaseResources
+> Task :app:processReleaseResources
+> Task :app:bundleReleaseResources
+> Task :app:javaPreCompileRelease
+> Task :app:extractProguardFiles
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:mergeReleaseNativeLibs
+> Task :app:stripReleaseDebugSymbols
+> Task :app:writeReleaseAppMetadata
+> Task :app:collectReleaseDependencies
+> Task :app:configureReleaseDependencies
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:parseReleaseIntegrityConfig
+> Task :app:validateSigningRelease
+> Task :app:kspReleaseKotlin
+> Task :app:compileReleaseKotlin
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:hiltCollectClassesRelease
+> Task :app:hiltAggregateDepsRelease
+> Task :app:compressReleaseJavaRes
+> Task :app:hiltJavaCompileRelease
+> Task :app:mergeReleaseJavaResource
+> Task :app:transformReleaseClassesWithAsm
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:produceReleaseComposeMapping
+> Task :app:reportReleaseComposeMappingErrors
+> Task :app:minifyReleaseWithR8
+> Task :app:buildReleasePreBundle
+> Task :app:mergeReleaseComposeMapping
+> Task :app:compileReleaseArtProfile
+> Task :app:packageReleaseBundle
+> Task :app:signReleaseBundle
+> Task :app:produceReleaseBundleIdeListingFile
+> Task :app:createReleaseBundleListingFileRedirect
+> Task :app:bundleRelease
+
+BUILD SUCCESSFUL in 1m 11s
+55 actionable tasks: 55 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.6.0/userguide/configuration_cache_enabling.html
+
+$ python tools/inspect_release.py
+Release bundle exists; merged release manifest forbids cleartext and backup.
+
+Stopping Daemon(s)
+1 Daemon stopped

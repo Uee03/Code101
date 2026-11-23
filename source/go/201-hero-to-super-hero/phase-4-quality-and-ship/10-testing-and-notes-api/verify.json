@@ -1,0 +1,19 @@
+{
+  "requires": ["go", "docker"],
+  "steps": [
+    {"name": "vet", "cmd": "go vet ./...", "cwd": "code"},
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution-test", "cmd": "go test ./...", "cwd": "exercise/solution", "expect_contains": ["ok"]},
+    {"name": "up", "cmd": "docker compose up -d --build --wait", "cwd": "code", "timeout": 600},
+    {"name": "health", "cmd": "curl -s -w \"status %{http_code}\\n\" http://127.0.0.1:8080/healthz", "cwd": "code",
+     "retries": 10, "retry_delay": 1, "expect_stdout": "{\"status\":\"ok\"}\nstatus 200"},
+    {"name": "invalid", "cmd": "curl -s -w \"status %{http_code}\\n\" -X POST -H \"Content-Type: application/json\" --data-binary \"@requests/invalid.json\" http://127.0.0.1:8080/notes", "cwd": "code",
+     "expect_stdout": "{\"type\":\"https://example.com/problems/validation-error\",\"title\":\"Validation failed\",\"status\":422,\"detail\":\"One or more fields are invalid.\",\"instance\":\"/notes\",\"errors\":[{\"field\":\"title\",\"message\":\"is required\"}]}\nstatus 422"},
+    {"name": "user", "cmd": "docker inspect --format \"{{.Config.User}}\" code101-go201-notes-api-1", "cwd": "code",
+     "expect_stdout": "nonroot:nonroot"}
+  ],
+  "cleanup": [
+    {"name": "down", "cmd": "docker compose down -v --remove-orphans --rmi local", "cwd": "code"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

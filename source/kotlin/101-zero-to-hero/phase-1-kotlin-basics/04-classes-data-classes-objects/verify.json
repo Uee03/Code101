@@ -1,0 +1,31 @@
+{
+  "requires": [
+    "java"
+  ],
+  "note": "Android Studio creates gradlew, gradlew.bat and gradle-wrapper.jar for learners. Before a maintainer run, copy those three files from capstones/mobile-kotlin/source/phase-1-setup/01-setup/code into code/ (the wrapper jar is not shipped).",
+  "steps": [
+    {
+      "name": "overlay exercise solution",
+      "cwd": "code",
+      "cmd": "xcopy ..\\exercise\\solution\\src src /E /I /Y"
+    },
+    {
+      "name": "compile Kotlin sources",
+      "cwd": "code",
+      "cmd": "gradlew.bat compileKotlin --console=plain",
+      "timeout": 1800,
+      "expect_contains": [
+        "BUILD SUCCESSFUL"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "stop wrapper Gradle daemons",
+      "cwd": "code",
+      "cmd": "gradlew.bat --stop",
+      "timeout": 180
+    }
+  ],
+  "skip_lesson_check": ["code/.gitignore", "code/build.gradle.kts", "code/gradle.properties", "code/settings.gradle.kts", "code/gradle/libs.versions.toml", "code/gradle/wrapper/gradle-wrapper.properties", "code/src/main/kotlin/lesson01/Hello.kt", "code/src/main/kotlin/lesson02/Main.kt", "code/src/main/kotlin/lesson03/Main.kt"]
+}

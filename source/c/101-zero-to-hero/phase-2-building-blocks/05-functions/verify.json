@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "expect_stdout": "Total with tip: 92.00\nEach of 2: 46.00\nInside the function n is 99\nn is still 5\nSquare of 7 is 49"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "expect_stdout": "4 even? 1\n7 even? 0\nAverage of 4, 7, 10: 7.00"
+    }
+  ]
+}

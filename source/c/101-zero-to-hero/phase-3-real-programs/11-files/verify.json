@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "expect_stdout": "milk: 2 x 1.20\nbread: 1 x 2.50\napples: 6 x 0.40\nLines read: 3\nTotal: 7.30\nCould not open does-not-exist.txt (as expected)"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "expect_stdout": "Highest: 90"
+    }
+  ]
+}

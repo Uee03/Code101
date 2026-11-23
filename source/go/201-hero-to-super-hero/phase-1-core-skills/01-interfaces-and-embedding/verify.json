@@ -1,0 +1,11 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "run", "cmd": "go run .", "cwd": "code",
+     "expect_stdout": "to=ada body=\"welcome, ada\"\nto=linus body=\"welcome, linus\"\nsent: 2\ngrace: welcome, grace\nanonymous sender\nfake(1 sent)\nanonymous sender\nfalse"},
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution", "cmd": "go run .", "cwd": "exercise/solution",
+     "expect_stdout": "HELLO, INTERFACES\ncount me\nand me\nbytes written: 16"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

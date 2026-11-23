@@ -1,0 +1,28 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #9ca3af;
+}
+
+.brand {
+  font-weight: 700;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav a.active {
+  text-decoration: underline;
+}
+
+.page {
+  display: block;
+  max-width: 44rem;
+  margin: 1rem auto;
+}

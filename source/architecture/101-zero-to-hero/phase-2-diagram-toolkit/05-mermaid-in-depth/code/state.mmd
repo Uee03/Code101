@@ -1,0 +1,6 @@
+stateDiagram-v2
+  [*] --> todo
+  todo --> in_progress : start
+  in_progress --> blocked : report obstacle
+  blocked --> in_progress : remove obstacle
+  in_progress --> done : complete

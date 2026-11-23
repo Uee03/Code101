@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "sku|color|note_missing|has_note_key\nN1|blue|t|f\nN2|red|f|t\nP1|(null)|t|f\nsku\nN1\nsku|pages\nN1|80\nN2|40"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "sku\nP1"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

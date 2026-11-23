@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 360" width="1180" height="360" role="img" aria-label="Uee03 wordmark">
+  <defs>
+    <linearGradient id="bg" x1="24" y1="30" x2="324" y2="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3E3760" />
+      <stop offset="1" stop-color="#2C2745" />
+    </linearGradient>
+    <linearGradient id="u" x1="80" y1="86" x2="268" y2="297" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B23FF" />
+      <stop offset="0.5" stop-color="#008BFF" />
+      <stop offset="1" stop-color="#E4FF30" />
+    </linearGradient>
+  </defs>
+
+  <!-- mark -->
+  <g transform="translate(24 30) scale(0.5859)">
+    <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bg)" />
+    <path d="M256 52 A204 204 0 0 1 460 256" fill="none" stroke="#008BFF" stroke-width="24"
+      stroke-linecap="round" opacity="0.95" />
+    <g fill="none" stroke="url(#u)" stroke-width="74" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M112 116 L112 300" />
+      <path d="M112 300 A144 144 0 0 0 400 300" />
+      <path d="M400 116 L400 396" />
+    </g>
+    <circle cx="430" cy="430" r="34" fill="#E4FF30" />
+  </g>
+
+  <!-- wordmark -->
+  <text x="372" y="243" font-family="'Segoe UI', 'Arial', sans-serif" font-size="186"
+    font-weight="800" letter-spacing="2" fill="#FFFFFF">Uee<tspan fill="#E4FF30">03</tspan></text>
+</svg>

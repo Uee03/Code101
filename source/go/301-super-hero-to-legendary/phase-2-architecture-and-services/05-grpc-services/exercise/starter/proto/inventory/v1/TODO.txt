@@ -1,0 +1,9 @@
+// TODO 1: add a unary RPC to InventoryService:
+//   rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+// and the two messages below it. DeleteItemRequest has a string sku = 1;
+// DeleteItemResponse has a bool deleted = 1;
+// Then run `buf lint` and `buf generate` again.
+//
+// This starter is an overlay: copy the lesson's `code` folder to `try05`,
+// then replace proto/inventory/v1/inventory.proto with the lesson file and
+// make the change above. Do not delete anything else.

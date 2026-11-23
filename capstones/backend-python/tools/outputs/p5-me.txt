@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 09:09:23 GMT
+content-length: 318
+content-type: application/json
+vary: Origin
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+x-trace-id: fcc18b29767f463fa1e8eee282edc1e8
+ratelimit-limit: 100
+ratelimit-remaining: 79
+ratelimit-reset: 60
+
+{"id":"a11ce000-0000-4000-8000-000000000001","username":"alice","email":"alice@tasksteams.test","displayName":"Alice Admin","roles":["admin"],"scopes":["email","openid","profile","tasks:admin","tasks:read","tasks:write"],"teams":[{"teamId":"7ea00000-0000-4000-8000-000000000001","name":"Platform Team","role":"lead"}]}

@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="deploy" name="Local deployment">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="host" value="Developer machine (Windows, macOS or Linux)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=top;align=left;spacingLeft=8;fontStyle=1;container=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1040" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="web" value="Web dev server (Angular 4200 or React 5173)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="host">
+          <mxGeometry x="20" y="50" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="browser" value="Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="host">
+          <mxGeometry x="340" y="50" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="api" value="Backend API (Python, ASP.NET, Go or Rust) on port 8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="host">
+          <mxGeometry x="620" y="50" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="net" value="Docker Compose network tasksteams-net" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;verticalAlign=top;align=left;spacingLeft=8;container=1;collapsible=0;" vertex="1" parent="host">
+          <mxGeometry x="40" y="190" width="960" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="kc" value="Keycloak 26.8.2, published on 127.0.0.1:8180" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="net">
+          <mxGeometry x="280" y="70" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="pg" value="PostgreSQL 17, published on 127.0.0.1:5432" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="net">
+          <mxGeometry x="660" y="60" width="160" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="loads the app (HTTP)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;" edge="1" source="browser" target="web" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="API calls with bearer token (HTTP 8000)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;" edge="1" source="browser" target="api" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="sign-in redirect (HTTP 8180)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;" edge="1" source="browser" target="kc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="SQL as tasks_app (TCP 5432)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;" edge="1" source="api" target="pg" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="fetches signing keys (JWKS)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;" edge="1" source="api" target="kc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="note" value="Local development view. Plain HTTP on loopback. HTTPS, a gateway and production hosting are not drawn." style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="20" y="480" width="700" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

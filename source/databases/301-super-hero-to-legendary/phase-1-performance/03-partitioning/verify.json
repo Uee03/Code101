@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "partition|rows\napp.measurements_2026_01|2\napp.measurements_2026_02|2\napp.measurements_2026_03|2\nall_rows_query|february_range|wrapped_in_function\n3|1|3\npartition|rows\napp.sales_eu|2\napp.sales_other|1\napp.sales_us|1\ntotal_rows|partitions\n8|4\nin_range|out_of_range|unique_without_key\nok:1|err:23514|err:0A000\npartitions_after_attach|rows_after_attach\n4|7\npartitions_after_detach|rows_after_detach|detached_rows\n3|6|1"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "partitions|may_insert\n4|ok:1"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

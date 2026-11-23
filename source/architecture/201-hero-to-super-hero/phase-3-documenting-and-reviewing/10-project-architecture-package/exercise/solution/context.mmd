@@ -1,0 +1,8 @@
+flowchart LR
+    member(["Member<br/>borrows and returns books"])
+    staff(["Librarian<br/>manages books and loans"])
+    sys["Community Library system<br/>catalogue and loans"]
+    mail["E-mail service, external<br/>sends reminders"]
+    member -->|"searches and borrows"| sys
+    staff -->|"manages"| sys
+    sys -->|"asks to send reminders"| mail

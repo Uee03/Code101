@@ -1,0 +1,9 @@
+HTTP/1.1 401 Unauthorized
+date: Mon, 23 Nov 2026 08:37:11 GMT
+server: uvicorn
+www-authenticate: Bearer realm="tasksteams", error="invalid_token"
+content-length: 197
+content-type: application/problem+json
+x-trace-id: 391ddc1018484d4a9b614131374b1443
+
+{"type":"https://code101.example/problems/unauthorized","title":"Unauthorized","status":401,"detail":"The access token is invalid.","instance":"/v1/me","traceId":"391ddc1018484d4a9b614131374b1443"}

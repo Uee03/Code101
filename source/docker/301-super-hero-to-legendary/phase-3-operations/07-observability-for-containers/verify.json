@@ -1,0 +1,59 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    {
+      "name": "engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "validate collector config",
+      "cwd": "code",
+      "cmd": "docker run --rm -v ./otel/collector-config.yaml:/etc/otelcol/config.yaml:ro otel/opentelemetry-collector:0.165.0 validate --config=/etc/otelcol/config.yaml"
+    },
+    {
+      "name": "up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build",
+      "timeout": 900
+    },
+    {
+      "name": "app answers",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:8090/",
+      "expect_stdout": "{\"message\": \"ok\"}",
+      "retries": 30,
+      "retry_delay": 2
+    },
+    {
+      "name": "metrics endpoint",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:8090/metrics",
+      "expect_contains": ["app_requests_total{path=\"/\",status=\"200\"} 1"]
+    },
+    {
+      "name": "prometheus ready",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:9090/-/ready",
+      "retries": 30,
+      "retry_delay": 2
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove built image",
+      "cwd": "code",
+      "cmd": "docker image rm code101/observability-api:1.0.0"
+    }
+  ]
+}

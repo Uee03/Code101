@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+option go_package = "example.com/code101/go301/l05/gen/inventory/v1;inventoryv1";
+
+// InventoryService shows the four kinds of gRPC call on one small domain.
+service InventoryService {
+  // Unary: one request, one response.
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+
+  // Server streaming: one request, many responses.
+  rpc ListItems(ListItemsRequest) returns (stream ListItemsResponse);
+
+  // Client streaming: many requests, one response.
+  rpc UploadStock(stream UploadStockRequest) returns (UploadStockResponse);
+
+  // Bidirectional streaming: both sides send independently.
+  rpc CheckStock(stream CheckStockRequest) returns (stream CheckStockResponse);
+
+  // Unary: remove an item.
+  rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+}
+
+message Item {
+  string sku = 1;
+  string name = 2;
+  int32 quantity = 3;
+}
+
+message GetItemRequest {
+  string sku = 1;
+}
+
+message GetItemResponse {
+  Item item = 1;
+}
+
+message ListItemsRequest {
+  // Only items with at least this quantity are returned. Zero means all.
+  int32 min_quantity = 1;
+}
+
+message ListItemsResponse {
+  Item item = 1;
+}
+
+message UploadStockRequest {
+  string sku = 1;
+  // Positive adds stock, negative removes it.
+  int32 delta = 2;
+}
+
+message UploadStockResponse {
+  int32 updated = 1;
+}
+
+message CheckStockRequest {
+  string sku = 1;
+}
+
+message CheckStockResponse {
+  string sku = 1;
+  int32 quantity = 2;
+  bool found = 3;
+}
+
+message DeleteItemRequest {
+  string sku = 1;
+}
+
+message DeleteItemResponse {
+  bool deleted = 1;
+}

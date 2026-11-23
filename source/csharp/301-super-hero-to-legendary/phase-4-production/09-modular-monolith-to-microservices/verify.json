@@ -1,0 +1,30 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "dotnet build src/Shop.Host --nologo -v quiet"
+    },
+    {
+      "name": "start-monolith",
+      "cwd": "code",
+      "cmd": "dotnet run --project src/Shop.Host --no-build",
+      "bg": true,
+      "wait": 8
+    },
+    {
+      "name": "place-order",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:5309/orders -H \"Content-Type: application/json\" --data @requests/order.json",
+      "retries": 10,
+      "retry_delay": 1,
+      "expect_stdout": "{\"id\":1,\"customer\":\"Ada\",\"paymentStatus\":\"Paid\",\"chargeReference\":\"chg-1\"}"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "requires": ["git", "python"],
+  "steps": [
+    {
+      "name": "init the repository",
+      "cwd": "code",
+      "cmd": "git init -b main",
+      "expect_contains": ["Initialized empty Git repository"]
+    },
+    {
+      "name": "set a local identity",
+      "cwd": "code",
+      "cmd": "git config user.name \"Practice\" && git config user.email \"practice@example.com\""
+    },
+    {
+      "name": "copy .env.example to .env",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "stage everything; .env stays out",
+      "cwd": "code",
+      "cmd": "git add . && git status --short",
+      "expect_contains": ["A  .env.example", "A  .gitignore"]
+    },
+    {
+      "name": "first commit",
+      "cwd": "code",
+      "cmd": "git commit -m \"First commit\"",
+      "expect_contains": ["create mode 100644 team-notes.md"]
+    },
+    {
+      "name": ".env is ignored",
+      "cwd": "code",
+      "cmd": "git check-ignore .env",
+      "expect_stdout": ".env"
+    }
+  ]
+}

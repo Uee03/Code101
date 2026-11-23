@@ -1,0 +1,8 @@
+HTTP/1.1 403 Forbidden
+date: Mon, 23 Nov 2026 08:33:44 GMT
+server: uvicorn
+content-length: 252
+content-type: application/problem+json
+x-trace-id: 764ae0e39c8b48e6a9522a248a0940dc
+
+{"type":"https://code101.example/problems/forbidden","title":"Forbidden","status":403,"detail":"Only a team lead or an admin may change the team.","instance":"/v1/teams/7ea00000-0000-4000-8000-000000000001","traceId":"764ae0e39c8b48e6a9522a248a0940dc"}

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Tasks Start</string>
+    <string name="my_tasks">My tasks</string>
+    <string name="add_task">Add task</string>
+    <string name="status_done">Done</string>
+    <string name="status_open">Open</string>
+</resources>

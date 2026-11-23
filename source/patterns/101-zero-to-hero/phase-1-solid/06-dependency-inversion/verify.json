@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nSMTP email to ana@example.com: Thanks for ordering Notebook\n--- after ---\nSMTP email to ana@example.com: Thanks for ordering Notebook\nSMS to +100: Thanks for ordering Notebook\nCheck passed: the fake saw exactly one message"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nSMTP email to ana@example.com: Thanks for ordering Notebook\n--- after ---\nSMTP email to ana@example.com: Thanks for ordering Notebook\nSMS to +100: Thanks for ordering Notebook\nCheck passed: the fake saw exactly one message"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Invoice 7 issued 2026-01-15"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Invoice 7 issued 2026-01-15"
+    }
+  ]
+}

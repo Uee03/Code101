@@ -1,0 +1,28 @@
+{
+  "requires": ["cmake", "gcc"],
+  "steps": [
+    {
+      "name": "configure the app with vcpkg (needs VCPKG_ROOT; first run builds the libraries)",
+      "cwd": "code",
+      "cmd": "cmake --preset default",
+      "timeout": 3600
+    },
+    {
+      "name": "build the app",
+      "cwd": "code",
+      "cmd": "cmake --build --preset default",
+      "timeout": 1800
+    },
+    {
+      "name": "build the exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o exercise exercise.c"
+    },
+    {
+      "name": "run the exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('exercise')]))\"",
+      "expect_stdout": "join ok: api/tasks\njoin too long: rejected, dst is empty"
+    }
+  ]
+}

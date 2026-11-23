@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "superuser_sees\n4\ntest_id|test|expected|actual|pass\n1|tenant 1 sees own rows|2|2|t\n2|insert own tenant row|ok:1|ok:1|t\n3|insert other tenant row|err:42501|err:42501|t\n4|update other tenant row|ok:0|ok:0|t\n5|move own row to other tenant|err:42501|err:42501|t\n6|delete other tenant row|ok:0|ok:0|t\n7|empty tenant context sees nothing|0|0|t\n8|forged tenant context is accepted|2|2|t\nall_policy_tests_pass\nt\nint4eq_leakproof|own_function_leakproof\nt|f\nrows_after_rollback\n4"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "test_id|test|expected|actual|pass\n1|tenant 2 deletes own row|ok:1|ok:1|t\n2|tenant 2 cannot see tenant 1 row|0|0|t"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

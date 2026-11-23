@@ -1,0 +1,19 @@
+replicaCount: 2
+image:
+  repository: code101/api
+  tag: ""
+  pullPolicy: IfNotPresent
+config:
+  greeting: hello from helm
+  warmupSeconds: 5
+service:
+  port: 80
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: 128Mi
+rollout:
+  maxSurge: 1
+  maxUnavailable: 0

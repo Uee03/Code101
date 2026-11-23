@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comment wall</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <main class="shell">
+    <h1>Comment wall</h1>
+
+    <form id="comment-form" class="stack">
+      <div>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" required maxlength="40" autocomplete="off">
+      </div>
+      <div>
+        <label for="message">Message (wrap a word in *stars* for bold)</label>
+        <textarea id="message" name="message" rows="3" required maxlength="200"></textarea>
+      </div>
+      <div>
+        <label for="website">Website (optional, must start with http:// or https://)</label>
+        <input id="website" name="website" type="url" autocomplete="off">
+      </div>
+      <div class="actions">
+        <button class="button" type="submit">Add comment</button>
+        <button id="attack" class="button button--ghost" type="button">Fill in the attack sample</button>
+      </div>
+    </form>
+
+    <section class="columns">
+      <div>
+        <h2>Safe rendering</h2>
+        <ul id="safe-list" class="comments"></ul>
+      </div>
+      <div class="danger-zone">
+        <h2>Unsafe rendering</h2>
+        <p class="muted">Demonstration only: this list inserts text as HTML.</p>
+        <ul id="unsafe-list" class="comments"></ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Cross-origin requests (CORS)</h2>
+      <p class="muted">Needs the demo server: run <code>npm run cors-server</code> in a second terminal.</p>
+      <button id="cors-button" class="button" type="button">Run the CORS checks</button>
+      <ul id="cors-result" class="comments" role="status"></ul>
+    </section>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

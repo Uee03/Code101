@@ -1,0 +1,91 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      canary_percent:
+        description: Share of traffic for the first stage (1 to 10 for a change that is not behind a flag)
+        required: true
+        default: '5'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        run: npm run build
+
+      - name: Keep the build that every later stage will use
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-build
+          path: dist
+          if-no-files-found: error
+          retention-days: 14
+
+  readiness:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - run: npm run build
+
+      # The sample report has a failing blocker on purpose. Your pipeline would generate this file.
+      - name: Evaluate the release report
+        run: node dist/check-release.js data/release-candidate.json
+
+  canary:
+    needs: [build, readiness]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: canary
+    env:
+      CANARY_PERCENT: ${{ inputs.canary_percent }}
+      RELEASE_SHA: ${{ github.sha }}
+    steps:
+      - name: Deploy to the canary stage
+        run: echo "Deploy $RELEASE_SHA to $CANARY_PERCENT percent of traffic with your platform's CLI here"
+
+      - name: Watch the stop conditions
+        run: echo "Compare error rate and INP percentile with the baseline for the agreed time; fail this job to stop the release"
+
+  production:
+    needs: canary
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      RELEASE_SHA: ${{ github.sha }}
+    steps:
+      - name: Promote to everyone
+        run: echo "Raise $RELEASE_SHA to 100 percent in steps, then keep the previous build for rollback"

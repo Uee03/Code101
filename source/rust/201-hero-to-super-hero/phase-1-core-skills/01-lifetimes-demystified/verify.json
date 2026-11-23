@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "picked: lifetimes\nline: borrowed"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "picked: rust\nline: borrowed"
+    }
+  ]
+}

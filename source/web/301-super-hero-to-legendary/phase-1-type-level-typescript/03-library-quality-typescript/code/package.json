@@ -1,0 +1,34 @@
+{
+  "name": "@code101/result-kit",
+  "version": "0.1.0",
+  "description": "A tiny Result type, used to teach TypeScript library packaging.",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc",
+    "demo": "npm run build && node scripts/demo.mjs",
+    "check:consumer": "tsc -p tsconfig.consumer.json && tsc -p tsconfig.consumer-loose.json",
+    "check:surface": "node scripts/check-surface.mjs",
+    "check:package": "attw --pack . --profile esm-only",
+    "verify": "npm run build && npm run check:consumer && npm run check:surface && npm run check:package"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "taskservice"
+dynamic = ["version"]
+description = "Task service used by the Python 301 production lessons"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.165,<0.166",
+    "uvicorn>=0.54,<0.55",
+]
+
+[project.optional-dependencies]
+dev = [
+    "httpx==0.28.1",
+    "ruff==0.17.6",
+    "mypy==2.4.1",
+    "pip-audit==2.10.1",
+    "build==1.6.1",
+    "cyclonedx-bom==9.0.0",
+]
+
+[tool.hatch.version]
+path = "src/taskservice/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/taskservice"]

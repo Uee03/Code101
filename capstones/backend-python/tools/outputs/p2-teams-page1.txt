@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:41 GMT
+server: uvicorn
+content-length: 415
+content-type: application/json
+x-trace-id: 6ad7f2ed52ce45e6806450941799ad92
+
+{"items":[{"id":"7ea00000-0000-4000-8000-000000000002","name":"Mobile Team","description":"Builds the phone apps.","memberCount":2,"createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.468375Z","updatedAt":"2026-11-23T08:32:45.468375Z"}],"page":{"limit":1,"nextCursor":"WyIyMDI2LTExLTIzVDA4OjMyOjQ1LjQ2ODM3NSswMDowMCIsIjdlYTAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMiJd"}}

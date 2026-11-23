@@ -1,0 +1,25 @@
+name: docker-image-practice
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+# TODO 1: add a top-level permissions block that grants only contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # TODO 2: give this job contents: read and packages: write so it can push to ghcr.io
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      # TODO 3: add a login step for ghcr.io (docker/login-action@v4, github.actor, secrets.GITHUB_TOKEN) that does NOT run on pull requests
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          # TODO 4: make push true only when the event is not a pull_request
+          tags: ghcr.io/your-user-in-lowercase/practice:latest
+          # TODO 5: replace the latest tag by a tag made from the commit id (github.sha)

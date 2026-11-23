@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.consumer.json",
+  "compilerOptions": {
+    "strict": false,
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
+    "verbatimModuleSyntax": false,
+    "skipLibCheck": true
+  }
+}

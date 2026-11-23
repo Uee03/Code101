@@ -1,0 +1,15 @@
+{
+  "requires": ["flutter", "dart", "python"],
+  "steps": [
+    {"name": "add the Android scaffold around the lesson files", "cwd": "code", "cmd": "flutter create --org com.code101 --project-name tasks --platforms=android --no-pub .", "timeout": 600},
+    {"name": "delete the generated test folder", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.rmtree('test', ignore_errors=True)\""},
+    {"name": "restore packages", "cwd": "code", "cmd": "flutter pub get", "timeout": 600, "expect_contains": ["Got dependencies!"]},
+    {"name": "generate the typed client", "cwd": "code", "cmd": "dart run swagger_parser", "timeout": 300},
+    {"name": "generate JSON serializers and the drift database code", "cwd": "code", "cmd": "dart run build_runner build --delete-conflicting-outputs", "timeout": 900},
+    {"name": "analyze once", "cwd": "code", "cmd": "flutter analyze --no-pub", "timeout": 300, "expect_contains": ["No issues found!"]},
+    {"name": "build a debug APK once", "cwd": "code", "cmd": "flutter build apk --debug --no-pub --dart-define-from-file=config/dev.json", "timeout": 1200, "expect_contains": ["app-debug.apk"]},
+    {"name": "solution: main.dart", "cwd": "exercise/solution", "cmd": "dart run main.dart", "timeout": 120, "expect_stdout": "attempt 1: 1s to 2s\nattempt 2: 2s to 4s\nattempt 3: 4s to 8s\nattempt 4: 8s to 16s\nattempt 5: 16s to 32s\nattempt 6: 32s to 64s\nattempt 7: 64s to 128s\nattempt 8: 128s to 256s\nattempt 9: 150s to 300s\nRetry-After 120s at attempt 2: 120s\nRetry-After 60s at attempt 9: 300s"}
+  ],
+  "cleanup": [],
+  "skip_lesson_check": ["code/android/app/build.gradle.kts", "code/android/app/src/debug/AndroidManifest.xml", "code/android/app/src/debug/res/xml/network_security_config.xml", "code/android/app/src/main/AndroidManifest.xml", "code/assets/icons/list.svg", "code/assets/icons/settings.svg", "code/assets/LICENSE-ICONS-CC0.txt", "code/config/dev.json", "code/contract/openapi.yaml", "code/lib/core/api_problem.dart", "code/lib/core/auth_errors.dart", "code/lib/core/config.dart", "code/lib/core/problem_messages.dart", "code/lib/core/result.dart", "code/lib/core/url_policy.dart", "code/lib/core/widgets/art_icon.dart", "code/lib/data/models/session.dart", "code/lib/data/models/sync_state.dart", "code/lib/data/models/task.dart", "code/lib/data/repositories/auth_repository.dart", "code/lib/data/services/api_service.dart", "code/lib/data/services/auth_interceptor.dart", "code/lib/data/services/auth_service.dart", "code/lib/data/services/problem_interceptor.dart", "code/lib/data/services/token_store.dart", "code/lib/features/login/view/login_screen.dart", "code/lib/features/login/view/session_check_screen.dart", "code/lib/features/login/view_model/auth_controller.dart", "code/lib/features/login/view_model/login_view_model.dart", "code/lib/features/task_detail/view/task_detail_screen.dart", "code/lib/features/task_detail/view_model/task_detail_view_model.dart", "code/lib/features/tasks/view/task_composer.dart", "code/lib/main.dart", "code/swagger_parser.yaml"]
+}

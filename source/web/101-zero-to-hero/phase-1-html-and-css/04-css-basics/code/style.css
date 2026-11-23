@@ -1,0 +1,10 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f1f5f9;
+  color: #172554;
+}
+p { color: #334155; }
+p { color: #166534; }
+.highlight { color: #9a3412; }
+#welcome { color: #1d4ed8; }
+h1 { font-size: 2rem; }

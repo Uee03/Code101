@@ -1,0 +1,4 @@
+NAME                                IMAGE                              COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+code101-react-author-5-api-1        code101-react-author-5-api         "uvicorn app.main:ap…"   api        40 seconds ago   Up 34 seconds (healthy)   127.0.0.1:8000->8000/tcp
+code101-react-author-5-db-1         postgres:17-alpine                 "docker-entrypoint.s…"   db         41 seconds ago   Up 39 seconds (healthy)   127.0.0.1:5432->5432/tcp
+code101-react-author-5-keycloak-1   quay.io/keycloak/keycloak:26.8.2   "/opt/keycloak/bin/k…"   keycloak   41 seconds ago   Up 39 seconds (healthy)   127.0.0.1:8180->8080/tcp

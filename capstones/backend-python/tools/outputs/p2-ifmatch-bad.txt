@@ -1,0 +1,8 @@
+HTTP/1.1 400 Bad Request
+date: Mon, 23 Nov 2026 08:33:43 GMT
+server: uvicorn
+content-length: 254
+content-type: application/problem+json
+x-trace-id: a13b14be521d497bad78326fc1a9921d
+
+{"type":"https://code101.example/problems/bad-request","title":"Bad request","status":400,"detail":"If-Match must be one strong ETag such as \"3\".","instance":"/v1/tasks/e8787266-112f-4a3c-a9b1-9e2bea4b62ec","traceId":"a13b14be521d497bad78326fc1a9921d"}

@@ -1,0 +1,13 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "generate types", "cwd": "code", "cmd": "npm run api:gen", "timeout": 120 },
+    { "name": "check generated types", "cwd": "code", "cmd": "{python} -c \"s=open('src/api/schema.d.ts',encoding='utf-8').read(); assert 'getHealth' in s and 'listTeams' in s\"", "expect_stdout": "" },
+    { "name": "build code", "cwd": "code", "cmd": "npm run build", "timeout": 300 },
+    { "name": "overlay solution", "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"", "expect_stdout": "" },
+    { "name": "install solution", "cwd": "sol", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "sol", "cmd": "npm run build", "timeout": 300 }
+  ],
+  "skip_lesson_check": ["code/contract/openapi.yaml", "code/vite.config.ts", "code/tsconfig.json", "code/tsconfig.app.json", "code/tsconfig.node.json", "code/.gitignore"]
+}

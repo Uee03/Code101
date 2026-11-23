@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nInvoice: 2700\nReceipt: 2700\n--- after ---\nInvoice: 2700\nReceipt: 2700\n--- lookalikes ---\nUsername 'al': must be 3 to 20 characters\nTitle with 30 letters: ok"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nInvoice: 2700\nReceipt: 2700\n--- after ---\nInvoice: 2700\nReceipt: 2700\n--- lookalikes ---\nUsername 'al': must be 3 to 20 characters\nTitle with 30 letters: ok"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Hello Ana Silva, welcome!\nHello Ana Silva!\nAS"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Hello Ana Silva, welcome!\nHello Ana Silva!\nAS"
+    }
+  ]
+}

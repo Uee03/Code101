@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph Outside["Outside the system boundary"]
+        U(["Team member"])
+        KC(["Keycloak"])
+    end
+    subgraph Inside["Backend API and database"]
+        P1("1 Validate token and check team access")
+        P2("2 Apply the complete-task rule")
+        P3("3 Audit trigger records the change")
+        D1[("D1 tasks")]
+        D2[("D2 team_members")]
+        D3[("D3 audit_log")]
+    end
+    U -->|"complete request, If-Match, bearer token"| P1
+    KC -.->|"signing keys"| P1
+    D2 -->|"membership of the caller"| P1
+    P1 -->|"checked request"| P2
+    D1 -->|"current task and version"| P2
+    P2 -->|"new status, completed_at, new version"| D1
+    P2 -->|"change facts"| P3
+    P3 -->|"audit row"| D3
+    P2 -->|"updated task and new ETag"| U

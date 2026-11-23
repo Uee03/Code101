@@ -1,0 +1,271 @@
+---
+track: capstone
+level: 201
+phase: 3
+phase_name: identity
+lesson: 03
+title: "Identity: validating Keycloak tokens, scopes and roles"
+time: 90 min
+prerequisites: [capstone-backend-python-02, capstone-platform-03]
+versions: { python: "3.12 or newer (author run: 3.15.2)", pyjwt: "2.15.1", cryptography: "50.0.2", keycloak_image: "quay.io/keycloak/keycloak:26.8.2" }
+verified: 2026-11-23 on Windows 11, Python 3.15.2, Docker 29.9.3, Compose 5.7.0
+source: capstones/backend-python/source/phase-3-identity/03-identity/
+assets: []
+---
+
+# 03. Identity: validating Keycloak tokens, scopes and roles
+
+## Why it matters
+Imagine a concert hall. The guard at the door can accept a hand-written note saying "I am the VIP", or check a ticket with a hologram that only the box office can print. Chapter 02 accepted the note: it read the claims of the token and believed them. This chapter installs the hologram check. Without it, anyone who can type JSON is an admin, which is the first of the OWASP API risks (broken authentication).
+
+## What you will build
+Real validation of the bearer token in `app/tokens.py`: the signing algorithm must be RS256, the signature must match a key from Keycloak's **JWKS** (JSON Web Key Set, its public keys), the issuer must be exactly ours, the audience must contain `tasks-api`, and the token must not be expired or not-yet-valid (with 30 seconds of tolerance). You will first forge an admin token and watch chapter 02 accept it, then watch the new code refuse it, and run an offline script that tries 14 broken tokens.
+
+Conformance state at the end of this chapter: **17 passed, 1 failed**, the same `me` failure as in chapter 02 (rate-limit headers, chapter 05). Validation adds no new passing check; it removes a hole the script cannot see.
+
+```mermaid
+flowchart TD
+    T["Authorization: Bearer token"] --> H{"header alg is RS256?"}
+    H -- no --> X["401 invalid_token"]
+    H -- yes --> K["key for kid from cached JWKS"]
+    K -->|"Keycloak unreachable, no cached key"| U["503 Retry-After"]
+    K --> S{"signature, iss, aud, exp, nbf, required claims"}
+    S -- fails --> X
+    S -- ok --> P["Principal: sub, roles, scopes"]
+    P --> Q{"scopes of the route present?"}
+    Q -- no --> F["403"]
+    Q -- yes --> OK["route runs; role and team checks follow"]
+```
+
+## Before you start
+- Chapter 02 done, or unzip `backend-python-phase-3-identity.zip` and open `03-identity/code`. Files unchanged from chapters 01 and 02 are not repeated (the pack holds the whole project).
+- Docker running; the stack of chapter 02 may still run (`docker compose ps`), otherwise `docker compose up -d --wait` in the project folder (with `.env` from `.env.example`).
+- Chapter 03 of the platform capstone (the realm, the claims in a token). The token of alice carries `iss` `http://localhost:8180/realms/tasksteams`, `aud` `tasks-api`, `sub` her user id, `realm_access.roles`, and a space separated `scope`.
+
+## Steps
+### Step 1. Add PyJWT
+Replace `requirements.txt` and `pyproject.toml`. **PyJWT** reads and verifies JSON Web Tokens; the extra `[crypto]` installs the `cryptography` package that RS256 needs.
+
+@@FILE requirements.txt
+
+@@FILE pyproject.toml
+
+```text
+(.venv) tasksteams-api> python -m pip install -r requirements.txt
+```
+
+### Step 2. See the hole (with the chapter 02 code)
+Create `scripts/forge_token.py`. It writes a token whose claims say "alice, admin, all scopes" and signs it with a **random key that Keycloak has never seen**:
+
+@@FILE scripts/forge_token.py
+
+Start the **chapter 02** API (`python -m uvicorn app.main:app --port 8000`, as before) and send the forged token with the helper of chapter 02. In PowerShell save the token in a variable first; in bash use `$(...)`:
+
+```powershell
+# Windows PowerShell
+$FORGED = python scripts/forge_token.py
+python scripts/call.py GET /v1/audit-log --token $FORGED
+```
+
+```bash
+# macOS and Linux
+FORGED=$(python3 scripts/forge_token.py)
+python3 scripts/call.py GET "/v1/audit-log?limit=1" --token "$FORGED"
+```
+
+Expected output with the chapter 02 code: the API **believes the forgery** and hands the audit trail to a stranger.
+
+@@OUT p3-forged-before-audit
+
+Stop that API with Ctrl+C. Everything in the next steps closes this hole.
+
+### Step 3. New settings
+Replace `app/config.py` (four new settings) and `.env.example` (the token section at the end):
+
+@@FILE app/config.py
+
+@@FILE .env.example
+
+`TOKEN_ISSUER` must equal the `iss` claim of the tokens **character for character**; Keycloak builds it from its configured hostname (`http://localhost:8180/realms/tasksteams`), no matter which address you used to reach it. `JWKS_URL` is where the keys are fetched from: on your computer `127.0.0.1:8180`, inside Compose (chapter 04) `keycloak:8080`. The issuer and the key address are therefore two separate settings.
+
+### Step 4. The token verifier
+Create `app/tokens.py`:
+
+@@FILE app/tokens.py
+
+Read it in this order:
+
+- `TokenRejected` carries a `reason` for **our log** and a `public` sentence safe to show the caller. The caller never learns *which* rule failed, only that the token is invalid; an attacker gets no feedback to iterate on. An expired token is the one friendly exception, because every honest client must be able to tell "refresh me".
+- `KeysUnavailable` is a different failure: Keycloak cannot be reached and we have no cached key. That is not the caller's fault, so it becomes **503**, not 401.
+- `JwksKeys` wraps PyJWT's `PyJWKClient`. It keeps the whole key set in memory for 5 minutes (`lifespan=300`). When a token names a `kid` we do not know, it fetches again, but at most once per 30 seconds (`cooldown_duration=30`), so someone sending random `kid` values cannot turn our API into a machine that hammers Keycloak. A key that Keycloak has just rotated can therefore be unknown for up to 30 seconds; the 5 minute token life makes that acceptable.
+- `TokenVerifier.verify` first reads the **unverified header** and requires `alg == "RS256"`. This blocks the `none` algorithm and the **key confusion** attack (a token signed with HMAC using our public key as the secret) before any key is looked up. Then `jwt.decode` checks the signature, `iss`, `aud`, `exp` and `nbf` in one call. `audience=` accepts both forms the claim can take (a string for one audience, a list for several), and `options={"require": [...]}` makes the four claims mandatory, so a token without `exp` can never live forever. `leeway` tolerates 30 seconds of clock difference between servers.
+
+`key_for` is a plain function that takes the token and returns the key. Production passes `JwksKeys`; the demo script below passes a lambda holding a key it made itself, which is why the rules can be tested without Keycloak.
+
+### Step 5. Wire it in
+Replace `app/dependencies.py` (adds the verifier):
+
+@@FILE app/dependencies.py
+
+Replace `app/auth.py`. `read_claims` is gone; `authenticate` now calls the verifier:
+
+@@FILE app/auth.py
+
+What stayed the same is the point: the routers did not change at all, because they only know `Principal` and the `Reader` and `Writer` types. What is new: a rejected token is logged as a warning with the **reason but never the token**; the answer carries `WWW-Authenticate: Bearer realm="tasksteams", error="invalid_token"` (RFC 6750); unreachable keys give 503; and `principal_from_claims` now reads `realm_access` defensively, because even a verified token is input.
+
+Replace `app/main.py` (the verifier is created next to the database pool):
+
+@@FILE app/main.py
+
+### Step 6. Test the rules offline
+Create `scripts/token_rules.py`. It makes its own RSA key, builds one token per broken rule, and shows what the verifier answers:
+
+@@FILE scripts/token_rules.py
+
+## Run it
+Stack up (`docker compose up -d --wait`) and the API started as before:
+
+```text
+(.venv) tasksteams-api> python -m uvicorn app.main:app --port 8000
+```
+
+**1. The forged token is now refused**
+
+```powershell
+# Windows PowerShell
+$FORGED = python scripts/forge_token.py
+python scripts/call.py GET /v1/audit-log --token $FORGED
+```
+
+@@OUT p3-forged-after-audit
+
+**2. A real token still works**
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/me --user alice
+```
+
+@@OUT p3-me-alice
+
+**3. Every token rule, without Keycloak or a network**
+
+```text
+(.venv) tasksteams-api> python scripts/token_rules.py
+```
+
+@@OUT p3-token-rules
+
+**4. Conformance**
+
+```text
+tasksteams-api> python scripts/conformance.py
+```
+
+@@OUT p3-conformance
+
+Still 17 and 1: the signature checks protect you from attackers; the conformance script only sends honest tokens.
+
+**5. Break it on purpose.** Start the API with the wrong issuer (`127.0.0.1` instead of `localhost`). In PowerShell `$env:TOKEN_ISSUER = "http://127.0.0.1:8180/realms/tasksteams"`; in bash `export TOKEN_ISSUER=http://127.0.0.1:8180/realms/tasksteams`; then start Uvicorn again. Every token is now refused, and **the log says why** while the client is told nothing:
+
+@@OUT p3-wrong-issuer
+
+@@OUT p3-log-wrong-issuer
+
+Remove the variable (`Remove-Item Env:TOKEN_ISSUER` or `unset TOKEN_ISSUER`). Now point `JWKS_URL` at a closed port, for example `http://127.0.0.1:9/jwks`, and restart: the API cannot get a key, so it answers **503**:
+
+@@OUT p3-jwks-down
+
+@@OUT p3-log-jwks-down
+
+Remove that variable too and stop the API with Ctrl+C.
+
+## How it works
+The three questions every protected request answers, in order:
+
+| Question | Where | Failure |
+|----------|-------|---------|
+| Is this a genuine, current token for us? | `TokenVerifier` (signature, `iss`, `aud`, `exp`, `nbf`) | 401, or 503 if the keys are unavailable |
+| May this **client** do this kind of thing? | `authenticate` compares the route's scopes (`tasks:read`, `tasks:write`, `tasks:admin`) with the token's `scope` claim | 403 |
+| May this **user** do it, here? | the role (`realm_access.roles`) in `require_admin`, and team membership in `access.py` | 403 or 404 |
+
+A token carries scopes **and** roles on purpose. Scopes are what the user consented to give the app (an app that only needs to read asks for `tasks:read`); roles are what the user is in the company. Effective permission is the **intersection**: bob's token holds the `tasks:admin` scope in the smoke client, and bob is still refused admin routes because he lacks the `admin` role (conformance check `403 for member on admin route`).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as API
+    participant K as Keycloak
+    C->>A: request, token with kid K1
+    A->>K: GET JWKS (first use only)
+    K-->>A: key set {K1}
+    A-->>C: 200 (key cached for 5 minutes)
+    C->>A: request, token with unknown kid K2
+    A->>A: last fetch under 30 s ago, no refetch
+    A-->>C: 401
+    C->>A: the same later
+    A->>K: GET JWKS (cooldown over)
+    K-->>A: key set {K1, K2}
+    A-->>C: 200
+```
+
+New terms: **JWT** (a signed JSON token: header, claims, signature); **JWKS** (the public keys of the issuer, as JSON); **`kid`** (key id: which key signed this token); **claim** (one fact inside the token, like `sub` or `exp`); **audience** (`aud`: who the token is meant for); **issuer** (`iss`: who made it); **clock skew** (two servers disagree on the time by a few seconds); **key confusion** (tricking a verifier into using a public key as an HMAC secret).
+
+Why this, not that:
+
+| Choice | Alternative | Why we chose this |
+|--------|-------------|-------------------|
+| Validate locally with cached keys | Call Keycloak's introspection endpoint per request | No network round trip per request and no dependency on Keycloak for every call; the price is that a revoked token stays valid until it expires (5 minutes here) |
+| PyJWT with `PyJWKClient` | Authlib or python-jose | Small and widely used, and the client already caches and throttles. Authlib is a good choice when the same app also acts as an OAuth client |
+| Allow only `RS256` | Accept whatever the header says | The header is attacker controlled (RFC 8725). We decide the algorithm, not the token |
+| Same message for every invalid token | Tell the caller which rule failed | An attacker gains nothing from the detail; the log keeps it for you |
+
+### Appendix: the same steps with Authentik
+Authentik can replace Keycloak as the identity provider. The code does not change, only settings and a few claims. Check each value in your own Authentik instance (provider and application settings) before you rely on it; the endpoint layout is from the Authentik OAuth2 provider documentation.
+
+| Setting or fact | Keycloak (this capstone) | Authentik |
+|-----------------|--------------------------|-----------|
+| `TOKEN_ISSUER` | `http://localhost:8180/realms/tasksteams` | `https://<host>/application/o/<application-slug>/` (default issuer mode, with the trailing slash) |
+| `JWKS_URL` | `.../realms/tasksteams/protocol/openid-connect/certs` | `https://<host>/application/o/<application-slug>/jwks/` |
+| Signing algorithm | RS256 | choose a signing key (certificate) on the provider so that tokens are RS256; the verifier refuses anything else |
+| `TOKEN_AUDIENCE` | `tasks-api` through an audience mapper | the provider's client id is the usual audience; set `TOKEN_AUDIENCE` to it |
+| Roles | `realm_access.roles` | a scope mapping that adds the groups or roles claim you choose; change `principal_from_claims` to read it |
+| Scopes | `scope` claim | `scope` claim from the requested scopes; define scope mappings for `tasks:read`, `tasks:write`, `tasks:admin` |
+
+## Try it
+Exercise: **read claims like the API.** Copy `exercise/starter/claims.py` into a folder of your own and finish three functions: `audiences` (the `aud` claim may be a string or a list; always return a list), `scopes` (one space separated string into a set), and `allowed` (the audience is listed and the scope is granted). Run `python claims.py`: only token `b` may write.
+
+@@FILE_STARTER claims.py
+
+<details><summary>Solution</summary>
+
+@@FILE_EXERCISE claims.py
+
+Output:
+
+@@OUT p3-ex-claims
+
+Token `a` has the audience but no write scope, token `c` has the scope but the wrong audience: both fail, because a token must be meant for this API **and** carry the scope.
+
+</details>
+
+## Check yourself
+1. Why does `verify` check the `alg` header before it looks for a key? <details><summary>Answer</summary>The header is written by the sender. If we let it choose the algorithm, an attacker can pick `none` (no signature) or HS256 with our public key as the secret. We decide: RS256 only.</details>
+2. Why are `TOKEN_ISSUER` and `JWKS_URL` separate settings? <details><summary>Answer</summary>The issuer is a name that must match the `iss` claim exactly (`localhost`), while the key address is a network location that depends on where the API runs (`127.0.0.1` on the host, `keycloak` inside Docker).</details>
+3. A user is removed in Keycloak at 10:00:00 and has a token issued at 09:58:00 (5 minute life). Until when can they still call the API, and how would you shorten it? <details><summary>Answer</summary>Until about 10:03:00 plus the 30 second skew, because validation is local. Shorten the token life, or call the introspection endpoint for sensitive operations, at the cost of a network call.</details>
+4. Why is "Keycloak unreachable" a 503 and not a 401? <details><summary>Answer</summary>The caller did nothing wrong; telling them their token is invalid would make clients throw away good tokens and log users out. 503 with `Retry-After` says "try again".</details>
+
+## Common mistakes
+| Symptom or error text | Cause | Fix |
+|---|---|---|
+| Every call is `401` with `"detail":"The access token is invalid."` and the log says `"reason": "InvalidIssuerError: Invalid issuer"` | `TOKEN_ISSUER` differs from the token's `iss`, for example `127.0.0.1` instead of `localhost`, or a missing `/realms/tasksteams` | Copy the `issuer` value from `http://127.0.0.1:8180/realms/tasksteams/.well-known/openid-configuration` |
+| Every call is `503` with `"detail":"The sign-in keys cannot be fetched right now."` and the log says `signing keys unavailable: Fail to fetch data from the url` | `JWKS_URL` is wrong, Keycloak is not running, or inside Docker you used `127.0.0.1` (that is the container itself) | Check `docker compose ps`; open the `JWKS_URL` in a browser; inside Compose use `http://keycloak:8080/...` |
+| `InvalidAudienceError: Audience doesn't match` in the log | The token was issued to a client without the `tasks-api` audience mapper | Use a client of the platform realm (`tasks-web`, `tasks-mobile`, `tasks-smoke`) |
+| `401` with `The access token has expired.` | Tokens live 5 minutes | Get a new token (`--user bob` fetches one for every call) or refresh it |
+| `ImportError` or `ModuleNotFoundError: No module named 'jwt'` | PyJWT is not installed in the active environment | `python -m pip install -r requirements.txt` |
+
+## Best practice
+Verify every claim you rely on, pin the algorithm yourself, and never log the token. Source: RFC 8725 JSON Web Token Best Current Practices https://www.rfc-editor.org/info/rfc8725 and PyJWT usage documentation https://pyjwt.readthedocs.io/en/stable/usage.html
+
+## Next lesson
+04. Run and ship: package the API as a multi-stage, non-root container image, add it to the platform Compose project with an override file, and start everything with one command.

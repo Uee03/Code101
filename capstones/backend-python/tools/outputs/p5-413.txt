@@ -1,0 +1,13 @@
+HTTP/1.1 413 Content Too Large
+date: Mon, 23 Nov 2026 09:12:28 GMT
+content-length: 236
+content-type: application/problem+json
+vary: Origin
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+x-trace-id: b79a1f0d96b74f319fb72ef717826e34
+
+{"type":"https://code101.example/problems/payload-too-large","title":"Payload too large","status":413,"detail":"The request body may not be larger than 1048576 bytes.","instance":"/v1/teams","traceId":"b79a1f0d96b74f319fb72ef717826e34"}

@@ -1,0 +1,100 @@
+{
+  "requires": [
+    "docker",
+    "cargo"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start temporary Postgres and Keycloak",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "compile the API",
+      "cwd": "code",
+      "cmd": "cargo build --locked",
+      "timeout": 900
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "cargo run --locked --quiet",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "health probe (database up)",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py GET /health",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_contains": [
+        "HTTP 200",
+        "\"database\": \"up\""
+      ]
+    },
+    {
+      "name": "read a seeded task",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py --as alice GET /v1/tasks/7a500000-0000-4000-8000-000000000004",
+      "expect_contains": [
+        "HTTP 200",
+        "etag: \"1\"",
+        "\"title\": \"Run the conformance script\""
+      ]
+    },
+    {
+      "name": "conformance script (phase 2 passes 17 of 18: only the RateLimit headers are missing)",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_exit": 1,
+      "expect_contains": [
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  cursor pagination (2 + 1 tasks, no overlap, last page has nextCursor null)",
+        "PASS  audit log (task create and update are in the audit trail)",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "17 passed, 1 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "expect_stdout": "[\"ada\", \"bob\", \"cy\"] next=Some(30)\n[\"dee\", \"eve\", \"fay\"] next=Some(60)\n[\"gus\"] next=None"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/Cargo.lock",
+    "code/.gitignore",
+    "code/rustfmt.toml",
+    "code/docker-compose.yml",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/scripts/api.py",
+    "code/scripts/conformance.py",
+    "code/src/error.rs",
+    "code/src/validation.rs"
+  ]
+}

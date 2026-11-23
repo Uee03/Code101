@@ -1,0 +1,17 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "run hello.py",
+      "cwd": "code",
+      "cmd": "{python} hello.py",
+      "expect_stdout": "Hello, world!\nMy name is Python, and I am your first program."
+    },
+    {
+      "name": "solution recipe_card.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} recipe_card.py",
+      "expect_stdout": "Recipe: Tea\n\nIngredients:\n- 1 tea bag\n- 1 cup of hot water"
+    }
+  ]
+}

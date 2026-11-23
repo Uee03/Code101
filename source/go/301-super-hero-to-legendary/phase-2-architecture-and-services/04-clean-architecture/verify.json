@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "fake smtp: to=ada@example.com subject=\"Invoice 7\" body=\"Amount due: 1250 cents\"\nsent invoice 7"
+    },
+    {
+      "name": "solution test",
+      "cmd": "go test ./...",
+      "cwd": "exercise/solution",
+      "expect_contains": [
+        "ok"
+      ]
+    }
+  ]
+}

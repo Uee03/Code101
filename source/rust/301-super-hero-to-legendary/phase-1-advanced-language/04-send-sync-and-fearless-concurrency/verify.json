@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "sum of squares 1..=100 with 4 workers: 338350\nsquares via channel: [1, 4, 9]\nmutex counter: 4000\natomic counter: 4000"
+    },
+    {
+      "name": "example tests and compile_fail doc test",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "max: Some(25)\nempty: None"
+    }
+  ]
+}

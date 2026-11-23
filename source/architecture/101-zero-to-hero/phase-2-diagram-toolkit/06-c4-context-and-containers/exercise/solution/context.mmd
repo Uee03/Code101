@@ -1,0 +1,6 @@
+flowchart LR
+  person["Person: team member or admin"]
+  platform["System: Tasks and Teams - plan shared work"]
+  identity["External system: Keycloak - sign in"]
+  person -->|"Plans work"| platform
+  platform -->|"Uses identity services"| identity

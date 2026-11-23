@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant W as Web client
+    participant K as Keycloak
+    participant A as Backend API
+    W->>W: create code_verifier, derive code_challenge (S256), create state
+    W->>K: redirect to authorization endpoint with client_id, redirect_uri, scope, state, code_challenge
+    K->>U: show the login page
+    U->>K: submit credentials
+    K->>W: redirect to redirect_uri with code and state
+    W->>W: check that the returned state equals the stored state
+    W->>K: token request with code, code_verifier, client_id
+    K->>K: hash code_verifier and compare with the stored code_challenge
+    K-->>W: access token and refresh token
+    W->>A: API call with Authorization Bearer access token
+    A-->>W: 200 OK or problem details

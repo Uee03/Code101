@@ -1,0 +1,51 @@
+erDiagram
+    USERS ||--o{ TEAM_MEMBERS : "belongs to"
+    TEAMS ||--o{ TEAM_MEMBERS : has
+    TEAMS ||--o{ PROJECTS : owns
+    PROJECTS ||--o{ TASKS : contains
+    USERS |o--o{ TASKS : "assigned to"
+    TASKS ||--o{ COMMENTS : has
+    USERS ||--o{ COMMENTS : writes
+    USERS {
+        uuid id PK
+        text username
+        text email
+    }
+    TEAMS {
+        uuid id PK
+        text name
+        int version
+    }
+    TEAM_MEMBERS {
+        uuid team_id PK, FK
+        uuid user_id PK, FK
+        text role
+    }
+    PROJECTS {
+        uuid id PK
+        uuid team_id FK
+        text key
+        text name
+    }
+    TASKS {
+        uuid id PK
+        uuid project_id FK
+        uuid assignee_id FK
+        text title
+        text status
+        date due_date
+        int version
+    }
+    COMMENTS {
+        uuid id PK
+        uuid task_id FK
+        uuid author_id FK
+        text body
+    }
+    AUDIT_LOG {
+        bigint id PK
+        uuid actor_id
+        text action
+        text entity_type
+        uuid entity_id "not a foreign key by design"
+    }

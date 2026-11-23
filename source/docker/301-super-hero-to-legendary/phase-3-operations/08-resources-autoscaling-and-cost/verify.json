@@ -1,0 +1,43 @@
+{
+  "requires": ["docker", "python"],
+  "steps": [
+    {
+      "name": "cost model",
+      "cwd": "code",
+      "cmd": "{python} cost_model.py cost-inputs.json",
+      "expect_stdout": "Node: 116.80 per month; 14.60 per vCPU, 3.65 per GiB\napi      requested 21.90 used 9.49 slack 56.7%\nworker   requested 43.80 used 14.60 slack 66.7%\ntotal    requested 65.70 used 24.09 slack 63.3%\nRequests fill 75.0% of the node's CPU and 37.5% of its memory"
+    },
+    {
+      "name": "exercise starter",
+      "cwd": "exercise/starter",
+      "cmd": "{python} ../../code/cost_model.py cost-inputs.json",
+      "expect_contains": ["web      requested 21.90 used 10.95 slack 50.0%", "Requests fill 25.0% of the node's CPU and 12.5% of its memory"]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} ../../code/cost_model.py cost-inputs.json",
+      "expect_contains": ["web      requested 16.06 used 10.95 slack 31.8%", "Requests fill 15.0% of the node's CPU and 12.5% of its memory"]
+    },
+    {
+      "name": "memory limit kills the container",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} --profile memory up --exit-code-from memhog",
+      "expect_exit": 137,
+      "timeout": 300
+    },
+    {
+      "name": "oom flag",
+      "cwd": "code",
+      "cmd": "docker inspect --format \"{{.State.OOMKilled}} {{.State.ExitCode}}\" {project}-memhog-1",
+      "expect_stdout": "true 137"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} --profile memory --profile cpu down -v --remove-orphans"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<h1>Tasks</h1>
+
+<p>
+  Showing {{ items().length }} tasks.
+  <a routerLink="/tasks/new">Create a task</a>
+</p>
+
+<ul class="tasks">
+  @for (task of items(); track task.id) {
+    <li>
+      <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+      <span class="meta">{{ task.status }}, {{ task.priority }}</span>
+    </li>
+  } @empty {
+    <li>There are no tasks yet.</li>
+  }
+</ul>
+
+@if (problem(); as current) {
+  <app-problem-view [problem]="current" />
+}
+
+@if (nextCursor()) {
+  <button type="button" (click)="loadMore()" [disabled]="loading()">{{ loading() ? 'Loading...' : 'Load more' }}</button>
+} @else {
+  <p>That is every task.</p>
+}
+
+<h2>Summary</h2>
+@defer (on viewport) {
+  <app-status-summary [tasks]="items()" />
+} @placeholder {
+  <p class="placeholder">The summary loads when this area scrolls into view.</p>
+} @loading (minimum 300ms) {
+  <p class="placeholder">Loading the summary...</p>
+}

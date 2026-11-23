@@ -1,0 +1,13 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "build", "cwd": "code", "cmd": "docker build -t code101-ci:test .", "timeout": 600 },
+    { "name": "selftest", "cwd": "code", "cmd": "docker run --rm code101-ci:test python app.py --selftest", "expect_stdout": "selftest ok" },
+    { "name": "default run", "cwd": "code", "cmd": "docker run --rm code101-ci:test", "expect_stdout": "Hello from an image built in CI" }
+  ],
+  "cleanup": [
+    { "name": "remove image", "cmd": "docker image rm code101-ci:test" }
+  ],
+  "skip_lesson_check": []
+}

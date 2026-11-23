@@ -1,0 +1,7 @@
+name: code101-hardening-baseline
+services:
+  app:
+    build: .
+    image: code101/hardening-demo:1.0.0
+    ports:
+      - "127.0.0.1:8090:8080"

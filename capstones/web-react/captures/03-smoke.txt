@@ -1,0 +1,12 @@
+
+> tasks-web-react@1.0.0 smoke
+> tsx scripts/smoke.ts
+
+foreign host: no bearer header (local transport stand-in)
+health: ok
+me: alice (admin)
+without token: 401
+teams: 2
+tasks: 5; nextCursor: null
+PKCE: S256; login page: 200; user store: memory
+expiry event: fired without automaticSilentRenew

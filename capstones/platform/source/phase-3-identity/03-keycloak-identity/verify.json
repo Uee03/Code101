@@ -1,0 +1,50 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres and Keycloak",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "infrastructure checks",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py --infra-only",
+      "retries": 10,
+      "retry_delay": 3,
+      "expect_stdout": "PASS  keycloak discovery (issuer matches, PKCE S256 offered)\nPASS  token for alice (iss, aud tasks-api, sub, role admin, three scopes)\nPASS  token for bob (role member only)\nPASS  postgres reachable (127.0.0.1:5432 answers the Postgres protocol)\n4 passed, 0 failed"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} show_roles.py",
+      "expect_stdout": "bob roles: member"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/openapi.yaml",
+    "code/requirements.txt",
+    "code/scripts/check_openapi.py",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/db/try_procedures.sql"
+  ],
+  "exclusive": "tasksteams"
+}

@@ -1,0 +1,15 @@
+flowchart TD
+    web["Web app"]
+    subgraph api["Library API"]
+        http["HTTP layer<br/>routes and validation"]
+        loans["Loan service<br/>one active loan per copy"]
+        cat["Catalogue service<br/>search books and copies"]
+        repo["Repository<br/>SQL access"]
+    end
+    db[("Library database")]
+    web --> http
+    http --> loans
+    http --> cat
+    loans --> repo
+    cat --> repo
+    repo -->|"SQL"| db

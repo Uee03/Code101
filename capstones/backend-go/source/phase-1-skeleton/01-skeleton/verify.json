@@ -1,0 +1,90 @@
+{
+  "requires": [
+    "go",
+    "curl"
+  ],
+  "steps": [
+    {
+      "name": "Go toolchain",
+      "cwd": "code",
+      "cmd": "go version",
+      "expect_contains": [
+        "go version go1."
+      ]
+    },
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "go build ./...",
+      "timeout": 300
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "go run ./cmd/api",
+      "bg": true,
+      "wait": 6
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 40,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\"}"
+    },
+    {
+      "name": "me stub",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "\"username\":\"alice\"",
+        "\"teams\":[]"
+      ]
+    },
+    {
+      "name": "validation problem",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"Content-Type: application/json\" --data-binary @requests/team-invalid.json http://127.0.0.1:8000/v1/teams",
+      "expect_contains": [
+        "\"status\":422",
+        "\"pointer\":\"/name\"",
+        "HTTP 422"
+      ]
+    },
+    {
+      "name": "valid body, not stored yet",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"Content-Type: application/json\" --data-binary @requests/team-valid.json http://127.0.0.1:8000/v1/teams",
+      "expect_contains": [
+        "HTTP 501"
+      ]
+    },
+    {
+      "name": "unknown path",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" http://127.0.0.1:8000/v1/nothing",
+      "expect_contains": [
+        "\"type\":\"https://code101.example/problems/not-found\"",
+        "HTTP 404"
+      ]
+    },
+    {
+      "name": "wrong method",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X DELETE http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "HTTP 405"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "go run .",
+      "expect_stdout": "PLAT         ok\nplat         /key invalid key\nP            /key invalid key\nTOOLONGKEY1  /key invalid key\nA1           ok"
+    }
+  ],
+  "cleanup": [],
+  "skip_lesson_check": [],
+  "exclusive": "tasksteams"
+}

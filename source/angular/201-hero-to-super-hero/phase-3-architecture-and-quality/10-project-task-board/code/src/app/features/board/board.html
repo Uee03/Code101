@@ -1,0 +1,35 @@
+<h1 i18n="@@board.heading">Board</h1>
+
+<p><a routerLink="/tasks/new" i18n="@@tasks.create">Create a task</a></p>
+
+@if (store.problem(); as problem) {
+  <app-problem-view [problem]="problem" />
+}
+
+@if (store.loading()) {
+  <p role="status" i18n="@@board.loading">Loading the board...</p>
+}
+
+<div class="columns">
+  @for (column of store.columns(); track column.status) {
+    <div class="column">
+      <h2 [id]="'col-' + column.status">{{ column.title }} ({{ column.tasks.length }})</h2>
+      <ul [attr.aria-labelledby]="'col-' + column.status">
+        @for (task of column.tasks; track task.id) {
+          <li class="card">
+            <a [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+            <span class="meta">{{ task.priority }}</span>
+            <label [for]="'move-' + task.id" i18n="@@board.move">Move to</label>
+            <select [id]="'move-' + task.id" (change)="move(task.id, $event)">
+              @for (option of options; track option.status) {
+                <option [value]="option.status" [selected]="option.status === task.status">{{ option.title }}</option>
+              }
+            </select>
+          </li>
+        } @empty {
+          <li class="empty" i18n="@@board.empty">Nothing here.</li>
+        }
+      </ul>
+    </div>
+  }
+</div>

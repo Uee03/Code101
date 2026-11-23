@@ -1,0 +1,24 @@
+name: candidate
+
+services:
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DATABASE_PASSWORD_FILE: /run/secrets/database_password
+    secrets:
+      - database_password
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    restart: unless-stopped
+
+secrets:
+  database_password:
+    file: ./secrets/database_password.txt

@@ -1,0 +1,213 @@
+:root {
+  color-scheme: light dark;
+  --fg: #17212b;
+  --bg: #ffffff;
+  --header-bg: #e7f0fa;
+  --link: #0759aa;
+  --danger: #a11a1a;
+  --border: #6b7785;
+  --focus: #0759aa;
+  font-family: system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e6edf3;
+    --bg: #0f1720;
+    --header-bg: #1d2b3a;
+    --link: #7db8ff;
+    --danger: #ff9b9b;
+    --border: #8b98a5;
+    --focus: #7db8ff;
+  }
+}
+
+body {
+  margin: 0;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+a {
+  color: var(--link);
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 2px solid var(--focus);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+header {
+  padding: 0.5rem 1rem;
+  background: var(--header-bg);
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.5rem 0.25rem;
+}
+
+nav a[aria-current='page'] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+main {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+main:focus {
+  outline: none;
+}
+
+button,
+select,
+input,
+textarea {
+  font: inherit;
+  min-height: 2.5rem;
+  box-sizing: border-box;
+  color: var(--fg);
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 0.4rem;
+}
+
+button {
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.field {
+  margin: 1rem 0;
+}
+
+.field label {
+  display: block;
+  font-weight: bold;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  max-width: 32rem;
+  padding: 0.4rem;
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.hint {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.error {
+  margin: 0.2rem 0;
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.summary,
+.problem {
+  border: 2px solid var(--danger);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.card h4 {
+  margin: 0 0 0.25rem;
+}
+
+.card p {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.card select {
+  max-width: 100%;
+}
+
+.toast-region {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.toast {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  color: var(--fg);
+  background: var(--header-bg);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  animation: toast-in 200ms ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

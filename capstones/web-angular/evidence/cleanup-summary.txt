@@ -1,0 +1,8 @@
+Cleanup after user stopped execution:
+- Stopped the in-progress Angular verifier process tree, including its dev-server descendants.
+- docker compose -p code101-verify-05-build-run-ship down -v --remove-orphans removed db/api/keycloak, project pg_data and tasksteams-net.
+- Built code101-verify-05-build-run-ship-api image was untagged/deleted. No phase-5 web image remained.
+- docker ps -a: header only, no containers.
+- docker volume ls: header only, no volumes.
+- docker network ls: bridge, host, none only.
+No subsequent runtime/build/server/Docker command was run; only writing, static comparison and packaging continue.

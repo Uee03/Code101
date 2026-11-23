@@ -1,0 +1,31 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "item,quantity\nTea,2\nRice,3\nTotal items: 5"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Row: Tea,2\nRow: Rice,3\nProduct rows: 2"
+    },
+    {
+      "name": "read checkpoint",
+      "cmd": "cargo run --quiet",
+      "cwd": "stages/01-read",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "item,quantity\nTea,2\nRice,3"
+    }
+  ]
+}

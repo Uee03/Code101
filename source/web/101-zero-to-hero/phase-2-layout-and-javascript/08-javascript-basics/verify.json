@@ -1,0 +1,48 @@
+{
+  "requires": [
+    "python",
+    "node"
+  ],
+  "steps": [
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node basics.js",
+      "expect_stdout": "Hello, Ada!\nReady for practice\nStudy: HTML\nStudy: CSS\nStudy: JavaScript\nSessions: 3"
+    },
+    {
+      "name": "serve code",
+      "cwd": "code",
+      "cmd": "{python} -m http.server 18108 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe code",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18108/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>JavaScript practice</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    },
+    {
+      "name": "run exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "node basics.js",
+      "expect_stdout": "Hello, Ada!\nPlan one more session\nStudy: HTML\nStudy: CSS\nStudy: JavaScript\nStudy: TypeScript\nSessions: 2"
+    },
+    {
+      "name": "serve exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -m http.server 18208 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe exercise/solution",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18208/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>JavaScript practice</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    }
+  ]
+}

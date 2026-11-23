@@ -1,0 +1,67 @@
+{
+  "run": {
+    "stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nEntries: 1\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "menu checkpoint": {
+    "stdout": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nAdded (not saved yet).\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "files checkpoint": {
+    "stdout": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nChoose 1, 2, 3 or 4.\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0308]: mismatched types\n --> src\\main.rs:4:32\n  |\n4 |     let tea = Expense { cents: 2.50 };\n  |                                ^^^^ expected `i64`, found floating-point number\n\nFor more information about this error, try `rustc --explain E0308`.\nerror: could not compile `expense_tracker` (bin \"expense_tracker\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "bad-header": {
+    "stdout": "Self-check: OK\n",
+    "stderr": "Error: Custom { kind: InvalidData, error: \"Wrong CSV header\" }\n",
+    "exit": 1
+  },
+  "bad-cents": {
+    "stdout": "Self-check: OK\n",
+    "stderr": "Error: Custom { kind: InvalidData, error: \"Bad cents\" }\n",
+    "exit": 1
+  },
+  "decimal-cents": {
+    "stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nUse whole cents.\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "missing-arm": {
+    "stdout": "",
+    "stderr": "error[E0004]: non-exhaustive patterns: `Command::Count` not covered\n   --> src\\main.rs:107:15\n    |\n107 |         match command(&choice) {\n    |               ^^^^^^^^^^^^^^^^ pattern `Command::Count` not covered\n    |\nnote: `Command` defined here\n   --> src\\main.rs:15:6\n    |\n 15 | enum Command {\n    |      ^^^^^^^\n...\n 19 |     Count,\n    |     ----- not covered\n    = note: the matched value is of type `Command`\nhelp: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown\n    |\n137 ~             Command::Unknown => println!(\"Choose 1, 2, 3 or 4.\"),\n138 ~             Command::Count => todo!(),\n    |\n\nFor more information about this error, try `rustc --explain E0004`.\nerror: could not compile `expense_tracker` (bin \"expense_tracker\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "save for reload": {
+    "stdout": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "reload checkpoint": {
+    "stdout": "1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "continuing checkpoint": {
+    "stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+    "stderr": "",
+    "exit": 0
+  }
+}

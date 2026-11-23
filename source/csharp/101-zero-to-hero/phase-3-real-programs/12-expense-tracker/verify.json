@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "1\nTea\n2.50\n2\n3\n0\n",
+      "expect_stdout": "Self-check passed.\nLoaded: 0\n1 Add | 2 List | 3 Save | 0 Exit\nDescription (no commas):\nAmount (positive, dot for decimals):\nAdded.\n1 Add | 2 List | 3 Save | 0 Exit\nTea: 2.50\nTotal: 2.50\n1 Add | 2 List | 3 Save | 0 Exit\nSaved expenses.csv\n1 Add | 2 List | 3 Save | 0 Exit\nBye (only saved changes are kept)."
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "1\nTea\n2.50\n4\n3\n0\n",
+      "expect_stdout": "Self-check passed.\nLoaded: 0\n1 Add | 2 List | 3 Save | 4 Total | 0 Exit\nDescription (no commas):\nAmount (positive, dot for decimals):\nAdded.\n1 Add | 2 List | 3 Save | 4 Total | 0 Exit\nTotal: 2.50\n1 Add | 2 List | 3 Save | 4 Total | 0 Exit\nSaved expenses.csv\n1 Add | 2 List | 3 Save | 4 Total | 0 Exit\nBye (only saved changes are kept)."
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

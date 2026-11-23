@@ -1,0 +1,24 @@
+# Runs the notes API in a hardened container: loopback-only port, read-only file system, no Linux capabilities.
+name: code101-go201-notes
+
+services:
+  api:
+    build: .
+    image: code101/go201-notes:dev
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      APP_LOG_FORMAT: json
+      APP_SHUTDOWN_TIMEOUT: 10s
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/app/notes", "healthcheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+    stop_grace_period: 15s

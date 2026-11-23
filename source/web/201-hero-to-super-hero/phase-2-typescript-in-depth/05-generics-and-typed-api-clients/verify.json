@@ -1,0 +1,52 @@
+{
+  "requires": [
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile code",
+      "cwd": "code",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "none\n3\nShip it\nlist: Write lesson, Review lesson\ntask 1: Write lesson [todo]\ntask 2: parse error - Task.status is not valid\ntask 99: http error - HTTP 404\noffline: network error - socket closed"
+    },
+    {
+      "name": "overlay solution",
+      "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "install solution",
+      "cwd": "sol",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile solution",
+      "cwd": "sol",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run solution",
+      "cwd": "sol",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "Showing 2 of 5 tasks"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore"
+  ]
+}

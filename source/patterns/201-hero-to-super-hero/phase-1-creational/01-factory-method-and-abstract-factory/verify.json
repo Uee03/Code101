@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- factory method ---\nPlan: Truck carries 5 crates by road\nPlan: Ship carries 5 crates by sea\n--- abstract factory ---\nlight: light button + light checkbox\ndark: dark button + dark checkbox"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- factory method ---\nPlan: Truck carries 5 crates by road\nPlan: Ship carries 5 crates by sea\n--- abstract factory ---\nlight: light button + light checkbox\ndark: dark button + dark checkbox"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "hello\nHELLO!"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "hello\nHELLO!"
+    }
+  ]
+}

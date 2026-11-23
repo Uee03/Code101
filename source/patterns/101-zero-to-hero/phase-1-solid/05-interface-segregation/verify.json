@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nResult: 'Email to ana@example.com: Order shipped'\nResult: ''\n--- after ---\nEmail to ana@example.com: Order shipped\nSMS to +100: Order shipped\nPush to ana-phone: Order shipped"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nResult: 'Email to ana@example.com: Order shipped'\nResult: ''\n--- after ---\nEmail to ana@example.com: Order shipped\nSMS to +100: Order shipped\nPush to ana-phone: Order shipped"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "mug: 800\nmug: 750\nmug: 900"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "mug: 800\nmug: 750\nmug: 900"
+    }
+  ]
+}

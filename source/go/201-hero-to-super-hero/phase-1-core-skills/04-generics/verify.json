@@ -1,0 +1,11 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "run", "cmd": "go run .", "cwd": "code",
+     "expect_stdout": "[2 8 3 5]\n[generics are typed]\n18\n3.75\n22\n9 pear\n18\nb true\nfalse\n2 true false"},
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution", "cmd": "go run .", "cwd": "exercise/solution",
+     "expect_stdout": "[apple banana cherry]\nmap[1:[a d] 2:[bb cc]]"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

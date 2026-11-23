@@ -1,0 +1,16 @@
+# TEACHING EXAMPLE: never run this file. Every setting here is a finding.
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DB_PASSWORD=hunter2
+  db:
+    image: postgres:17-alpine
+    network_mode: host
+    environment:
+      POSTGRES_PASSWORD: hunter2

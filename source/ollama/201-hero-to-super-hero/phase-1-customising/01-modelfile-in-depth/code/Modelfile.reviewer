@@ -1,0 +1,11 @@
+# Modelfile.reviewer: a short code-review helper built on llama3.2:1b
+FROM llama3.2:1b
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER num_ctx 4096
+PARAMETER num_predict 300
+PARAMETER repeat_penalty 1.1
+PARAMETER seed 42
+SYSTEM """You are a careful code reviewer. Answer in at most five short bullet points. If the code looks correct, say so. Never invent line numbers."""
+MESSAGE user Review: total = price * qty
+MESSAGE assistant Looks correct. If price is money, consider a decimal type instead of a float.

@@ -1,0 +1,2 @@
+# TODO: make the prod release run 3 replicas and greet "hello from prod".
+# Write only the keys that change; Helm merges this file over values.yaml.

@@ -1,0 +1,161 @@
+{
+  "requires": [
+    "python",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env and start temporary Postgres and Keycloak",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 420,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "install the packages into a throwaway folder",
+      "cwd": "code",
+      "cmd": "{python} -m pip install -q --disable-pip-version-check --target .deps -r requirements.txt",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "token rules offline",
+      "cwd": "code",
+      "cmd": "{python} -c \"import os, subprocess, sys; sys.exit(subprocess.call([sys.executable, 'scripts/token_rules.py'], env=dict(os.environ, PYTHONPATH='.deps')))\"",
+      "expect_contains": [
+        "ok    valid token                                  accepted",
+        "ok    signed with another key                      rejected: InvalidSignatureError: Signature verification failed",
+        "ok    algorithm none (no signature)                rejected: algorithm 'none' is not allowed",
+        "ok    HS256 signed with the public key             rejected: algorithm 'HS256' is not allowed",
+        "all rules hold"
+      ]
+    },
+    {
+      "name": "start the API on the host",
+      "cwd": "code",
+      "cmd": "{python} -c \"import sys; sys.path.insert(0, '.deps'); import uvicorn; uvicorn.run('app.main:app', port=8000)\"",
+      "bg": true,
+      "wait": 4
+    },
+    {
+      "name": "wait until the API answers",
+      "cwd": "code",
+      "cmd": "curl -s -f http://127.0.0.1:8000/health",
+      "retries": 20,
+      "retry_delay": 1
+    },
+    {
+      "name": "a forged admin token is refused",
+      "cwd": "code",
+      "cmd": "{python} -c \"import os, subprocess, sys; env = dict(os.environ, PYTHONPATH='.deps'); token = subprocess.run([sys.executable, 'scripts/forge_token.py'], env=env, capture_output=True, text=True).stdout.strip(); subprocess.call([sys.executable, 'scripts/call.py', 'GET', '/v1/audit-log', '--token', token])\"",
+      "retries": 3,
+      "retry_delay": 2,
+      "expect_contains": [
+        "HTTP/1.1 401 Unauthorized",
+        "www-authenticate: Bearer realm=\"tasksteams\", error=\"invalid_token\"",
+        "\"detail\":\"The access token is invalid.\""
+      ]
+    },
+    {
+      "name": "a real token works",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py GET /v1/me --user alice",
+      "retries": 3,
+      "retry_delay": 3,
+      "expect_contains": [
+        "HTTP/1.1 200 OK",
+        "\"username\":\"alice\"",
+        "\"roles\":[\"admin\"]"
+      ]
+    },
+    {
+      "name": "conformance: 17 pass, only the RateLimit headers of chapter 05 are missing",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_exit": 1,
+      "retries": 2,
+      "retry_delay": 5,
+      "expect_contains": [
+        "PASS  token for alice (iss, aud tasks-api, sub, role admin, three scopes)",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "PASS  401 without token (401 problem details with a Bearer challenge)",
+        "PASS  403 for member on admin route (bob (member) gets 403 on the audit log and on creating a team)",
+        "17 passed, 1 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} claims.py",
+      "expect_stdout": "a False\nb True\nc False"
+    },
+    {
+      "name": "exercise starter compiles",
+      "cwd": "exercise/starter",
+      "cmd": "{python} -m py_compile claims.py"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore",
+    "code/app/__init__.py",
+    "code/app/access.py",
+    "code/app/db.py",
+    "code/app/db_errors.py",
+    "code/app/errors.py",
+    "code/app/http.py",
+    "code/app/idempotency.py",
+    "code/app/logging_config.py",
+    "code/app/middleware.py",
+    "code/app/pagination.py",
+    "code/app/repositories/__init__.py",
+    "code/app/repositories/audit.py",
+    "code/app/repositories/comments.py",
+    "code/app/repositories/members.py",
+    "code/app/repositories/projects.py",
+    "code/app/repositories/sql.py",
+    "code/app/repositories/tasks.py",
+    "code/app/repositories/teams.py",
+    "code/app/repositories/users.py",
+    "code/app/routers/__init__.py",
+    "code/app/routers/audit.py",
+    "code/app/routers/comments.py",
+    "code/app/routers/health.py",
+    "code/app/routers/me.py",
+    "code/app/routers/members.py",
+    "code/app/routers/projects.py",
+    "code/app/routers/tasks.py",
+    "code/app/routers/teams.py",
+    "code/app/routers/users.py",
+    "code/app/schemas.py",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/reassign-outsider.json",
+    "code/requests/task-cancel.json",
+    "code/requests/task-create-other.json",
+    "code/requests/task-create.json",
+    "code/requests/task-patch.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-patch.json",
+    "code/requests/team-secret.json",
+    "code/requests/team-valid.json",
+    "code/scripts/call.py",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

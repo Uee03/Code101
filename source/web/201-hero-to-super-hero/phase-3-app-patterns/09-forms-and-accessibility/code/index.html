@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New task form</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <main class="shell">
+    <h1>New task</h1>
+
+    <section id="error-summary" class="error-summary" aria-labelledby="error-summary-title" tabindex="-1" hidden>
+      <h2 id="error-summary-title">There is a problem</h2>
+      <ul id="error-list"></ul>
+    </section>
+
+    <form id="task-form" novalidate>
+      <div class="field">
+        <label for="title">Title</label>
+        <p id="title-hint" class="hint">At least 3 characters.</p>
+        <p id="title-error" class="error" hidden></p>
+        <input id="title" name="title" type="text" required minlength="3" autocomplete="off" aria-describedby="title-hint title-error">
+      </div>
+
+      <div class="field">
+        <label for="due">Due date</label>
+        <p id="due-error" class="error" hidden></p>
+        <input id="due" name="due" type="date" required aria-describedby="due-error">
+      </div>
+
+      <fieldset class="field" aria-describedby="priority-error">
+        <legend>Priority</legend>
+        <p id="priority-error" class="error" hidden></p>
+        <label class="choice"><input id="priority-low" type="radio" name="priority" value="low" required> Low</label>
+        <label class="choice"><input id="priority-normal" type="radio" name="priority" value="normal"> Normal</label>
+        <label class="choice"><input id="priority-high" type="radio" name="priority" value="high"> High</label>
+      </fieldset>
+
+      <div class="field">
+        <label for="notes">Notes (optional)</label>
+        <p id="notes-hint" class="hint">Up to 140 characters.</p>
+        <textarea id="notes" name="notes" rows="3" maxlength="140" aria-describedby="notes-hint"></textarea>
+      </div>
+
+      <details class="help">
+        <summary>How to write a good title</summary>
+        <p>Start with a verb and name the result, for example "Draft the release notes".</p>
+      </details>
+
+      <button class="button" type="submit">Save task</button>
+    </form>
+
+    <p id="saved" role="status"></p>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

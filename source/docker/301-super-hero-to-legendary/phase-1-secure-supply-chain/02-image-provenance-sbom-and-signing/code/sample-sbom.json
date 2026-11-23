@@ -1,0 +1,10 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "name": "sample-sbom (hand-written, abbreviated, made-up versions)",
+  "packages": [
+    {"SPDXID": "SPDXRef-Package-1", "name": "bash", "versionInfo": "0.0.1-sample"},
+    {"SPDXID": "SPDXRef-Package-2", "name": "libssl3", "versionInfo": "0.0.1-sample"},
+    {"SPDXID": "SPDXRef-Package-3", "name": "libexpat1", "versionInfo": "0.0.1-sample"},
+    {"SPDXID": "SPDXRef-Package-4", "name": "zlib1g", "versionInfo": "0.0.1-sample"}
+  ]
+}

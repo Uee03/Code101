@@ -1,0 +1,16 @@
+services:
+  redis:
+    image: redis:8.8-alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Copy .env.example to .env first}
+    command:
+      - sh
+      - -c
+      - exec redis-server --save "" --appendonly no --maxmemory 64mb --maxmemory-policy allkeys-lru --requirepass "$$REDIS_PASSWORD"
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -q PONG"]
+      interval: 3s
+      timeout: 3s
+      retries: 20

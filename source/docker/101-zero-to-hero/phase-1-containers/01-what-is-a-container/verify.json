@@ -1,0 +1,48 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "version",
+      "cwd": "code",
+      "cmd": "docker --version",
+      "expect_contains": [
+        "Docker version 29.9.3"
+      ]
+    },
+    {
+      "name": "hello",
+      "cwd": "code",
+      "cmd": "docker run --name code101-verify-01-hello hello-world:latest",
+      "expect_contains": [
+        "Hello from Docker!"
+      ]
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "docker run --name code101-verify-01-exercise hello-world:latest",
+      "expect_contains": [
+        "Hello from Docker!"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove hello",
+      "cwd": "code",
+      "cmd": "docker rm -f code101-verify-01-hello"
+    },
+    {
+      "name": "remove exercise",
+      "cwd": "code",
+      "cmd": "docker rm -f code101-verify-01-exercise"
+    }
+  ]
+}

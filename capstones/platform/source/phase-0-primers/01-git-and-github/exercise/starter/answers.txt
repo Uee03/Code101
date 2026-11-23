@@ -1,0 +1,21 @@
+Write the Git command for each step. Replace every TODO.
+Start in your tasks-notes folder, on branch main, with a clean "git status".
+
+1. Create a branch called add-database-port and switch to it:
+TODO
+
+2. (Edit team-notes.md: add the line "- Database port: 5432" and save.)
+   Stage team-notes.md:
+TODO
+
+3. Commit with the message "Add the database port":
+TODO
+
+4. Go back to the branch main:
+TODO
+
+5. Bring the branch into main:
+TODO
+
+6. Show the history, one line per commit:
+TODO

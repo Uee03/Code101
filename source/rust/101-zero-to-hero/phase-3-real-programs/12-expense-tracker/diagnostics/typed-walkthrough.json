@@ -1,0 +1,7 @@
+{
+  "menu checkpoint": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nAdded (not saved yet).\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+  "files checkpoint": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+  "reload checkpoint": "1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+  "self-check checkpoint": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\n",
+  "typed starter": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\n"
+}

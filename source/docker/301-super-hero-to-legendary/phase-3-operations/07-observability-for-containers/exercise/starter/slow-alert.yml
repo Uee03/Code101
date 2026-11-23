@@ -1,0 +1,12 @@
+groups:
+  - name: code101-api-exercise
+    rules:
+      - alert: ApiSlowP95
+        # TODO: replace expr with a query that is true when the 95th percentile
+        # latency of all paths, measured over 5 minutes, is above 0.5 seconds.
+        expr: vector(0) > 1
+        for: 5m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "p95 latency is above 500 ms"

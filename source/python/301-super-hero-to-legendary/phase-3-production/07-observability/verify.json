@@ -1,0 +1,34 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "create a virtual environment",
+      "cwd": "code",
+      "cmd": "{python} -m venv .venv"
+    },
+    {
+      "name": "install the pinned dependencies (needs network)",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'pip', 'install', '-r', 'requirements.txt']))\"",
+      "timeout": 900
+    },
+    {
+      "name": "offline demo: span, correlated log, counter",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), 'demo.py']))\"",
+      "expect_stdout": "span names: ['complete_task']\nspan attributes: {'task.id': 1}\nlog carries the span's trace id: True\nlog message and field: task completed 1\ncounter app.tasks.completed: 1"
+    },
+    {
+      "name": "tests",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'unittest']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "{'task_id': 7, 'Password': '[redacted]', 'nested': {'token': '[redacted]', 'ok': 1}}\ninput unchanged: True"
+    }
+  ]
+}

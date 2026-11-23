@@ -1,0 +1,13 @@
+/* Exercise 03 solution. Link this file after styles.css in index.html. */
+
+@layer components {
+  .btn--danger {
+    background: light-dark(#b91c1c, #fca5a5);
+    color: light-dark(#ffffff, #1a0505);
+    border-color: transparent;
+  }
+
+  .toast--error {
+    --toast-color: light-dark(#b91c1c, #fca5a5);
+  }
+}

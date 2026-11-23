@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "god object: cannot build a report: smtp_host is required\nsplit: 2 open of 3\nanemic: importer completed a cancelled task, status=done\nrich: rejected: a cancelled task cannot be completed\nhammer: regex accepts 2026-13-45: True\nright tool: date parser accepts 2026-13-45: False\nservice locator: found out at run time: mailer is not registered\nconstructor injection: dependencies visible: mailer\nsingleton: second test sees USD (leaked from the first)\ninjected: second test sees EUR"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "god object: cannot build a report: smtp_host is required\nsplit: 2 open of 3\nanemic: importer completed a cancelled task, status=done\nrich: rejected: a cancelled task cannot be completed\nhammer: regex accepts 2026-13-45: True\nright tool: date parser accepts 2026-13-45: False\nservice locator: found out at run time: mailer is not registered\nconstructor injection: dependencies visible: mailer\nsingleton: second test sees USD (leaked from the first)\ninjected: second test sees EUR"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "test one: counter is 1\ntest two: counter is 1"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "test one: counter is 1\ntest two: counter is 1"
+    }
+  ]
+}

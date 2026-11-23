@@ -1,0 +1,32 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "audit insecure file (exit 1, 11 findings)",
+      "cwd": "code",
+      "cmd": "{python} audit_compose.py docker-compose.insecure.yml",
+      "expect_exit": 1,
+      "expect_contains": ["docker-compose.insecure.yml:7: [C1] privileged container disables most isolation", "11 finding(s)"]
+    },
+    {
+      "name": "audit reviewed file",
+      "cwd": "code",
+      "cmd": "{python} audit_compose.py docker-compose.reviewed.yml",
+      "expect_stdout": "docker-compose.reviewed.yml: no findings"
+    },
+    {
+      "name": "audit exercise starter (exit 1, 5 findings)",
+      "cwd": "exercise/starter",
+      "cmd": "{python} ../../code/audit_compose.py docker-compose.yml",
+      "expect_exit": 1,
+      "expect_contains": ["5 finding(s)"]
+    },
+    {
+      "name": "audit exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} ../../code/audit_compose.py docker-compose.yml",
+      "expect_contains": ["no findings"]
+    }
+  ],
+  "cleanup": []
+}

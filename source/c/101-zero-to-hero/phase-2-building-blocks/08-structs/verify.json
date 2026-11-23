@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "expect_stdout": "Pen: 10 at 1.50 each = 15.00\nPen: 15 at 1.50 each = 22.50\nNotebook: 4 at 3.25 each = 13.00\nRuler: 6 at 0.80 each = 4.80\nEraser: 12 at 0.50 each = 6.00\nShelf value: 23.80\nSpare: 0 at 1.50 each = 0.00\nPen: 15 at 1.50 each = 22.50"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "expect_stdout": "C Basics, 200 pages, 40.00\nC Basics, 200 pages, 30.00"
+    }
+  ]
+}

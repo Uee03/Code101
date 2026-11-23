@@ -1,0 +1,6 @@
+flowchart LR
+  member["Team member"]
+  web["Tasks and Teams web client"]
+  api["Backend API"]
+  member -->|"Views tasks"| web
+  web -->|"Requests allowed tasks"| api

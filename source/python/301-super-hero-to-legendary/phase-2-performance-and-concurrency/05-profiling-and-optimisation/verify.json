@@ -1,0 +1,40 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "unit tests (standard library only)",
+      "cwd": "code",
+      "cmd": "{python} -m unittest"
+    },
+    {
+      "name": "lru_cache and TTL demo",
+      "cwd": "code",
+      "cmd": "{python} cache.py",
+      "expect_stdout": "CacheInfo(hits=2, misses=2, maxsize=128, currsize=2)\nunderlying calls: 2\nloads: 2"
+    },
+    {
+      "name": "same result, then timings (numbers differ per machine)",
+      "cwd": "code",
+      "cmd": "{python} compare.py",
+      "expect_contains": ["same result: True"]
+    },
+    {
+      "name": "memory peak",
+      "cwd": "code",
+      "cmd": "{python} memory_peak.py",
+      "expect_contains": ["generator peak is smaller: True"]
+    },
+    {
+      "name": "profile output exists",
+      "cwd": "code",
+      "cmd": "{python} profile_report.py",
+      "expect_contains": ["customers_slow"]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "[('be', 3), ('to', 3), ('is', 1)]\nsame result: True"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+# Modelfile.summariser: a two-sentence summariser on the same base model
+FROM llama3.2:1b
+PARAMETER temperature 0.1
+PARAMETER num_ctx 2048
+PARAMETER num_predict 120
+SYSTEM """Summarise the user's text in two sentences. Do not add facts that are not in the text."""

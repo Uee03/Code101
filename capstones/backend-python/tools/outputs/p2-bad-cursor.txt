@@ -1,0 +1,8 @@
+HTTP/1.1 400 Bad Request
+date: Mon, 23 Nov 2026 08:33:42 GMT
+server: uvicorn
+content-length: 240
+content-type: application/problem+json
+x-trace-id: f06d67950a414bd6a3978d378fb76109
+
+{"type":"https://code101.example/problems/bad-request","title":"Bad request","status":400,"detail":"The cursor is not valid.","instance":"/v1/projects/9a000000-0000-4000-8000-000000000001/tasks","traceId":"f06d67950a414bd6a3978d378fb76109"}

@@ -1,0 +1,14 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npm run build", "timeout": 300 },
+    { "name": "check build output", "cwd": "code", "cmd": "{python} -c \"import os; assert os.path.exists('dist/index.html')\"", "expect_stdout": "" },
+    { "name": "serve code", "cwd": "code", "cmd": "npm run dev -- --port 18201", "bg": true, "wait": 3 },
+    { "name": "probe code", "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://localhost:18201/'); s=r.read().decode(); assert r.status == 200 and '/src/main.tsx' in s\"", "retries": 10, "retry_delay": 1, "expect_stdout": "" },
+    { "name": "overlay solution", "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"", "expect_stdout": "" },
+    { "name": "install solution", "cwd": "sol", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "sol", "cmd": "npm run build", "timeout": 300 }
+  ],
+  "skip_lesson_check": []
+}

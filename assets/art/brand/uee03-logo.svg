@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Uee03 logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3E3760" />
+      <stop offset="1" stop-color="#2C2745" />
+    </linearGradient>
+    <linearGradient id="u" x1="96" y1="96" x2="416" y2="456" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B23FF" />
+      <stop offset="0.5" stop-color="#008BFF" />
+      <stop offset="1" stop-color="#E4FF30" />
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bg)" />
+
+  <!-- accent quarter-ring, top-right -->
+  <path d="M256 52 A204 204 0 0 1 460 256" fill="none" stroke="#008BFF" stroke-width="24"
+    stroke-linecap="round" opacity="0.95" />
+
+  <!-- u monogram -->
+  <g fill="none" stroke="url(#u)" stroke-width="74" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 116 L112 300" />
+    <path d="M112 300 A144 144 0 0 0 400 300" />
+    <path d="M400 116 L400 396" />
+  </g>
+
+  <!-- lime dot accent -->
+  <circle cx="430" cy="430" r="34" fill="#E4FF30" />
+</svg>

@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 09:09:36 GMT
+vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Request-Private-Network
+access-control-allow-methods: GET, POST, PUT, PATCH, DELETE
+access-control-max-age: 600
+access-control-allow-headers: Accept, Accept-Language, Authorization, Content-Language, Content-Type, Idempotency-Key, If-Match, If-None-Match
+access-control-allow-origin: http://localhost:4200
+content-length: 2
+content-type: text/plain; charset=utf-8
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+x-trace-id: 7145ef50a9cb40dd9a66f33a908d6289
+
+OK

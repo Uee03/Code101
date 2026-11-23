@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "alpha ready | beta ready\nowned ready\ndeadline expired: true"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "ALPHA ready | BETA ready\nOWNED ready\ndeadline expired: true"
+    }
+  ]
+}

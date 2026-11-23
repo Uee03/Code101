@@ -1,0 +1,39 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "1\nTea\n250\n2\n3\n4\n",
+      "timeout": 300,
+      "expect_stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "1\nTea\n250\n5\n4\n",
+      "timeout": 300,
+      "expect_stdout": "Self-check: OK\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count\nEntries: 1\n1 Add | 2 List | 3 Total | 4 Quit | 5 Count"
+    },
+    {
+      "name": "menu checkpoint",
+      "cmd": "cargo run --quiet",
+      "cwd": "stages/01-menu",
+      "stdin": "1\nTea\n250\n2\n3\n4\n",
+      "timeout": 300,
+      "expect_stdout": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nAdded (not saved yet).\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit"
+    },
+    {
+      "name": "files checkpoint",
+      "cmd": "cargo run --quiet",
+      "cwd": "stages/02-files",
+      "stdin": "1\nTea\n250\n2\n3\n4\n",
+      "timeout": 300,
+      "expect_stdout": "1 Add | 2 List | 3 Total | 4 Quit\nDescription (no commas):\nCents (0-1000000000):\nSaved.\n1 Add | 2 List | 3 Total | 4 Quit\nTea: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit\nTotal: 250 cents\n1 Add | 2 List | 3 Total | 4 Quit"
+    }
+  ]
+}

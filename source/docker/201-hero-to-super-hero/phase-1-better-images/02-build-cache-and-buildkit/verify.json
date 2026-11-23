@@ -1,0 +1,16 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "build good", "cwd": "code", "cmd": "docker build -t code101-cache:201 .", "timeout": 600 },
+    { "name": "build bad", "cwd": "code", "cmd": "docker build -f Dockerfile.bad -t code101-cache-bad:201 .", "timeout": 600 },
+    { "name": "rebuild good (cache)", "cwd": "code", "cmd": "docker build --progress=plain -t code101-cache:201 .", "expect_contains": [], "timeout": 600 },
+    { "name": "run", "cwd": "code", "cmd": "docker run -d --rm --name {project}-run -p 127.0.0.1:8080:8000 code101-cache:201" },
+    { "name": "probe", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"message\": \"Hello from a cached build\", \"psycopg\": \"3.2.9\"}", "retries": 20, "retry_delay": 1 }
+  ],
+  "cleanup": [
+    { "name": "stop", "cmd": "docker rm -f {project}-run" },
+    { "name": "remove images", "cmd": "docker image rm code101-cache:201 code101-cache-bad:201" }
+  ],
+  "skip_lesson_check": []
+}

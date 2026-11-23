@@ -1,0 +1,43 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --urls http://localhost:5081 --environment Development",
+      "bg": true,
+      "wait": 12
+    },
+    {
+      "name": "check-api",
+      "cwd": ".",
+      "cmd": "{python} verify/check.py",
+      "retries": 30,
+      "retry_delay": 1
+    },
+    {
+      "name": "apply-solution-files",
+      "cwd": ".",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'run', ignore=shutil.ignore_patterns('bin', 'obj')); shutil.copytree('exercise/solution', 'run', dirs_exist_ok=True)\""
+    },
+    {
+      "name": "start-solution",
+      "cwd": "run",
+      "cmd": "dotnet run --project . --urls http://localhost:5082 --environment Development",
+      "bg": true,
+      "wait": 12
+    },
+    {
+      "name": "check-solution",
+      "cwd": ".",
+      "cmd": "{python} verify/check_solution.py",
+      "retries": 30,
+      "retry_delay": 1
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json"
+  ]
+}

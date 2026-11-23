@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        VERSION: "${VERSION:-dev}"
+        COMMIT: "${COMMIT:-none}"
+    image: "code101/l09-app:${VERSION:-dev}"
+    environment:
+      HTTP_ADDR: "0.0.0.0:8080"
+      SHUTDOWN_DELAY: "${SHUTDOWN_DELAY:-0s}"
+    ports:
+      - "127.0.0.1:8080:8080"
+    user: "65532:65532"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 128m
+    cpus: 0.5
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test: ["CMD", "/app", "-healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    stop_grace_period: 15s
+    restart: unless-stopped

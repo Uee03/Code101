@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Study club</title>
+</head>
+<body>
+  <header><h1>Join my study club</h1></header>
+  <main>
+    <h2>Contact details</h2>
+    <form action="index.html" method="get">
+      <p><label for="name">Name</label>
+        <input id="name" name="name" type="text" required></p>
+      <p><label for="email">Email</label>
+        <input id="email" name="email" type="email" required></p>
+      <p><label for="sessions">Sessions per week</label>
+        <input id="sessions" name="sessions" type="number" min="1" max="7" value="1"></p>
+      <p><label for="start">Start date</label>
+        <input id="start" name="start" type="date"></p>
+      <button type="submit">Preview details</button>
+    </form>
+    <p>This demo reloads this page. It does not send email or join a real club.</p>
+  </main>
+  <footer><p>A beginner-friendly club.</p></footer>
+</body>
+</html>

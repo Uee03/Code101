@@ -1,0 +1,18 @@
+name: code101-lesson09
+
+services:
+  api:
+    build: .
+    image: taskservice:1.4.0
+    ports:
+      - "127.0.0.1:8100:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    pids_limit: 200
+    restart: unless-stopped

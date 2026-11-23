@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nINVOICE\nNotebook x2 = 24.00\nPen x4 = 6.00\nTotal: 27.00\nEmail sent to ana@example.com\n--- after ---\nINVOICE\nNotebook x2 = 24.00\nPen x4 = 6.00\nTotal: 27.00\nEmail sent to ana@example.com"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nINVOICE\nNotebook x2 = 24.00\nPen x4 = 6.00\nTotal: 27.00\nEmail sent to ana@example.com\n--- after ---\nINVOICE\nNotebook x2 = 24.00\nPen x4 = 6.00\nTotal: 27.00\nEmail sent to ana@example.com"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Order total: 54.00\nOrder total: 64.00"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Order total: 54.00\nOrder total: 64.00"
+    }
+  ]
+}

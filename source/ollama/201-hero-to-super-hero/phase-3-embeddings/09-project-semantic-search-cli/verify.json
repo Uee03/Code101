@@ -1,0 +1,16 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "skip_lesson_check": [
+    "code/ollama_http.py",
+    "code/textutil.py",
+    "code/db.py",
+    "code/docker-compose.yml",
+    "code/.env.example",
+    "code/.gitignore",
+    "code/requirements.txt",
+    "code/initdb/01-schema.sql"
+  ],
+  "notes": "Written, not run. Static text/source comparison only. No Docker, Postgres, Ollama, pip or program was executed by the author. The skipped files are byte-identical to lessons 201.01, 201.07 and 201.08 and are not repeated in the lesson text. Offline check for a learner: python -m unittest in the code folder (needs no database)."
+}

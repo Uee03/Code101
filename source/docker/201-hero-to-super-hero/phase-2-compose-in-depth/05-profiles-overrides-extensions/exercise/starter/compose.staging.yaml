@@ -1,0 +1,5 @@
+services:
+  web: {}
+  # TODO 1: under web, add an environment mapping that sets APP_ENV to staging
+  # TODO 2: under web, add a restart policy that restarts the container unless you stopped it
+  # TODO 3: under web, replace (not extend) the published ports with 127.0.0.1:8081:8000 using the !override tag

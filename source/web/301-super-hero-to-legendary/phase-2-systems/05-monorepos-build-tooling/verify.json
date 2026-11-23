@@ -1,0 +1,25 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npm run build --silent", "expect_stdout": "" },
+    { "name": "test code", "cwd": "code", "cmd": "npm test --silent", "timeout": 120 },
+    {
+      "name": "run app",
+      "cwd": "code",
+      "cmd": "npm start --silent",
+      "expect_stdout": ".button { background: var(--color-action-background); color: var(--color-action-text); }\n.button-plain { background: var(--color-surface); color: var(--color-text-default); }\n<button type=\"button\" class=\"button button-primary\">Save</button>\n<button type=\"button\" class=\"button button-plain\">Cancel &amp; close</button>"
+    },
+    { "name": "affected tokens", "cwd": "code", "cmd": "node scripts/affected.mjs packages/tokens/src/index.ts", "expect_stdout": "@code101/tokens\n@code101/ui\n@code101/web" },
+    { "name": "affected ui", "cwd": "code", "cmd": "node scripts/affected.mjs packages/ui/src/index.ts", "expect_stdout": "@code101/ui\n@code101/web" },
+    { "name": "affected root", "cwd": "code", "cmd": "node scripts/affected.mjs tsconfig.base.json", "expect_stdout": "@code101/tokens\n@code101/ui\n@code101/web" },
+    { "name": "affected none", "cwd": "code", "cmd": "node scripts/affected.mjs", "expect_stdout": "No workspaces affected" },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npm run build --silent", "expect_stdout": "" },
+    { "name": "affected tokens with charts", "cwd": "work", "cmd": "node scripts/affected.mjs packages/tokens/src/index.ts", "expect_stdout": "@code101/charts\n@code101/tokens\n@code101/ui\n@code101/web" }
+  ]
+}

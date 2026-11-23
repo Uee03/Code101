@@ -1,0 +1,7 @@
+.git/
+.env
+.env.*
+__pycache__/
+*.pyc
+Dockerfile*
+# TODO 3: add the pattern that keeps the big data/ folder out of the build context

@@ -1,0 +1,185 @@
+{
+  "requires": [
+    "go",
+    "curl",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start the temporary database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait db",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "go build ./...",
+      "timeout": 300
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "go run ./cmd/api",
+      "bg": true,
+      "wait": 6
+    },
+    {
+      "name": "health with the database",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 40,
+      "retry_delay": 1,
+      "expect_contains": [
+        "\"database\":\"up\""
+      ]
+    },
+    {
+      "name": "filter and sort the tasks of a project",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" \"http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks?q=conf&priority=medium\"",
+      "expect_contains": [
+        "\"title\":\"Run the conformance script\"",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "update a task",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X PATCH -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" -H \"Content-Type: application/json\" -H @requests/if-match-1.txt --data-binary @requests/task-patch.json http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000004",
+      "expect_contains": [
+        "\"status\":\"in_progress\"",
+        "\"version\":2",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "update again with the old ETag",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X PATCH -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" -H \"Content-Type: application/json\" -H @requests/if-match-1.txt --data-binary @requests/task-patch.json http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000004",
+      "expect_contains": [
+        "HTTP 412"
+      ]
+    },
+    {
+      "name": "complete through the stored function",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" -H @requests/if-match-2.txt http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000004/complete",
+      "expect_contains": [
+        "\"status\":\"done\"",
+        "\"version\":3",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "a done task cannot be reassigned",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H @requests/if-match-3.txt --data-binary @requests/reassign.json http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000004/reassign",
+      "expect_contains": [
+        "HTTP 409"
+      ]
+    },
+    {
+      "name": "a member may not reassign",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" -H \"Content-Type: application/json\" -H @requests/if-match-3.txt --data-binary @requests/reassign.json http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000004/reassign",
+      "expect_contains": [
+        "HTTP 403"
+      ]
+    },
+    {
+      "name": "comments of a task",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: ca401000-0000-4000-8000-000000000003\" http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000003/comments",
+      "expect_contains": [
+        "\"username\":\"alice\"",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "the audit trail is for admins",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" http://127.0.0.1:8000/v1/audit-log",
+      "expect_contains": [
+        "HTTP 403"
+      ]
+    },
+    {
+      "name": "the audit trail of the task",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" \"http://127.0.0.1:8000/v1/audit-log?entityType=task&entityId=7a500000-0000-4000-8000-000000000004&limit=2\"",
+      "expect_contains": [
+        "\"action\":\"update\"",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "go run .",
+      "expect_stdout": "If-None-Match: \"3\"        ETag: \"3\" -> true\nIf-None-Match: W/\"3\"      ETag: \"3\" -> true\nIf-None-Match: \"2\", \"3\"   ETag: \"3\" -> true\nIf-None-Match: *          ETag: \"3\" -> true\nIf-None-Match: \"4\"        ETag: \"3\" -> false\nIf-None-Match:            ETag: \"3\" -> false"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove the temporary stack",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.env.example",
+    "code/cmd/api/main.go",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/go.mod",
+    "code/go.sum",
+    "code/internal/auth/dev.go",
+    "code/internal/auth/principal.go",
+    "code/internal/config/config.go",
+    "code/internal/http/authz.go",
+    "code/internal/http/etag.go",
+    "code/internal/http/health.go",
+    "code/internal/http/me.go",
+    "code/internal/http/members.go",
+    "code/internal/http/middleware.go",
+    "code/internal/http/projects.go",
+    "code/internal/http/request.go",
+    "code/internal/http/respond.go",
+    "code/internal/http/teams.go",
+    "code/internal/http/users.go",
+    "code/internal/http/validate.go",
+    "code/internal/problem/problem.go",
+    "code/internal/store/members.go",
+    "code/internal/store/page.go",
+    "code/internal/store/projects.go",
+    "code/internal/store/store.go",
+    "code/internal/store/teams.go",
+    "code/internal/store/users.go",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/if-match-1.txt",
+    "code/requests/if-match-99.txt",
+    "code/requests/if-none-match-1.txt",
+    "code/requests/member-put.json",
+    "code/requests/project-create.json",
+    "code/requests/project-invalid.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-patch.json",
+    "code/requests/team-valid.json",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #d1d5db;
+}
+
+:host(.done) label {
+  color: #4b5563;
+  text-decoration: line-through;
+}
+
+:host(.highlight) {
+  background: #fff4cc;
+}
+
+.remove {
+  padding: 0.25rem 0.625rem;
+}

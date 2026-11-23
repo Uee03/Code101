@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "code101-note-words"
+version = "0.1.0"
+description = "A tiny word-count command for Python 201"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+note-words = "note_words.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/note_words"]

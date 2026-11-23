@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "appTitle": "Tasks and Teams",
+  "sessionCheck": "Session check",
+  "login": "Login",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "teams": "Teams",
+  "settings": "Settings",
+  "authError": "Sign-in or sign-out could not finish. Check your connection and try again.",
+  "configurationError": "Configuration error: use HTTPS, or a debug-only loopback host.",
+  "continueChapter": "Continue with chapter 03 to load server data.",
+  "busy": "Please wait",
+  "back": "Back"
+}

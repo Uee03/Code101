@@ -1,0 +1,14 @@
+flowchart TD
+    P{"Is the network partitioned right now?"}
+    PAC["P branch: during a partition choose between consistency and availability"]
+    ELC["E branch: else, in normal operation, choose between latency and consistency"]
+    C1["Consistency: refuse or wait, so answers stay correct"]
+    A1["Availability: answer with what you have, answers may be old"]
+    C2["Consistency: wait for confirmation, higher latency"]
+    L2["Latency: answer from the nearest copy, answers may be old"]
+    P -->|"yes"| PAC
+    P -->|"no"| ELC
+    PAC --> C1
+    PAC --> A1
+    ELC --> C2
+    ELC --> L2

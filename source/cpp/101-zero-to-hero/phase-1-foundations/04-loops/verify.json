@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/loops",
+      "cwd": "code",
+      "stdin": "4\n5\n0\n",
+      "expect_stdout": "Times table for 3\n3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15\nCountdown\n3\n2\n1\nLiftoff!\nLetters in 'cake' that are not 'a':\nc\nk\ne\nEnter whole numbers to add up. Enter 0 to stop.\nTotal: 9"
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/loops",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "10\n8\n6\n4\n2\nGo!"
+    }
+  ],
+  "skip_lesson_check": []
+}

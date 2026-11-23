@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "quantity: 12\nreason: reading order quantity\nreason: quantity must be positive"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "quantity: 12\nreason: reading order quantity\nreason: quantity must be at least two"
+    }
+  ]
+}

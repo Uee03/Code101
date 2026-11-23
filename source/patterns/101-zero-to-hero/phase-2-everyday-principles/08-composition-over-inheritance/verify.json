@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before: 2 channels ---\nEmail: Server down\nEmail: URGENT Server down\nSMS: Server down\nSMS: URGENT Server down\n--- after: 3 channels ---\nEmail: Server down\nEmail: URGENT Server down\nSMS: Server down\nSMS: URGENT Server down\nSlack: Server down\nSlack: URGENT Server down"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before: 2 channels ---\nEmail: Server down\nEmail: URGENT Server down\nSMS: Server down\nSMS: URGENT Server down\n--- after: 3 channels ---\nEmail: Server down\nEmail: URGENT Server down\nSMS: Server down\nSMS: URGENT Server down\nSlack: Server down\nSlack: URGENT Server down"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "300\n800\n800\n1300"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "300\n800\n800\n1300"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "requires": [
+    "python",
+    "node"
+  ],
+  "steps": [
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node app.js",
+      "expect_stdout": "Clicks: 0"
+    },
+    {
+      "name": "serve code",
+      "cwd": "code",
+      "cmd": "{python} -m http.server 18109 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe code",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18109/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>DOM events</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    },
+    {
+      "name": "run exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "node app.js",
+      "expect_stdout": "Clicks: 0"
+    },
+    {
+      "name": "serve exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -m http.server 18209 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe exercise/solution",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18209/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>DOM events</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    }
+  ]
+}

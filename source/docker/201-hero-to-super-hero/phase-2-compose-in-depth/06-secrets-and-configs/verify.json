@@ -1,0 +1,15 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "create .env", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env'); shutil.copy('secrets/db_password.txt.example', 'secrets/db_password.txt'); shutil.copy('secrets/build_token.txt.example', 'secrets/build_token.txt')\"" },
+    { "name": "up", "cwd": "code", "cmd": "docker compose up -d --build --wait", "timeout": 600 },
+    { "name": "probe", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"greeting\": \"Hello from secrets\", \"config\": {\"feature_banner\": \"Welcome\", \"page_size\": 20}, \"secret_length\": 25}", "retries": 20, "retry_delay": 1 },
+    { "name": "secrets in web", "cwd": "code", "cmd": "docker compose exec -T web ls /run/secrets", "expect_stdout": "db_password" }
+  ],
+  "cleanup": [
+    { "name": "down", "cwd": "code", "cmd": "docker compose down -v --remove-orphans" },
+    { "name": "remove image", "cmd": "docker image rm code101-secrets-web:201" }
+  ],
+  "skip_lesson_check": []
+}

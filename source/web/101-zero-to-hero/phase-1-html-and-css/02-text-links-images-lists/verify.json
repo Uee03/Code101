@@ -1,0 +1,35 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "serve code",
+      "cwd": "code",
+      "cmd": "{python} -m http.server 18102 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe code",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18102/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>Learning shelf</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    },
+    {
+      "name": "serve exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -m http.server 18202 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe exercise/solution",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18202/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>Learning shelf</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<span class="title">
+  <input type="checkbox" [checked]="task().done" [attr.aria-label]="'Done: ' + task().title" (change)="toggle()">
+  {{ position() }}. <a [routerLink]="['/tasks', task().id]">{{ task().title }}</a>
+</span>
+<button type="button" class="remove" [attr.aria-label]="'Remove ' + task().title" (click)="remove()">
+  <span class="icon icon-x" aria-hidden="true"></span>
+</button>

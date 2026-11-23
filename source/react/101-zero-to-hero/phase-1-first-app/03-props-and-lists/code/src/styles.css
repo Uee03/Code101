@@ -1,0 +1,48 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
+
+header,
+footer {
+  background: #e7f0fa;
+  padding: 0.5rem 1rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.panel {
+  margin-bottom: 1.5rem;
+}
+
+.books {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card {
+  border: 1px solid #66788a;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.card h3,
+.card p {
+  margin: 0.25rem 0;
+}
+
+.badge {
+  color: #0b5d1e;
+  font-weight: bold;
+}

@@ -1,0 +1,46 @@
+{
+  "requires": ["docker", "kubectl", "kind"],
+  "steps": [
+    {
+      "name": "build image",
+      "cwd": "code",
+      "cmd": "docker build -t code101/api:1.0.0 .",
+      "timeout": 600
+    },
+    {
+      "name": "create cluster",
+      "cwd": "code",
+      "cmd": "kind create cluster --name code101-verify",
+      "timeout": 600
+    },
+    {
+      "name": "load image",
+      "cwd": "code",
+      "cmd": "kind load docker-image code101/api:1.0.0 --name code101-verify",
+      "timeout": 300
+    },
+    {
+      "name": "apply",
+      "cwd": "code",
+      "cmd": "kubectl --context kind-code101-verify apply -f k8s/"
+    },
+    {
+      "name": "rollout",
+      "cwd": "code",
+      "cmd": "kubectl --context kind-code101-verify -n code101 rollout status deployment/api --timeout=180s",
+      "expect_contains": ["deployment \"api\" successfully rolled out"]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "delete cluster",
+      "cwd": "code",
+      "cmd": "kind delete cluster --name code101-verify"
+    },
+    {
+      "name": "remove image",
+      "cwd": "code",
+      "cmd": "docker image rm code101/api:1.0.0"
+    }
+  ]
+}

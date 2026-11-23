@@ -1,0 +1,143 @@
+{
+  "requires": [
+    "go",
+    "curl",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "build the image and start db, keycloak and api",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build --wait",
+      "timeout": 900,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 10,
+      "retry_delay": 2,
+      "expect_contains": [
+        "\"database\":\"up\""
+      ]
+    },
+    {
+      "name": "the container runs as a non-root user",
+      "cwd": "code",
+      "cmd": "docker inspect --format \"user={{.Config.User}}\" {project}-api-1",
+      "expect_contains": [
+        "user=nonroot:nonroot"
+      ]
+    },
+    {
+      "name": "the healthcheck is the binary itself",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T api /app/api healthcheck"
+    },
+    {
+      "name": "conformance",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "retries": 10,
+      "retry_delay": 3,
+      "expect_exit": 1,
+      "expect_contains": [
+        "PASS  health",
+        "PASS  create team",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "17 passed, 1 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "go run .",
+      "expect_stdout": "\":8000\"          -> \"http://127.0.0.1:8000/health\"\n\"0.0.0.0:8000\"   -> \"http://127.0.0.1:8000/health\"\n\"127.0.0.1:9000\" -> \"http://127.0.0.1:9000/health\"\n\"[::]:8080\"      -> \"http://127.0.0.1:8080/health\"\n\"8000\"           -> \"\""
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove the temporary stack",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.env.example",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/go.mod",
+    "code/go.sum",
+    "code/internal/auth/jwks.go",
+    "code/internal/auth/jwt.go",
+    "code/internal/auth/principal.go",
+    "code/internal/config/config.go",
+    "code/internal/http/audit.go",
+    "code/internal/http/authz.go",
+    "code/internal/http/comments.go",
+    "code/internal/http/errors.go",
+    "code/internal/http/etag.go",
+    "code/internal/http/health.go",
+    "code/internal/http/idempotency.go",
+    "code/internal/http/me.go",
+    "code/internal/http/members.go",
+    "code/internal/http/middleware.go",
+    "code/internal/http/optional.go",
+    "code/internal/http/projects.go",
+    "code/internal/http/request.go",
+    "code/internal/http/respond.go",
+    "code/internal/http/server.go",
+    "code/internal/http/tasks.go",
+    "code/internal/http/teams.go",
+    "code/internal/http/users.go",
+    "code/internal/http/validate.go",
+    "code/internal/problem/problem.go",
+    "code/internal/store/audit.go",
+    "code/internal/store/comments.go",
+    "code/internal/store/errors.go",
+    "code/internal/store/idempotency.go",
+    "code/internal/store/members.go",
+    "code/internal/store/page.go",
+    "code/internal/store/projects.go",
+    "code/internal/store/registry.go",
+    "code/internal/store/store.go",
+    "code/internal/store/tasks.go",
+    "code/internal/store/teams.go",
+    "code/internal/store/users.go",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/comment-create.json",
+    "code/requests/if-match-1.txt",
+    "code/requests/if-match-2.txt",
+    "code/requests/if-match-3.txt",
+    "code/requests/if-match-4.txt",
+    "code/requests/if-match-5.txt",
+    "code/requests/if-match-99.txt",
+    "code/requests/if-none-match-1.txt",
+    "code/requests/member-put.json",
+    "code/requests/project-create.json",
+    "code/requests/project-invalid.json",
+    "code/requests/reassign.json",
+    "code/requests/task-clear.json",
+    "code/requests/task-create.json",
+    "code/requests/task-invalid.json",
+    "code/requests/task-patch.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-patch.json",
+    "code/requests/team-valid.json",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

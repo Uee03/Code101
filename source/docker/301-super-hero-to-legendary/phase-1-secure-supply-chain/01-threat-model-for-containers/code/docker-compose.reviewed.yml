@@ -1,0 +1,36 @@
+name: code101-reviewed
+services:
+  web:
+    image: nginxinc/nginx-unprivileged:1.31-alpine
+    user: "101:101"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:8080:8080"
+    tmpfs:
+      - /tmp
+  db:
+    image: postgres:17-alpine
+    user: "70:70"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    tmpfs:
+      - /tmp
+      - /run/postgresql
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt

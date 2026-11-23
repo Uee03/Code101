@@ -1,0 +1,9 @@
+{
+  "greeting": "Hello, world!\n",
+  "typed starter": "Recipe: TODO\n",
+  "literal cargo run": {
+    "stdout": "Hello, world!\n",
+    "stderr": "   Compiling hello_rust v0.1.0 (<project>)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.66s\n     Running `target\\debug\\hello_rust.exe`\n",
+    "exit": 0
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- strategy ---\npickup: 0\nstandard: 500\nexpress: 1250\n--- state ---\nstatus: draft\nstatus: review\nstatus: draft\nstatus: published\nError: Cannot submit a published document"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- strategy ---\npickup: 0\nstandard: 500\nexpress: 1250\n--- state ---\nstatus: draft\nstatus: review\nstatus: draft\nstatus: published\nError: Cannot submit a published document"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "red\ngreen\nyellow\nred"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "red\ngreen\nyellow\nred"
+    }
+  ]
+}

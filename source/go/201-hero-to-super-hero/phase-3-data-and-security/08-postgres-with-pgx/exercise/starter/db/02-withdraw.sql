@@ -1,0 +1,4 @@
+-- TODO 1: create the function app.withdraw(p_account_id integer, p_amount_cents bigint) RETURNS bigint.
+-- It behaves like app.deposit, but subtracts: reject an amount of zero or less with SQLSTATE 22023,
+-- raise SQLSTATE P0002 when the account does not exist, and return the new balance.
+-- Do not write your own overdraft check: the table's CHECK constraint already refuses a negative balance.

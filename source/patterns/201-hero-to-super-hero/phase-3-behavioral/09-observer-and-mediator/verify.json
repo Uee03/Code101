@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- observer ---\nlog: price is 100\nlog: price is 120\nALERT: price 120 is above 110\nALERT: price 130 is above 110\n--- mediator ---\nname changed -> register enabled: False\nterms changed -> register enabled: True\nname changed -> register enabled: False"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- observer ---\nlog: price is 100\nlog: price is 120\nALERT: price 120 is above 110\nALERT: price 130 is above 110\n--- mediator ---\nname changed -> register enabled: False\nterms changed -> register enabled: True\nname changed -> register enabled: False"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "display: 5 C\ndisplay: -3 C\nwarning: freezing"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "display: 5 C\ndisplay: -3 C\nwarning: freezing"
+    }
+  ]
+}

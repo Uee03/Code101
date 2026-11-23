@@ -1,0 +1,90 @@
+{
+  "requires": [
+    "dotnet",
+    "docker",
+    "curl"
+  ],
+  "steps": [
+    {
+      "name": "env-file",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "restore-tools",
+      "cwd": "code",
+      "cmd": "dotnet tool restore"
+    },
+    {
+      "name": "run-tests",
+      "cwd": "code/NotesApi.Tests",
+      "cmd": "dotnet test",
+      "timeout": 600
+    },
+    {
+      "name": "create-migration",
+      "cwd": "code",
+      "cmd": "dotnet ef migrations add InitialCreate --project NotesApi",
+      "timeout": 300
+    },
+    {
+      "name": "compose-up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build --wait",
+      "timeout": 900
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:8085/health",
+      "retries": 10,
+      "retry_delay": 2,
+      "expect_stdout": "{\"status\":\"ok\"}"
+    },
+    {
+      "name": "create-note",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Content-Type: application/json\" -d @new-note.json http://localhost:8085/notes",
+      "expect_stdout": "{\"id\":1,\"title\":\"Buy milk\",\"body\":\"2 litres\"}"
+    },
+    {
+      "name": "list-notes",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:8085/notes",
+      "expect_stdout": "[{\"id\":1,\"title\":\"Buy milk\",\"body\":\"2 litres\"}]"
+    },
+    {
+      "name": "container-is-not-root",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T api sh -c \"id -u | grep -vx 0\""
+    },
+    {
+      "name": "apply-solution-files",
+      "cwd": ".",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('exercise/solution', 'code', dirs_exist_ok=True)\""
+    },
+    {
+      "name": "run-solution-tests",
+      "cwd": "code/NotesApi.Tests",
+      "cmd": "dotnet test",
+      "timeout": 600
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "compose-down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/.gitignore",
+    "code/NotesApi/Common/Result.cs",
+    "code/NotesApi/Common/Mapping.cs",
+    "code/NotesApi/Common/GlobalExceptionHandler.cs",
+    "code/NotesApi/Notes/CreateNoteValidator.cs",
+    "code/NotesApi/Notes/NotesOptions.cs",
+    "code/NotesApi/appsettings.json"
+  ]
+}

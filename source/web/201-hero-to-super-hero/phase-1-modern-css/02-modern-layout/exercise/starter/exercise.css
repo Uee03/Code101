@@ -1,0 +1,14 @@
+/* Exercise 02. Link this file after styles.css in index.html. */
+
+/* TODO 1 (guided): add a third tier. When the card container is at least 36rem wide,
+   make .product use grid-template-columns: 14rem 1fr and .product__media use aspect-ratio: 4 / 3. */
+
+/* TODO 2 (change): rewrite this rule with logical properties so it mirrors in a dir="rtl" parent. */
+.legacy-note {
+  margin-left: 1rem;
+  padding-right: 1rem;
+  border-left: 4px solid currentColor;
+  text-align: left;
+}
+
+/* TODO 3 (stretch): make .page padding and .layout gap scale with clamp() in your own steps. */

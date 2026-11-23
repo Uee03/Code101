@@ -1,0 +1,15 @@
+ok    valid token                                  accepted
+ok    audience is a list that contains tasks-api   accepted
+ok    expired 10 s ago (inside the 30 s skew)      accepted
+ok    expired 120 s ago                            rejected: token expired
+ok    not valid before 5 minutes from now          rejected: ImmatureSignatureError: The token is not yet valid (nbf)
+ok    wrong issuer                                 rejected: InvalidIssuerError: Invalid issuer
+ok    wrong audience (string)                      rejected: InvalidAudienceError: Audience doesn't match
+ok    wrong audience (list)                        rejected: InvalidAudienceError: Audience doesn't match
+ok    no exp claim                                 rejected: MissingRequiredClaimError: Token is missing the "exp" claim
+ok    no sub claim                                 rejected: MissingRequiredClaimError: Token is missing the "sub" claim
+ok    signed with another key                      rejected: InvalidSignatureError: Signature verification failed
+ok    algorithm none (no signature)                rejected: algorithm 'none' is not allowed
+ok    HS256 signed with the public key             rejected: algorithm 'HS256' is not allowed
+ok    not a token at all                           rejected: not a JWT
+all rules hold

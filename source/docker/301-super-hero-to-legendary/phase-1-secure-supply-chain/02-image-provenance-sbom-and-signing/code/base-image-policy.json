@@ -1,0 +1,5 @@
+{
+  "allowed_repositories": ["python", "alpine", "postgres", "localhost:5050/team/base"],
+  "forbidden_tags": ["latest"],
+  "require_digest": true
+}

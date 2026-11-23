@@ -1,0 +1,12 @@
+sequenceDiagram
+  actor Member
+  participant Web
+  participant API
+  participant Database
+  Member->>Web: Open a task
+  Web->>API: Read task with access token
+  API->>API: Validate token and check team access
+  API->>Database: Read allowed task
+  Database-->>API: Task row
+  API-->>Web: Task data
+  Web-->>Member: Show task

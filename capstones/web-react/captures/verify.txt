@@ -1,0 +1,7 @@
+[PASS      ] capstones/web-react/source/phase-1-setup/01-create-app
+[PASS      ] capstones/web-react/source/phase-2-auth/02-sign-in
+[PASS      ] capstones/web-react/source/phase-3-screens/03-screens-and-state
+[PASS      ] capstones/web-react/source/phase-4-errors/04-errors-and-accessibility
+[PASS      ] capstones/web-react/source/phase-5-ship/05-build-run-ship
+
+5 passed, 0 failed, 0 unverified (missing tools)

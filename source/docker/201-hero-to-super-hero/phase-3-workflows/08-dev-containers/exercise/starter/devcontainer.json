@@ -1,0 +1,12 @@
+{
+  "name": "code101-docker-201-devloop",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  // TODO 1: mount the project folder at /workspace (workspaceMount) and open it there (workspaceFolder)
+  // TODO 2: run as the non-root user vscode (remoteUser)
+  // TODO 3: forward port 8000 (forwardPorts)
+  // TODO 4: install the VS Code extension ms-python.python inside the container (customizations.vscode.extensions)
+  "init": true
+}

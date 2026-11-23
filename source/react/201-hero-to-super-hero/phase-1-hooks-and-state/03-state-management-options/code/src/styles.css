@@ -1,0 +1,56 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.toast {
+  min-height: 1.5rem;
+  font-weight: bold;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.board section {
+  border: 1px solid #66788a;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.board ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 0.75rem 0;
+}
+
+input,
+select,
+button {
+  font: inherit;
+  padding: 0.3rem 0.5rem;
+}
+
+:focus-visible {
+  outline: 3px solid #0759aa;
+  outline-offset: 2px;
+}

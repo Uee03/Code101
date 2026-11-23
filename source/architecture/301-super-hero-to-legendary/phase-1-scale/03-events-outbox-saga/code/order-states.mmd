@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> Placed
+    Placed --> StockReserved : StockReserved
+    Placed --> Cancelled : OutOfStock
+    StockReserved --> Paid : PaymentCaptured
+    StockReserved --> Cancelling : PaymentFailed
+    Cancelling --> Cancelled : StockReleased
+    Paid --> Confirmed : ShipmentCreated
+    Confirmed --> [*]
+    Cancelled --> [*]

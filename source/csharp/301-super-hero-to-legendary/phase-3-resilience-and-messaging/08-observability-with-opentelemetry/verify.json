@@ -1,0 +1,28 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "dotnet build --nologo -v quiet"
+    },
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --no-build",
+      "bg": true,
+      "wait": 8
+    },
+    {
+      "name": "read-order",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:5308/orders/7",
+      "retries": 10,
+      "retry_delay": 1,
+      "expect_stdout": "{\"id\":7,\"totalCents\":8750}"
+    }
+  ],
+  "skip_lesson_check": []
+}

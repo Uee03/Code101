@@ -1,0 +1,60 @@
+{
+  "realm": "shop",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "clients": [
+    {
+      "clientId": "billing-service",
+      "name": "Billing service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "bearerOnly": true
+    },
+    {
+      "clientId": "orders-service",
+      "name": "Shop host (orders)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "${ORDERS_CLIENT_SECRET}",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "billing-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "billing-service",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "roles": {
+    "client": {
+      "billing-service": [
+        {
+          "name": "charge",
+          "description": "May create charges"
+        }
+      ]
+    }
+  },
+  "users": [
+    {
+      "username": "service-account-orders-service",
+      "enabled": true,
+      "serviceAccountClientId": "orders-service",
+      "clientRoles": {
+        "billing-service": ["charge"]
+      }
+    }
+  ]
+}

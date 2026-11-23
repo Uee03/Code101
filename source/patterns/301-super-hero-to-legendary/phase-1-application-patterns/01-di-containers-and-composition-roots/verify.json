@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "validate: 0 problem(s)\nmail: task 1 created\nalice created task 1 'Write ADR 1' on 2026-03-01\nmail: task 2 created\nalice created task 2 'Write ADR 2' on 2026-03-01\nsingleton repo shared: True\ntransient mailer shared: False\nscoped context shared in one scope: True\nscoped context shared across scopes: False\ncaptive: container refused to build: True\ncycle: container refused to build: True"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "validate: 0 problem(s)\nmail: task 1 created\nalice created task 1 'Write ADR 1' on 2026-03-01\nmail: task 2 created\nalice created task 2 'Write ADR 2' on 2026-03-01\nsingleton repo shared: True\ntransient mailer shared: False\nscoped context shared in one scope: True\nscoped context shared across scopes: False\ncaptive: container refused to build: True\ncycle: container refused to build: True"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "2026-03-01: paid 5\n2000-01-01: paid 5"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "2026-03-01: paid 5\n2000-01-01: paid 5"
+    }
+  ]
+}

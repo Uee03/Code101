@@ -1,0 +1,91 @@
+#include "net/CprTransport.hpp"
+
+#include <cpr/cpr.h>
+#include <spdlog/spdlog.h>
+
+#include <chrono>
+#include <cstddef>
+#include <cstdint>
+#include <string_view>
+
+namespace tt {
+namespace {
+
+constexpr std::size_t kMaxBodyBytes = 4U * 1024U * 1024U;
+
+const char* methodName(Method method) {
+    switch (method) {
+        case Method::Get: return "GET";
+        case Method::Post: return "POST";
+        case Method::Put: return "PUT";
+        case Method::Patch: return "PATCH";
+        case Method::Delete: return "DELETE";
+    }
+    return "?";
+}
+
+cpr::Response perform(cpr::Session& session, Method method) {
+    switch (method) {
+        case Method::Post: return session.Post();
+        case Method::Put: return session.Put();
+        case Method::Patch: return session.Patch();
+        case Method::Delete: return session.Delete();
+        case Method::Get: break;
+    }
+    return session.Get();
+}
+
+}  // namespace
+
+Result<HttpResponse> CprTransport::send(const HttpRequest& request, std::stop_token stop) {
+    cpr::Session session;
+    session.SetUrl(cpr::Url{request.url});
+    cpr::Header headers;
+    for (const auto& [name, value] : request.headers) {
+        headers[name] = value;
+    }
+    session.SetHeader(headers);
+    session.SetTimeout(cpr::Timeout{request.timeout});
+    session.SetConnectTimeout(cpr::ConnectTimeout{std::chrono::milliseconds{3000}});
+    session.SetRedirect(cpr::Redirect(false));
+    // libcurl calls this regularly during a transfer; returning false aborts it (clean shutdown, cancel).
+    session.SetProgressCallback(cpr::ProgressCallback{
+        [&stop](auto, auto, auto, auto, std::intptr_t) { return !stop.stop_requested(); }});
+    if (!request.body.empty()) {
+        session.SetBody(cpr::Body{request.body});
+    }
+
+    // The body is collected here, chunk by chunk, so that an oversized answer stops the transfer early.
+    std::string body;
+    bool tooLarge = false;
+    session.SetWriteCallback(cpr::WriteCallback{[&body, &tooLarge](std::string_view chunk, std::intptr_t) {
+        if (body.size() + chunk.size() > kMaxBodyBytes) {
+            tooLarge = true;
+            return false;
+        }
+        body.append(chunk);
+        return true;
+    }});
+
+    cpr::Response reply = perform(session, request.method);
+    if (tooLarge) {
+        return failure(ErrorKind::Network, "The answer is too large", "The server sent more than 4 MiB.");
+    }
+    if (reply.error.code == cpr::ErrorCode::ABORTED_BY_CALLBACK) {
+        return failure(ErrorKind::Cancelled, "Cancelled");
+    }
+    if (reply.error.code != cpr::ErrorCode::OK) {
+        return failure(ErrorKind::Network, "Cannot reach the server", reply.error.message);
+    }
+    spdlog::debug("{} {} -> {}", methodName(request.method), request.url, reply.status_code);
+
+    HttpResponse response;
+    response.status = static_cast<int>(reply.status_code);
+    response.body = std::move(body);
+    for (const auto& [name, value] : reply.header) {
+        response.headers.emplace(name, value);
+    }
+    return response;
+}
+
+}  // namespace tt

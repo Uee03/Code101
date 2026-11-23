@@ -1,0 +1,23 @@
+flowchart LR
+    subgraph svcs["Services"]
+        s1["Gateway"]
+        s2["Orders"]
+        s3["Inventory and other services"]
+    end
+    col["OpenTelemetry Collector"]
+    met[("Metrics store")]
+    trc[("Trace backend")]
+    log[("Log store")]
+    dash["Dashboards"]
+    alr["Alerts on SLO burn and on saturation"]
+    oncall(["On-call engineer"])
+    s1 -->|"metrics, traces, logs"| col
+    s2 -->|"metrics, traces, logs"| col
+    s3 -->|"metrics, traces, logs"| col
+    col --> met
+    col --> trc
+    col --> log
+    met --> dash
+    met --> alr
+    alr -->|"page or ticket"| oncall
+    oncall -->|"follows one trace id"| trc

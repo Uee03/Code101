@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "before_analyze_equals_750\nf\nopen_estimate|done_estimate\n750|250\nn_distinct|vals|freqs\n2|{open,done}|{0.75,0.25}\nestimate_without_extended|actual_rows\n50|100\nestimate_with_dependencies\n100\nautovacuum_on|trigger_at_1000_rows|trigger_at_10m_rows\non|250|2000050\noption_name|option_value\nautovacuum_enabled|false\nautovacuum_vacuum_scale_factor|0.02\nautovacuum_vacuum_threshold|100\nsize_after_delete_unchanged\nt\nsize_after_vacuum_unchanged\nt\nsize_after_vacuum_full_smaller\nt"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "default_trigger|tuned_trigger\n50050|2550"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+flowchart LR
+    cl["Web and mobile clients"]
+    fac["Facade that routes by path, proposal"]
+    mono["Existing backend, still serves most paths"]
+    new["New Comments service, serves the comment paths"]
+    dbm[("Existing database")]
+    dbn[("Comments database owned by the new service")]
+    cl --> fac
+    fac -->|"all other paths"| mono
+    fac -->|"comment paths"| new
+    mono --> dbm
+    new --> dbn
+    new -->|"asks the existing backend: may this caller see the task?"| mono

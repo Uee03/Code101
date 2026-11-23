@@ -1,0 +1,25 @@
+{
+  "name": "code101-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "test": "node --test \"packages/*/dist/*.test.js\"",
+    "start": "node apps/web/dist/main.js",
+    "affected": "node scripts/affected.mjs",
+    "ci": "npm run build && npm test"
+  },
+  "engines": {
+    "node": ">=26.13.1",
+    "npm": ">=11.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}

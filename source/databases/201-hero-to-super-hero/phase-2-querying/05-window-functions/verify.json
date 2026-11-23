@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "team|rep|amount|position|place|dense_place|running_amount|previous_amount\nNorth|Ava|100|1|1|1|100|0\nNorth|Ben|100|2|1|1|200|100\nNorth|Cora|60|3|3|2|260|100\nSouth|Dan|80|1|1|1|80|0"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "team|rep|amount\nNorth|Ava|100\nSouth|Dan|80"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

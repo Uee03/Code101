@@ -1,0 +1,21 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "print policy",
+      "cwd": "code",
+      "cmd": "node dist/print-policy.js",
+      "expect_stdout": "default-src 'none'; script-src 'nonce-TESTNONCE' 'strict-dynamic'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types app; report-to csp\nstrict policy findings: 0\nlegacy policy findings: 4\n- script-src allows 'unsafe-inline': an injected inline script would run\n- object-src is not restricted (use 'none')\n- base-uri is not restricted (use 'none' or 'self')\n- frame-ancestors is missing (clickjacking protection)\n__Host-session=abc123; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=900\nContent-Security-Policy, Reporting-Endpoints, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cache-Control, Strict-Transport-Security"
+    },
+    { "name": "package policy", "cwd": "code", "cmd": "node scripts/check-package-policy.mjs", "expect_stdout": "Package policy OK: 2 dependencies pinned" },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npx tsc", "expect_stdout": "" },
+    { "name": "run solution exercise", "cwd": "work", "cmd": "node dist/exercise.js", "expect_stdout": "true 53\ntrue false" }
+  ]
+}

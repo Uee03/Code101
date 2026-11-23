@@ -1,0 +1,47 @@
+:root { font-family: system-ui, sans-serif; color: #17212b; background: #fff; }
+body { margin: 0; }
+main { max-width: 65rem; margin: auto; padding: 1rem; }
+button, input, select, textarea { font: inherit; padding: .5rem; }
+button, a { min-height: 24px; min-width: 24px; }
+:focus-visible { outline: 2px solid #0759aa; outline-offset: 3px; }
+
+html { scroll-padding-top: 6rem; }
+header { position: sticky; top: 0; padding: 1rem; background: #e7f0fa; }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+a { color: #0759aa; display: inline-block; padding: .25rem; }
+.skip { position: absolute; left: -10000px; }
+.skip:focus { position: fixed; left: 0; top: 0; z-index: 10; background: white; }
+label { display: block; margin: .5rem 0; }
+input, textarea, select { max-width: 100%; box-sizing: border-box; }
+label input:not([type=checkbox]), label select { display: block; }
+form { margin: 1rem 0; padding: .75rem; border: 1px solid #66788a; }
+li { margin: .75rem 0; overflow-wrap: anywhere; }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.board section { background: #e7f0fa; padding: .5rem; }
+.table-wrap { overflow-x: auto; }
+th, td { text-align: left; padding: .5rem; }
+.toast { padding: .5rem 1rem; min-height: 1.5rem; }
+dialog { max-width: min(90vw, 45rem); border: 2px solid #0759aa; }
+.icon { display: inline-block; width: 1.25rem; height: 1.25rem; background-color: currentColor; vertical-align: middle; margin-right: .3rem; }
+.icon-search { mask: url(/icons/ui/search.svg) center / contain no-repeat; }
+.icon-filter { mask: url(/icons/ui/filter.svg) center / contain no-repeat; }
+.icon-plus { mask: url(/icons/ui/plus.svg) center / contain no-repeat; }
+.icon-x { mask: url(/icons/ui/x.svg) center / contain no-repeat; }
+.icon-check-circle { mask: url(/icons/ui/check-circle.svg) center / contain no-repeat; }
+.icon-alert-triangle { mask: url(/icons/ui/alert-triangle.svg) center / contain no-repeat; }
+.icon-list { mask: url(/icons/ui/list.svg) center / contain no-repeat; }
+.icon-columns { mask: url(/icons/ui/columns.svg) center / contain no-repeat; }
+.icon-log-in { mask: url(/icons/arrows/log-in.svg) center / contain no-repeat; }
+.icon-log-out { mask: url(/icons/arrows/log-out.svg) center / contain no-repeat; }
+.icon-refresh-cw { mask: url(/icons/arrows/refresh-cw.svg) center / contain no-repeat; }
+.icon-users { mask: url(/icons/users/users.svg) center / contain no-repeat; }
+.icon-cloud-off { mask: url(/icons/cloud-network/cloud-off.svg) center / contain no-repeat; }
+.icon-calendar-days { mask: url(/icons/time/calendar-days.svg) center / contain no-repeat; }
+@media (prefers-color-scheme: dark) {
+  :root { color: #f3f7fc; background: #101820; }
+  header, .board section { background: #203040; }
+  a { color: #9dccff; }
+  :focus-visible { outline-color: #9dccff; }
+  .skip:focus { background: #101820; }
+}
+@media (forced-colors: active) { .icon { background-color: CanvasText; } }

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "tasksteams-desktop",
+  "version-string": "0.1.0",
+  "description": "Tasks and Teams native desktop client in C17 with SDL3 and Nuklear",
+  "dependencies": [
+    "sdl3",
+    "curl",
+    "cjson",
+    "openssl"
+  ]
+}

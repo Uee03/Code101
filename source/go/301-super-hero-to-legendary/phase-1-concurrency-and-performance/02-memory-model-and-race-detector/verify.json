@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "safe run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "expect_stdout": "mutex counter: 8000\natomic counter: 8000\nsafe publish: hello\ncache: eu-1 true\nlazy config: eu-1"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "balance: 4000"
+    }
+  ]
+}

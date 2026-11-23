@@ -1,0 +1,1 @@
+{"requires":["python","uv"],"steps":[{"name":"installed entry point","cwd":"code","cmd":"uv run --python 3.12 note-words","expect_contains":["words: 3"]},{"name":"exercise solution using installed package","cwd":"code","cmd":"uv run --python 3.12 python ../exercise/solution/exercise.py","expect_contains":["words: 2"]}]}

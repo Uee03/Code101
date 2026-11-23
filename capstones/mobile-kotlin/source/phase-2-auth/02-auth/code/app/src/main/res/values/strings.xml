@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tasks and Teams</string>
+    <string name="setup_ready">Setup ready</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="teams">Teams</string>
+    <string name="auth_error">Session could not be completed. Check the browser and connection, then try again.</string>
+    <string name="session_check">Session check</string>
+    <string name="login">Login</string>
+</resources>

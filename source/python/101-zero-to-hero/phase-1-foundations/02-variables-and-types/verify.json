@@ -1,0 +1,17 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "run variables.py",
+      "cwd": "code",
+      "cmd": "{python} variables.py",
+      "expect_stdout": "Name: Ada\nAge: 36\nHeight in metres: 1.65\nIs a student: False\n<class 'str'>\n<class 'int'>\n<class 'float'>\n<class 'bool'>\nAda is 36 years old and 1.65 m tall.\nNext year Ada will be 37."
+    },
+    {
+      "name": "solution business_card.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} business_card.py",
+      "expect_stdout": "Grace Hopper, Computer Scientist\nExperience: 5 years\nNext year: 6 years"
+    }
+  ]
+}

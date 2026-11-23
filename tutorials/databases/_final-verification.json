@@ -1,0 +1,6 @@
+{
+  "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero",
+  "exit": 0,
+  "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/01-what-a-database-is\n[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/02-connect-with-a-tool\n[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/03-tables-and-data-types\n[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/04-reading-data\n[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/05-changing-data\n[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/06-keys-and-relationships\n[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/07-joining-tables\n[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/08-summaries\n[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/09-good-design\n[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/10-transactions\n[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/11-indexes-and-explain\n[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/12-library-project\n\n12 passed, 0 failed, 0 unverified (missing tools)\n",
+  "stderr": ""
+}

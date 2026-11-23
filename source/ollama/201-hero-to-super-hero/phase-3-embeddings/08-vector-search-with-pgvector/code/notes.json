@@ -1,0 +1,14 @@
+[
+  {"id": "n01", "title": "Opening hours", "text": "The shop opens at 9:00 on weekdays and 10:00 on Saturdays. It is closed on Sundays and on public holidays."},
+  {"id": "n02", "title": "Returns", "text": "Customers may return unused parts within 30 days with a receipt. Opened tyres and inner tubes cannot be returned."},
+  {"id": "n03", "title": "Puncture repair", "text": "A puncture repair takes about 20 minutes and costs 8 euros. The mechanic checks the tyre for glass before fitting the new tube."},
+  {"id": "n04", "title": "Standard service", "text": "A standard service includes brake adjustment, gear tuning and a chain check. Book it at least two days ahead."},
+  {"id": "n05", "title": "Frame warranty", "text": "Frames carry a five-year warranty against manufacturing faults. Wear parts such as brake pads and chains are not covered."},
+  {"id": "n06", "title": "Helmet fitting", "text": "Every child bike sold includes a free helmet fitting. Staff adjust the straps until two fingers fit under the chin."},
+  {"id": "n07", "title": "Deliveries", "text": "Orders over 100 euros ship free within the country. Delivery takes three to five working days."},
+  {"id": "n08", "title": "Staff training", "text": "New staff shadow a mechanic for two weeks before working alone. Every mechanic completes a first-aid course each year."},
+  {"id": "n09", "title": "Workshop cleaning", "text": "The workshop floor is swept at closing time. Used oil goes into the sealed blue drum and is collected monthly."},
+  {"id": "n10", "title": "Test rides", "text": "Test rides last up to 15 minutes and need a photo ID left at the counter. E-bikes require a signed waiver."},
+  {"id": "n11", "title": "Loyalty points", "text": "Members collect one point per euro and receive a 5 euro voucher for every 500 points."},
+  {"id": "n12", "title": "Winter storage", "text": "Customers can store a bike over winter for 25 euros per month. Stored bikes get a free brake check in spring."}
+]

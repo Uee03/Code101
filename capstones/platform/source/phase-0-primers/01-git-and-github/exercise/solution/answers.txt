@@ -1,0 +1,29 @@
+Write the Git command for each step. Replace every TODO.
+Start in your tasks-notes folder, on branch main, with a clean "git status".
+
+1. Create a branch called add-database-port and switch to it:
+git switch -c add-database-port
+
+2. (Edit team-notes.md: add the line "- Database port: 5432" and save.)
+   Stage team-notes.md:
+git add team-notes.md
+
+3. Commit with the message "Add the database port":
+git commit -m "Add the database port"
+
+4. Go back to the branch main:
+git switch main
+
+5. Bring the branch into main:
+git merge add-database-port
+
+6. Show the history, one line per commit:
+git log --oneline
+
+Rung 2 (change): add the line "*.log" to .gitignore, create a file named server.log,
+then run "git status --short". Only .gitignore is listed, server.log is not.
+
+Rung 3 (stretch), one possible plan for a .env that was pushed by mistake:
+1. Treat the secret as public: change the password or revoke the key at its provider.
+2. git rm --cached .env, add .env to .gitignore, commit and push.
+3. Only then, if the repository must be clean, rewrite history (a tool such as git filter-repo) and tell everyone who cloned it.

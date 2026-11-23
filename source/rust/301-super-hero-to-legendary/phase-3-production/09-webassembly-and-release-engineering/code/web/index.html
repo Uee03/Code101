@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'">
+  <title>Slugify (Rust and WebAssembly)</title>
+</head>
+<body>
+  <main>
+    <h1>Slugify</h1>
+    <label for="title">Title</label>
+    <input id="title" type="text" value="Hello, Rust 301!" autocomplete="off">
+    <p>Slug: <output id="slug" for="title" aria-live="polite"></output></p>
+    <p>Module version: <span id="version"></span></p>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

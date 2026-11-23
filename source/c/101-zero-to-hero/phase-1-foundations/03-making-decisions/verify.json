@@ -1,0 +1,31 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "stdin": "30\n6\n",
+      "expect_stdout": "Age:\nDay number (1=Mon ... 7=Sun):\nSaturday\nWeekend surcharge: 2\nTicket price: 14"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "stdin": "85\n",
+      "expect_stdout": "Score (0 to 100):\nGrade: B"
+    }
+  ]
+}

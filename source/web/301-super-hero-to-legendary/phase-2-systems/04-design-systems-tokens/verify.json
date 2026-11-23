@@ -1,0 +1,25 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build tokens", "cwd": "code", "cmd": "npm run tokens --silent", "expect_stdout": "Tokens: 22 shared, 8 light, 8 dark\nContrast: 10 pairs passed (minimum 4.5:1)\nWrote build/tokens.css, build/tokens.ts, build/tokens.html, build/docs.css" },
+    {
+      "name": "check generated css",
+      "cwd": "code",
+      "cmd": "{python} -c \"s=open('build/tokens.css',encoding='utf-8').read(); assert '--button-radius: var(--radius-md);' in s and '@media (prefers-color-scheme: dark)' in s\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "overlay exercise starter on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work-starter', ignore=shutil.ignore_patterns('node_modules', 'dist', 'build')); shutil.copytree('exercise/starter', 'work-starter', dirs_exist_ok=True)\""
+    },
+    { "name": "install starter", "cwd": "work-starter", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "starter must fail contrast", "cwd": "work-starter", "cmd": "npm run tokens --silent", "expect_exit": 1 },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist', 'build')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution tokens", "cwd": "work", "cmd": "npm run tokens --silent", "expect_stdout": "Tokens: 24 shared, 10 light, 10 dark\nContrast: 12 pairs passed (minimum 4.5:1)\nWrote build/tokens.css, build/tokens.ts, build/tokens.html, build/docs.css" }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "status": "historical before user stop; not final-file verification",
+  "capture": {
+    "pub": {
+      "cmd": "flutter pub get",
+      "exit": 0,
+      "stdout": "Resolving dependencies...\nDownloading packages...\n  built_collection 5.1.2 (6.0.0 available)\n  material_color_utilities 0.13.0 (0.13.1 available)\n  test_api 0.7.14 (0.7.15 available)\n  vector_math 2.4.3 (2.4.4 available)\n  xml 7.0.1 (7.1.0 available)\nGot dependencies!\n5 packages have newer versions incompatible with dependency constraints.\nTry `flutter pub outdated` for more information.\n",
+      "stderr": ""
+    },
+    "generate": {
+      "cmd": "dart run swagger_parser",
+      "exit": 0,
+      "stdout": "Generated 58 files in F:\\Projects\\Uee03\\Code101\\capstones\\mobile-flutter\\source\\phase-2-auth\\02-auth\\code\\lib\\data\\generated.\n",
+      "stderr": ""
+    },
+    "parts": {
+      "cmd": "dart run build_runner build",
+      "exit": 0,
+      "stdout": "  0s json_serializable on 72 inputs; lib/app/app.dart\n  7s json_serializable on 72 inputs: 1 no-op; spent 6s analyzing; lib/app/providers.dart\n  8s json_serializable on 72 inputs: 64 skipped, 8 no-op; spent 6s analyzing\n  0s drift_dev on 288 inputs; lib/app/app.dart\n  0s drift_dev on 288 inputs: 264 skipped, 16 same, 8 no-op\n  0s source_gen:combining_builder on 144 inputs; lib/app/app.dart\n  0s source_gen:combining_builder on 144 inputs: 144 skipped\n  Built with build_runner/aot in 10s; wrote 16 outputs.\n",
+      "stderr": ""
+    },
+    "analyze": {
+      "cmd": "flutter analyze --no-pub",
+      "exit": 0,
+      "stdout": "Analyzing code...                                               \nNo issues found! (ran in 8.5s)\n",
+      "stderr": ""
+    },
+    "debug": {
+      "cmd": "flutter build apk --debug --no-pub --dart-define-from-file=config/dev.json",
+      "exit": 0,
+      "stdout": "Running Gradle task 'assembleDebug'...                          \nRunning Gradle task 'assembleDebug'...                             29,6s\n√ Built build\\app\\outputs\\flutter-apk\\app-debug.apk\n",
+      "stderr": "WARNING: Your app uses the following plugins that apply Kotlin Gradle Plugin (KGP): workmanager_android\nFuture versions of Flutter will fail to build if your app uses plugins that apply KGP.\n\nPlease check the changelogs of these plugins and upgrade to a version that supports Built-in Kotlin.\nIf no such version exists, report the issue to the plugin. If necessary, here is a guide on filing\nan issue against a plugin: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-app-developers#report-incompatible-kotlin-gradle-plugin-usage-to-plugin-authors\n\nIf you are a plugin author, please migrate your plugin to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors\n"
+    },
+    "manifest": {
+      "cmd": "python tool/check_artifacts.py",
+      "exit": 0,
+      "stdout": "Debug APK: application id, redirect scheme and networkSecurityConfig present\n",
+      "stderr": ""
+    },
+    "probe": {
+      "cmd": "dart run tool/url_probe.dart",
+      "exit": 0,
+      "stdout": "URL allowed: 10.0.2.2\n",
+      "stderr": ""
+    },
+    "exercise": {
+      "cmd": "dart run ../exercise/solution/main.dart",
+      "exit": 0,
+      "stdout": "Refresh before request\n",
+      "stderr": ""
+    }
+  }
+}

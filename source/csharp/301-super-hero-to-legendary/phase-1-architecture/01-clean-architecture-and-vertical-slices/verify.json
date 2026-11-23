@@ -1,0 +1,34 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "dotnet build src/Orders.Api --nologo -v quiet"
+    },
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --project src/Orders.Api --no-build",
+      "bg": true,
+      "wait": 8
+    },
+    {
+      "name": "place-order",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:5301/orders -H \"Content-Type: application/json\" --data @requests/order.json",
+      "retries": 10,
+      "retry_delay": 1,
+      "expect_stdout": "{\"id\":1,\"customer\":\"Ada\",\"totalCents\":2500}"
+    },
+    {
+      "name": "get-order",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:5301/orders/1",
+      "expect_stdout": "{\"id\":1,\"customer\":\"Ada\",\"totalCents\":2500,\"lineCount\":1}"
+    }
+  ],
+  "skip_lesson_check": []
+}

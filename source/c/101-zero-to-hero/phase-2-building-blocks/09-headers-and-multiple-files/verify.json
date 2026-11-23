@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c rectangle.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "expect_stdout": "Desk area: 7200\nDesk perimeter: 360\nDesk is square: 0\nTile is square: 1"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c temperature.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "expect_stdout": "212 F = 100.0 C\n100 C = 212.0 F"
+    }
+  ]
+}

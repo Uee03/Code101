@@ -1,0 +1,6 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "notes": "Written, not run. Static text/source comparison only. No dotnet command, Ollama command, API call or program was executed by the author. Offline check for a learner: dotnet run -- --selftest in the code folder."
+}

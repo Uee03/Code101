@@ -1,0 +1,129 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "SDK version",
+      "cmd": "dotnet --version",
+      "expect_contains": [
+        "11.0."
+      ]
+    },
+    {
+      "name": "build the project",
+      "cwd": "code",
+      "cmd": "dotnet build --nologo",
+      "timeout": 300,
+      "expect_contains": [
+        "Build succeeded.",
+        "0 Error(s)"
+      ]
+    },
+    {
+      "name": "start the API",
+      "cwd": "code/src/TasksApi",
+      "cmd": "dotnet run --no-build",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\"}"
+    },
+    {
+      "name": "me stub",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "\"username\":\"alice\"",
+        "\"roles\":[\"admin\"]"
+      ]
+    },
+    {
+      "name": "validation problem",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: application/json\" --data-binary @requests/empty-team.json",
+      "expect_contains": [
+        "problems/validation-error",
+        "\"status\":422",
+        "\"pointer\":\"/name\""
+      ]
+    },
+    {
+      "name": "created team",
+      "cwd": "code",
+      "cmd": "curl -s -i -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: application/json\" --data-binary @requests/new-team.json",
+      "expect_contains": [
+        "HTTP/1.1 201 Created",
+        "ETag: \"1\"",
+        "\"name\":\"Ops Team\""
+      ]
+    },
+    {
+      "name": "unknown route is a problem",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/nope",
+      "expect_contains": [
+        "problems/not-found",
+        "\"status\":404"
+      ]
+    },
+    {
+      "name": "wrong method is a problem",
+      "cwd": "code",
+      "cmd": "curl -s -X DELETE http://127.0.0.1:8000/health",
+      "expect_contains": [
+        "\"title\":\"Method not allowed\"",
+        "\"status\":405"
+      ]
+    },
+    {
+      "name": "wrong content type is a problem",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: text/plain\" -d hello",
+      "expect_contains": [
+        "\"title\":\"Unsupported media type\"",
+        "\"status\":415"
+      ]
+    },
+    {
+      "name": "broken JSON is a 400 problem",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: application/json\" -d {bad",
+      "expect_contains": [
+        "\"title\":\"Bad request\"",
+        "\"status\":400"
+      ]
+    },
+    {
+      "name": "exercise solution builds",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', '_ex', ignore=shutil.ignore_patterns('bin', 'obj')); shutil.copytree('exercise/solution', '_ex', dirs_exist_ok=True)\"",
+      "timeout": 60
+    },
+    {
+      "name": "build the exercise copy",
+      "cwd": "_ex",
+      "cmd": "dotnet build --nologo",
+      "timeout": 300,
+      "expect_contains": [
+        "0 Error(s)"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "release the build output (the API process was just stopped)",
+      "cmd": "{python} -c \"import shutil, time; time.sleep(3); [shutil.rmtree(p, ignore_errors=True) for p in ('code/src/TasksApi/bin', 'code/src/TasksApi/obj', '_ex')]\"",
+      "timeout": 60
+    }
+  ],
+  "skip_lesson_check": [
+    "code/openapi.yaml"
+  ],
+  "exclusive": "tasksteams"
+}

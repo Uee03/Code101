@@ -1,0 +1,157 @@
+{
+  "requires": [
+    "node",
+    "npm",
+    "docker",
+    "python"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "docker engine",
+      "cwd": "code",
+      "cmd": "docker info --format \"{{.ServerVersion}}\""
+    },
+    {
+      "name": "install",
+      "cwd": "code",
+      "cmd": "npm ci --no-audit --no-fund",
+      "timeout": 420
+    },
+    {
+      "name": "contract hash",
+      "cwd": "code",
+      "cmd": "node scripts/check-contract.mjs",
+      "expect_contains": [
+        "contract: SHA-256 matches platform; 27 operations"
+      ]
+    },
+    {
+      "name": "production build",
+      "cwd": "code",
+      "cmd": "npm run build",
+      "timeout": 420,
+      "expect_contains": [
+        "vite v8.3.8",
+        "modules transformed."
+      ]
+    },
+    {
+      "name": "temporary backend stack",
+      "cwd": "code",
+      "cmd": "docker compose --env-file backend/.env.example -f backend/docker-compose.yml -f backend/docker-compose.override.yml -p {project} up -d --build --wait --wait-timeout 420",
+      "timeout": 420
+    },
+    {
+      "name": "one generated client smoke",
+      "cwd": "code",
+      "cmd": "npm run smoke",
+      "timeout": 420,
+      "expect_contains": [
+        "health: ok",
+        "me: alice (admin)",
+        "without token: 401",
+        "PKCE: S256; login page: 200; user store: memory",
+        "expiry event: fired without automaticSilentRenew",
+        "teams: 2",
+        "tasks: 5; nextCursor: null"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "node ../../code/node_modules/tsx/dist/cli.mjs run.ts",
+      "expect_contains": [
+        "exercise: cursor stops at null"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "stop backend stack",
+      "cwd": "code",
+      "cmd": "docker compose --env-file backend/.env.example -f backend/docker-compose.yml -f backend/docker-compose.override.yml -p {project} down -v --remove-orphans",
+      "timeout": 180
+    },
+    {
+      "name": "remove built backend image",
+      "cwd": "code",
+      "cmd": "docker image rm {project}-api"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/package-lock.json",
+    "code/src/api/schema.d.ts",
+    "code/contract/openapi.yaml",
+    "code/backend/.gitignore",
+    "code/backend/pyproject.toml",
+    "code/backend/app/access.py",
+    "code/backend/app/auth.py",
+    "code/backend/app/config.py",
+    "code/backend/app/db.py",
+    "code/backend/app/db_errors.py",
+    "code/backend/app/dependencies.py",
+    "code/backend/app/errors.py",
+    "code/backend/app/http.py",
+    "code/backend/app/idempotency.py",
+    "code/backend/app/logging_config.py",
+    "code/backend/app/main.py",
+    "code/backend/app/middleware.py",
+    "code/backend/app/pagination.py",
+    "code/backend/app/ratelimit.py",
+    "code/backend/app/schemas.py",
+    "code/backend/app/tokens.py",
+    "code/backend/app/__init__.py",
+    "code/backend/db/schema.sql",
+    "code/backend/db/seed.sql",
+    "code/backend/keycloak/realm-tasksteams.json",
+    "code/backend/requests/reassign-outsider.json",
+    "code/backend/requests/task-cancel.json",
+    "code/backend/requests/task-create-other.json",
+    "code/backend/requests/task-create.json",
+    "code/backend/requests/task-patch.json",
+    "code/backend/requests/team-invalid.json",
+    "code/backend/requests/team-patch.json",
+    "code/backend/requests/team-secret.json",
+    "code/backend/requests/team-valid.json",
+    "code/backend/scripts/call.py",
+    "code/backend/scripts/conformance.py",
+    "code/backend/scripts/forge_token.py",
+    "code/backend/scripts/measure.py",
+    "code/backend/scripts/token_rules.py",
+    "code/backend/app/repositories/audit.py",
+    "code/backend/app/repositories/comments.py",
+    "code/backend/app/repositories/members.py",
+    "code/backend/app/repositories/projects.py",
+    "code/backend/app/repositories/sql.py",
+    "code/backend/app/repositories/tasks.py",
+    "code/backend/app/repositories/teams.py",
+    "code/backend/app/repositories/users.py",
+    "code/backend/app/repositories/__init__.py",
+    "code/backend/app/routers/audit.py",
+    "code/backend/app/routers/comments.py",
+    "code/backend/app/routers/health.py",
+    "code/backend/app/routers/me.py",
+    "code/backend/app/routers/members.py",
+    "code/backend/app/routers/projects.py",
+    "code/backend/app/routers/tasks.py",
+    "code/backend/app/routers/teams.py",
+    "code/backend/app/routers/users.py",
+    "code/backend/app/routers/__init__.py",
+    "code/public/icons/LICENSE-ICONS-CC0.txt",
+    "code/public/icons/arrows/log-in.svg",
+    "code/public/icons/arrows/log-out.svg",
+    "code/public/icons/arrows/refresh-cw.svg",
+    "code/public/icons/cloud-network/cloud-off.svg",
+    "code/public/icons/time/calendar-days.svg",
+    "code/public/icons/ui/alert-triangle.svg",
+    "code/public/icons/ui/check-circle.svg",
+    "code/public/icons/ui/columns.svg",
+    "code/public/icons/ui/filter.svg",
+    "code/public/icons/ui/list.svg",
+    "code/public/icons/ui/plus.svg",
+    "code/public/icons/ui/search.svg",
+    "code/public/icons/ui/x.svg",
+    "code/public/icons/users/users.svg"
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "requires": [
+    "go",
+    "curl",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start the temporary database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait db",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "go build ./...",
+      "timeout": 300
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "go run ./cmd/api",
+      "bg": true,
+      "wait": 6
+    },
+    {
+      "name": "health with the database",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 40,
+      "retry_delay": 1,
+      "expect_contains": [
+        "\"database\":\"up\""
+      ]
+    },
+    {
+      "name": "first request with a key",
+      "cwd": "code",
+      "cmd": "curl -s -i -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H \"Idempotency-Key: demo-key-0001\" --data-binary @requests/task-create.json http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks",
+      "expect_contains": [
+        "HTTP/1.1 201 Created"
+      ]
+    },
+    {
+      "name": "the same request again",
+      "cwd": "code",
+      "cmd": "curl -s -i -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H \"Idempotency-Key: demo-key-0001\" --data-binary @requests/task-create.json http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks",
+      "expect_contains": [
+        "HTTP/1.1 201 Created",
+        "Idempotent-Replayed: true"
+      ]
+    },
+    {
+      "name": "the same key with another body",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H \"Idempotency-Key: demo-key-0001\" --data-binary @requests/task-patch.json http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks",
+      "expect_contains": [
+        "already used with a different request",
+        "HTTP 422"
+      ]
+    },
+    {
+      "name": "a key that is too short",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H \"Idempotency-Key: abc\" --data-binary @requests/task-create.json http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks",
+      "expect_contains": [
+        "HTTP 400"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "go run .",
+      "expect_stdout": "first        b692f082278108794800f8fd4047755fea0d884e25831b8094934dc621032a32\nsame request true\nother body   false\nother path   false"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove the temporary stack",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.env.example",
+    "code/cmd/api/main.go",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/go.mod",
+    "code/go.sum",
+    "code/internal/auth/dev.go",
+    "code/internal/auth/principal.go",
+    "code/internal/config/config.go",
+    "code/internal/http/audit.go",
+    "code/internal/http/comments.go",
+    "code/internal/http/errors.go",
+    "code/internal/http/etag.go",
+    "code/internal/http/health.go",
+    "code/internal/http/me.go",
+    "code/internal/http/members.go",
+    "code/internal/http/middleware.go",
+    "code/internal/http/optional.go",
+    "code/internal/http/projects.go",
+    "code/internal/http/request.go",
+    "code/internal/http/respond.go",
+    "code/internal/http/server.go",
+    "code/internal/http/tasks.go",
+    "code/internal/http/teams.go",
+    "code/internal/http/users.go",
+    "code/internal/http/validate.go",
+    "code/internal/problem/problem.go",
+    "code/internal/store/audit.go",
+    "code/internal/store/comments.go",
+    "code/internal/store/errors.go",
+    "code/internal/store/members.go",
+    "code/internal/store/page.go",
+    "code/internal/store/projects.go",
+    "code/internal/store/store.go",
+    "code/internal/store/tasks.go",
+    "code/internal/store/teams.go",
+    "code/internal/store/users.go",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/comment-create.json",
+    "code/requests/if-match-1.txt",
+    "code/requests/if-match-2.txt",
+    "code/requests/if-match-3.txt",
+    "code/requests/if-match-4.txt",
+    "code/requests/if-match-5.txt",
+    "code/requests/if-match-99.txt",
+    "code/requests/if-none-match-1.txt",
+    "code/requests/member-put.json",
+    "code/requests/project-create.json",
+    "code/requests/project-invalid.json",
+    "code/requests/reassign.json",
+    "code/requests/task-clear.json",
+    "code/requests/task-create.json",
+    "code/requests/task-invalid.json",
+    "code/requests/task-patch.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-patch.json",
+    "code/requests/team-valid.json",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

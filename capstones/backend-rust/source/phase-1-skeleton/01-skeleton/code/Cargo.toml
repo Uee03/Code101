@@ -1,0 +1,25 @@
+[package]
+name = "tasks-api"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.88"
+description = "Tasks and Teams API (Code101 capstone, Rust backend)"
+publish = false
+
+[dependencies]
+axum = "0.8"
+dotenvy = "0.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "net", "rt-multi-thread", "signal"] }
+tower = { version = "0.5", features = ["util"] }
+tower-http = { version = "0.7", features = ["request-id", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid = { version = "1", features = ["serde", "v4"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

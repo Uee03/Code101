@@ -1,0 +1,19 @@
+flowchart TD
+    client["Web or mobile client"]
+    subgraph api["Backend API container"]
+        http["HTTP layer<br/>routing, request validation, problem details, rate-limit headers"]
+        auth["Token validator<br/>signature, issuer, audience, expiry, scope, role"]
+        idem["Idempotency handler<br/>replays the stored response for a repeated create"]
+        app["Application layer<br/>use cases and team membership checks"]
+        data["Data layer<br/>parameterised SQL and calls to stored functions"]
+    end
+    kc["Keycloak, external"]
+    db[("PostgreSQL")]
+    client -->|"HTTP with bearer token"| http
+    http --> auth
+    http --> idem
+    http --> app
+    app --> data
+    idem --> data
+    auth -.->|"signing keys"| kc
+    data -->|"SQL as tasks_app"| db

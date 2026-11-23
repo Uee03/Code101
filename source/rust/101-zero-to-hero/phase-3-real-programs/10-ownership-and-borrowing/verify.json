@@ -1,0 +1,23 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Reading: Rust stories\nReader: Rust stories [read]\nBackup: Rust stories"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Book: Garden guide [library]\nBackup: Garden guide"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+flowchart TD
+    subgraph app["One deployable: Tasks and Teams backend"]
+        http["HTTP layer"]
+        subgraph mods["Modules, each with a public interface and its own tables"]
+            teams["Teams and membership"]
+            work["Projects and tasks"]
+            talk["Comments"]
+            audit["Audit trail"]
+        end
+    end
+    db[("One PostgreSQL database, a schema per module")]
+    http --> teams
+    http --> work
+    http --> talk
+    work -->|"asks: is the caller a member?"| teams
+    talk -->|"asks: does the task exist and may the caller see it?"| work
+    teams -->|"publishes change facts"| audit
+    work -->|"publishes change facts"| audit
+    talk -->|"publishes change facts"| audit
+    mods --> db

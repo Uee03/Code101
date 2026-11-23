@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.env
+.git
+.gitignore
+*.md
+Dockerfile
+docker-compose*.yml
+db/
+keycloak/
+scripts/
+openapi.yaml

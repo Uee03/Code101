@@ -1,0 +1,38 @@
+.errors p {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.875rem;
+}
+
+.errors p.hint {
+  color: #4b5563;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.summary {
+  max-width: 36rem;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 2px solid #b42318;
+  border-radius: 0.25rem;
+}
+
+.summary h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.link {
+  min-height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1d4ed8;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+}

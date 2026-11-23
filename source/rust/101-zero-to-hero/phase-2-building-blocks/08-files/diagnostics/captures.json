@@ -1,0 +1,37 @@
+{
+  "run": {
+    "stdout": "item,quantity\nTea,2\nRice,3\nTotal items: 5\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Row: Tea,2\nRow: Rice,3\nProduct rows: 2\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "read checkpoint": {
+    "stdout": "item,quantity\nTea,2\nRice,3\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Row: Tea,2\nRow: Rice,3\nProduct rows: 0\n",
+    "stderr": "warning: variable does not need to be mutable\n --> src\\main.rs:5:9\n  |\n5 |     let mut rows = 0;\n  |         ----^^^^\n  |         |\n  |         help: remove this `mut`\n  |\n  = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default\n\n",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error: expected `;`, found `println`\n --> src\\main.rs:2:34\n  |\n2 |     let report = \"Total items: 5\"\n  |                                  ^ help: add `;` here\n3 |     println!(\"{report}\");\n  |     ------- unexpected token\n\nerror: could not compile `files` (bin \"files\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "from-src": {
+    "stdout": "",
+    "stderr": "\nthread 'main' (28064) panicked at src\\main.rs:4:51:\nCould not read supplies.csv: Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "no-manifest": {
+    "stdout": "",
+    "stderr": "error: could not find `Cargo.toml` in `<project>` or any parent directory\n",
+    "exit": 101
+  }
+}

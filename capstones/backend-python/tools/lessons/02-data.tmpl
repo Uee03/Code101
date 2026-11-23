@@ -1,0 +1,549 @@
+---
+track: capstone
+level: 201
+phase: 2
+phase_name: data
+lesson: 02
+title: "Data: repositories, stored functions, ETag, cursors and idempotency"
+time: 180 min
+prerequisites: [capstone-backend-python-01, capstone-platform-04, databases-101]
+versions: { python: "3.12 or newer (author run: 3.15.2)", fastapi: "0.165.0", sqlalchemy: "2.1.9", psycopg: "3.3.9", postgres_image: "17-alpine", keycloak_image: "quay.io/keycloak/keycloak:26.8.2" }
+verified: 2026-11-23 on Windows 11, Python 3.15.2, Docker 29.9.3, Compose 5.7.0
+source: capstones/backend-python/source/phase-2-data/02-data/
+assets: []
+---
+
+# 02. Data: repositories, stored functions, ETag, cursors and idempotency
+
+## Why it matters
+Think of a restaurant. The waiter (the HTTP layer) takes orders and serves plates but never walks into the pantry. A storekeeper (the repository) is the only person who fetches ingredients, and always with a written slip (a bound parameter), never by shouting free text into the pantry. Some dishes follow a recipe the kitchen keeps in its own book (a stored function) so that every cook, in every restaurant of the chain, makes them the same way. This chapter builds the storekeepers, uses the recipe book, and adds the manners of a polite waiter: "this plate has changed since you ordered" (ETag), "page two, please" (cursor) and "I already served that order" (idempotency key).
+
+## What you will build
+All 27 operations of the contract on top of the platform Postgres: teams, members, projects, tasks, comments, the audit log, users and a real `/health` and `/v1/me`. Writes run in a transaction that first tells the database who the caller is, so the audit trail names them. The caller is identified by a **stand-in**: the API reads the claims of the bearer token **without checking its signature**. That is only acceptable while you develop. Chapter 03 replaces it with real token validation, and shows why you must.
+
+Conformance state at the end of this chapter: **17 passed, 1 failed**. The failing check is `me` because the `RateLimit-*` headers arrive in chapter 05. Everything else, including the idempotency, ETag, pagination, 401, 403, problem-details and audit checks, passes.
+
+```mermaid
+flowchart LR
+    R["router (HTTP)"] -->|"1. Principal from the bearer token"| A["authenticate()"]
+    R -->|"2. open transaction as the caller"| DB["Database.transaction(actor)"]
+    R -->|"3. may this caller see the team?"| AC["access.py"]
+    R -->|"4. SQL with bound parameters"| RP["repositories/*"]
+    RP --> PG[("Postgres: tables, triggers, functions")]
+    PG -->|"SQLSTATE TS404, TS409, TS412, TS422, 23505"| ER["db_errors.py: problem details"]
+```
+
+## Before you start
+- Chapter 01 done, or unzip `backend-python-phase-2-data.zip` and open `02-data/code`. The pack holds the whole project at the end of this chapter. Files unchanged from chapter 01 (`app/logging_config.py`, `app/middleware.py`, `app/errors.py`, `app/schemas.py`, `.gitignore`, `requests/team-valid.json`, `requests/team-invalid.json`) are not repeated here: they are shown in full in chapter 01.
+- Docker running (`docker info` prints server details). Host ports 5432 and 8180 must be free; the Databases track labs and other backends use them too, one at a time.
+- The platform capstone chapters 02 to 04 (schema, stored functions, realm, conformance script). Their files are **copied unchanged** into this project, so this chapter shows only what is new.
+- Terminal in the project folder `tasksteams-api` with the virtual environment active, as in chapter 01.
+
+## Steps
+### Step 1. Bring in the platform files
+The platform capstone owns the database schema, the seed data, the Keycloak realm, the Compose file and the conformance script. Copy these five files from its final pack (`capstones/platform/source/phase-4-conformance/04-conformance-script/code`, or the unzipped `platform-phase-4-conformance.zip`) into your project, keeping the folder names. They must stay byte for byte identical: a backend never edits the contract.
+
+```powershell
+# Windows PowerShell, from the project folder; adjust the first line to where the platform pack is
+$platform = "..\platform-phase-4-conformance\04-conformance-script\code"
+mkdir db, keycloak, scripts
+Copy-Item $platform\docker-compose.yml .
+Copy-Item $platform\db\schema.sql, $platform\db\seed.sql db\
+Copy-Item $platform\keycloak\realm-tasksteams.json keycloak\
+Copy-Item $platform\scripts\conformance.py scripts\
+```
+
+```bash
+# macOS and Linux
+platform=../platform-phase-4-conformance/04-conformance-script/code
+mkdir -p db keycloak scripts
+cp "$platform/docker-compose.yml" .
+cp "$platform/db/schema.sql" "$platform/db/seed.sql" db/
+cp "$platform/keycloak/realm-tasksteams.json" keycloak/
+cp "$platform/scripts/conformance.py" scripts/
+```
+
+`db/schema.sql`, `db/seed.sql`, `keycloak/realm-tasksteams.json` and `scripts/conformance.py` are long files that are shown in the platform chapters 02, 03 and 04; they are not repeated here. The Compose file is short and you will run it now, so here it is in full:
+
+@@FILE docker-compose.yml
+
+| Part | What it does and what happens if you change it |
+|------|-----------------------------------------------|
+| `services.db` | Postgres 17. Its credentials come from `.env`. `127.0.0.1:` in the port means only your own computer can connect; without it the database is reachable from your network |
+| `volumes` of `db` | `pg_data` keeps the data. The two `docker-entrypoint-initdb.d` files run **once**, on an empty volume: schema first, then seed (file names sort). Edit the SQL later and nothing changes until `down -v` deletes the volume |
+| `healthcheck` of `db` | `pg_isready` every 3 seconds; `--wait` blocks until it passes |
+| `services.keycloak` | Keycloak 26.8.2 in development mode. `--import-realm` loads the realm file on first start. `KC_HOSTNAME` fixes the issuer that goes into every token: `http://localhost:8180/realms/tasksteams` |
+| `KC_HOSTNAME_BACKCHANNEL_DYNAMIC` | lets other containers (our API, from chapter 04) call Keycloak by its service name while tokens still carry `localhost` |
+| `networks` | both services join the network `tasksteams-net`; the name is fixed so backends can join it too |
+
+The Compose file reads its values from a `.env` file next to it. The platform `.env.example` is extended by our settings. Replace the content of `.env.example`:
+
+@@FILE .env.example
+
+Then create your own copy and start the infrastructure:
+
+```powershell
+# Windows PowerShell
+Copy-Item .env.example .env
+docker compose up -d --wait
+docker compose ps
+```
+
+```bash
+# macOS and Linux
+cp .env.example .env
+docker compose up -d --wait
+docker compose ps
+```
+
+Expected output of `docker compose up -d --wait` (the first start downloads images and Keycloak needs about half a minute):
+
+@@OUT p2-compose-up
+
+Expected output of `docker compose ps`:
+
+@@OUT p2-compose-ps
+
+Both services say `healthy`. The project name `tasksteams-api` is the folder name; Compose prefixes container names with it.
+
+### Step 2. Add the database packages
+Replace `requirements.txt` and `pyproject.toml` (two new lines each):
+
+@@FILE requirements.txt
+
+@@FILE pyproject.toml
+
+`SQLAlchemy` is the toolkit; we use only its **Core** (connections, transactions, `text()` queries). `psycopg[binary]` is the Postgres driver version 3 with the precompiled library, so no C compiler is needed. Install:
+
+```text
+(.venv) tasksteams-api> python -m pip install -r requirements.txt
+```
+
+### Step 3. Settings and the database connection
+Replace `app/config.py` (three new settings; `database_url` has no default, so the application refuses to start without it):
+
+@@FILE app/config.py
+
+Create `app/db.py`:
+
+@@FILE app/db.py
+
+`create_engine` builds the connection **pool**: a few connections opened once and lent to requests. `pool_size=10` plus `max_overflow=10` allows 20 at once; a request that waits more than `pool_timeout=5` seconds gets an error instead of hanging. `pool_pre_ping` tests a connection before lending it. `transaction()` is the heart of every write: `engine.begin()` opens a transaction that commits when the `with` block ends normally and rolls back when it raises, and with an `actor_id` its first statement runs `set_config('app.current_user_id', ..., true)`. The `true` means "local to this transaction", so the value cannot leak to the next request that reuses the connection. The audit trigger and the stored functions of the schema read that setting.
+
+### Step 4. SQL helpers and the repositories
+A **repository** is a module that hides the SQL of one kind of data behind plain Python functions. Rules for every function below: SQL text is constant, every value travels as a **bound parameter** (`:name`), so SQL injection is impossible by construction, and nothing here knows about HTTP.
+
+Create the folder `app/repositories`, an empty `app/repositories/__init__.py`, and `app/repositories/sql.py`:
+
+@@FILE app/repositories/sql.py
+
+- `fetch_one` and `fetch_all` run a query and return dictionaries (column name to value).
+- `like_escape` makes `%`, `_` and `\` literal, so a search for `100%` does not match everything.
+- `lock_and_check` is optimistic concurrency in two lines of SQL: `SELECT version ... FOR UPDATE` locks the row until the transaction ends and returns its version; if the caller's `If-Match` version differs the function raises **412**. The table name is formatted into the text, which is safe only because every caller passes a literal.
+- `update_columns` builds `UPDATE ... SET a = :a, b = :b`. Column names are checked against an allow-list first (they come from DTO field names, which a client influences), values are bound.
+
+Create `app/repositories/users.py`:
+
+@@FILE app/repositories/users.py
+
+`ensure_user` stores the row that foreign keys point to the first time a Keycloak user appears. `ON CONFLICT DO NOTHING` makes it safe when two requests race. `list_users` shows the **keyset pagination** pattern used everywhere: `(username, id) > (:after_name, :after_id)` compares two columns as one tuple, in the same order as `ORDER BY username, id`. `CAST(:x AS text) IS NULL` is how a parameter that may be absent is switched off; the cast is needed because Postgres cannot guess the type of a bare `NULL` parameter.
+
+Create `app/repositories/teams.py`:
+
+@@FILE app/repositories/teams.py
+
+`create_team` does not insert anything itself. It calls the **stored function** `create_team(...)`, which inserts the team and its first lead in one step and also sets the audit actor. The function returns a row of type `teams`; we select only `id` and read the full team (with `member_count`) afterwards. `get_access` is the one query behind "may this caller see this team": it returns nothing when the team does not exist, and a row with `role` NULL when it exists but the caller is not a member.
+
+Create `app/repositories/members.py`:
+
+@@FILE app/repositories/members.py
+
+`lock_leads` locks the lead rows so that two admins cannot remove the last two leads of a team in parallel. `put_member` is an **upsert**: `INSERT ... ON CONFLICT DO UPDATE` and `RETURNING (xmax = 0)`. In Postgres the system column `xmax` is 0 for a row that was just inserted and not 0 for one that was updated by the conflict clause, which lets the API answer 201 or 200 from one statement.
+
+Create `app/repositories/projects.py`:
+
+@@FILE app/repositories/projects.py
+
+Create `app/repositories/tasks.py`. This is the richest repository: filtering, three sort orders with matching cursors, and the two stored functions.
+
+@@FILE app/repositories/tasks.py
+
+How `list_tasks` works: every filter is "on" only when its parameter is not NULL (or the array not empty), so one fixed SQL text serves all combinations and nothing is pasted together from user input. `KEYSETS` maps the `sort` value to two pieces of SQL: a condition that skips everything up to the cursor, and the `ORDER BY`. The `dueDate` order puts tasks without a due date last (`NULLS LAST`), so its cursor needs the three-way logic you see: after a dated row continue with later dates **or** the same date and a larger id **or** any undated row; after an undated row continue with undated rows of larger id. `ILIKE ... ESCAPE '\'` is a case-insensitive substring search that can use the trigram index of the schema. `complete_task` and `reassign_task` call the stored functions, which lock the row, compare the version and apply the business rules inside Postgres.
+
+Create `app/repositories/comments.py`:
+
+@@FILE app/repositories/comments.py
+
+Create `app/repositories/audit.py`:
+
+@@FILE app/repositories/audit.py
+
+### Step 5. Pagination, ETag helpers and idempotency
+Create `app/pagination.py`:
+
+@@FILE app/pagination.py
+
+A cursor is the position of the last row of a page: its sort values and its id. We encode them as JSON and **base64url** (a URL-safe text form) so the client treats the string as opaque. `decode_cursor` checks the shape and the type of every value with a small parser per value and turns any failure into a 400, never a 500. We do not sign cursors: whatever position a forged cursor names, every query still repeats the authorization condition, so it cannot show rows the caller may not see (TDD decision D10). `make_page` relies on the repositories fetching **one row more** than the limit: if that extra row exists there is a next page, and the cursor is built from the last row that is returned.
+
+Create `app/http.py`:
+
+@@FILE app/http.py
+
+`parse_if_match` accepts exactly one strong ETag such as `"3"`; a missing header is 428, anything else 400. `etag_matches` implements the weak comparison that `If-None-Match` uses (RFC 9110). `created` builds a 201 response with `Location` and `ETag`, plus `Idempotent-Replayed: true` for a replay. `Location` comes from the `PUBLIC_BASE_URL` setting and never from the request's `Host` header, which a client controls.
+
+Create `app/idempotency.py`:
+
+@@FILE app/idempotency.py
+
+An **idempotency key** makes a create safe to repeat: a network error after the server created the task must not make the client create it twice. The trick is to use the database as the arbiter. In one transaction we insert the key row (`ON CONFLICT DO NOTHING`), and if we won the insert we create the resource and store the response body on the key row. A second request with the same key blocks on the unique index until the first one commits, then finds the stored row and replays it. A different request body under the same key (different hash) is a 422. If creating fails, the transaction rolls back and the key row disappears with it, so the client may simply retry. The status 409 "still in progress" cannot normally occur with this design; it remains as a defensive branch.
+
+### Step 6. Who is calling, and may they?
+Create `app/dependencies.py`. A **dependency** is a function FastAPI calls for you and whose result it passes to the route:
+
+@@FILE app/dependencies.py
+
+`Db` and `AppSettings` are `Annotated` shortcuts, so a route can simply write `db: Db`. Now create `app/auth.py`:
+
+@@FILE app/auth.py
+
+Read the stand-in carefully. `read_claims` decodes the middle part of the token and **believes it**. Everything after it is final code and stays: `principal_from_claims` builds a `Principal` (user id, roles, scopes), `authenticate` checks the scopes the route declares and makes sure the user row exists, and `Reader`, `Writer`, `AdminWriter` and `AdminOnly` are ready-made parameter types that name the required scope and role. The scope belongs to the **client** (what the app may do for the user), the role to the **user** (what they may do at all); a request needs both. Only `read_claims` changes in chapter 03.
+
+Create `app/access.py`:
+
+@@FILE app/access.py
+
+This file is the object-level authorization of the API (OWASP API1). Every object (project, task, comment) belongs to a team, and `team_access` answers **404 for a team the caller does not belong to, exactly as for a team that does not exist**, so nobody can learn which ids exist. Inside a team the role decides: a member may work, only a lead or an admin may `require_manage`, which answers **403** because the caller already knows the object exists.
+
+### Step 7. Map database errors to problem details
+Create `app/db_errors.py`:
+
+@@FILE app/db_errors.py
+
+The stored functions signal problems with custom SQLSTATE codes (`TS404`, `TS409`, `TS412`, `TS422`); Postgres itself uses codes such as `23505` (unique violation). This one handler turns them into the right problem details. Only messages we wrote ourselves (the `TS...` ones) are shown to the client; everything else gets a fixed sentence, so a constraint or table name never leaks. A database that cannot be reached has no SQLSTATE at all: that becomes **503** with `Retry-After`, not 500.
+
+### Step 8. The routers
+Replace `app/routers/health.py`. It now asks the database:
+
+@@FILE app/routers/health.py
+
+Replace `app/routers/me.py`. The stub is gone; the caller comes from the token, the details from the database:
+
+@@FILE app/routers/me.py
+
+Create `app/routers/users.py`:
+
+@@FILE app/routers/users.py
+
+Replace `app/routers/teams.py`:
+
+@@FILE app/routers/teams.py
+
+Look at `create_team`: `run_idempotent` receives a small inner function `create` that does the real work, so the same code path serves "no key", "first time" and "replay". `update_team` shows the order of checks for every `PATCH`: header (428), access (404 or 403), version (412), update, read back, answer with the new ETag. `delete_team` uses the `AdminOnly` type: scope `tasks:admin` and the `admin` role.
+
+Create `app/routers/members.py`:
+
+@@FILE app/routers/members.py
+
+Create `app/routers/projects.py`:
+
+@@FILE app/routers/projects.py
+
+Create `app/routers/tasks.py`:
+
+@@FILE app/routers/tasks.py
+
+`PATCH /v1/tasks/{id}` applies **JSON Merge Patch**: `body.model_dump(exclude_unset=True)` contains exactly the fields the client sent, and an explicit `null` for `assigneeId` or `dueDate` clears them. `complete` and `reassign` do not update rows themselves; they call the stored functions and let Postgres decide, which is why the error text for a cancelled task comes from the database.
+
+Create `app/routers/comments.py`:
+
+@@FILE app/routers/comments.py
+
+Create `app/routers/audit.py`:
+
+@@FILE app/routers/audit.py
+
+Replace `app/main.py`. It now creates the database pool when the application starts (the **lifespan**) and closes it when it stops:
+
+@@FILE app/main.py
+
+### Step 9. Helper script and request files
+Typing tokens and headers into curl differs a lot between shells (PowerShell 5.1 even rewrites double quotes inside arguments), so the project carries one small script that does the same everywhere. Create `scripts/call.py`:
+
+@@FILE scripts/call.py
+
+`python scripts/call.py GET /v1/me --user bob` fetches a token for bob from Keycloak, sends the request and prints the answer in the same layout as `curl -i`. `--if-match 3` sends the header `If-Match: "3"` with the quotes the standard requires. `python scripts/call.py token alice` prints just a token, if you prefer curl. (The login with a password works only because the realm has the smoke client `tasks-smoke` for fake local users; real apps use the browser flow.)
+
+Create the request bodies in `requests/` (the two team files from chapter 01 stay). `requests/task-create.json`:
+
+@@FILE requests/task-create.json
+
+`requests/task-create-other.json`:
+
+@@FILE requests/task-create-other.json
+
+`requests/task-patch.json`:
+
+@@FILE requests/task-patch.json
+
+`requests/task-cancel.json`:
+
+@@FILE requests/task-cancel.json
+
+`requests/reassign-outsider.json` (alice is not a member of the Mobile Team):
+
+@@FILE requests/reassign-outsider.json
+
+`requests/team-secret.json`:
+
+@@FILE requests/team-secret.json
+
+`requests/team-patch.json`:
+
+@@FILE requests/team-patch.json
+
+## Run it
+Start the API on your computer (the database and Keycloak run in Docker). Leave this terminal open:
+
+```text
+(.venv) tasksteams-api> python -m uvicorn app.main:app --port 8000
+```
+
+In a second terminal in the same folder, run the calls below. `python` here means the one of your environment (or any Python 3, the script uses only the standard library). Ids such as the task id differ in your run: copy them from the previous answer.
+
+**1. Health now reports the database**
+
+```text
+tasksteams-api> python scripts/call.py GET /health
+```
+
+@@OUT p2-health
+
+**2. Who am I?** Bob is a member of both seed teams. The first call creates nothing new (the seed has bob), a stranger would be inserted here:
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/me --user bob
+```
+
+@@OUT p2-me-bob
+
+**3. Cursor pagination.** `limit=1` gives one team and a `nextCursor`; the second call passes it back as `cursor`:
+
+```text
+tasksteams-api> python scripts/call.py GET "/v1/teams?limit=1" --user bob
+```
+
+@@OUT p2-teams-page1
+
+@@OUT p2-teams-page2
+
+The second answer ends with `"nextCursor":null`: that was the last page. A made-up cursor is a client error:
+
+```text
+tasksteams-api> python scripts/call.py GET "/v1/projects/9a000000-0000-4000-8000-000000000001/tasks?cursor=abc" --user bob
+```
+
+@@OUT p2-bad-cursor
+
+**4. Filtering and sorting.** Repeat a parameter to match several values:
+
+```text
+tasksteams-api> python scripts/call.py GET "/v1/projects/9a000000-0000-4000-8000-000000000001/tasks?status=todo&status=blocked" --user bob
+```
+
+@@OUT p2-tasks-filter
+
+Sort by due date, two per page (the first page ends in a cursor, the second continues after it):
+
+@@OUT p2-tasks-due-page1
+
+@@OUT p2-tasks-due-page2
+
+**5. Idempotency.** Send the same create twice with one `Idempotency-Key`:
+
+```text
+tasksteams-api> python scripts/call.py POST /v1/projects/9a000000-0000-4000-8000-000000000001/tasks --user bob --body requests/task-create.json --idempotency-key demo-key-0001
+```
+
+@@OUT p2-task-create-1
+
+The second identical call returns the **same task**, marked as a replay (the body's members are in a different order because Postgres stores `jsonb`, which does not keep key order; the content is identical):
+
+@@OUT p2-task-create-2
+
+The same key with a different body is refused:
+
+```text
+tasksteams-api> python scripts/call.py POST /v1/projects/9a000000-0000-4000-8000-000000000001/tasks --user bob --body requests/task-create-other.json --idempotency-key demo-key-0001
+```
+
+@@OUT p2-idem-other
+
+**6. ETag, If-None-Match and If-Match.** Read the task (use your own task id):
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/tasks/<task id> --user bob
+```
+
+@@OUT p2-task-get
+
+Ask again with the ETag you hold. The answer has no body:
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/tasks/<task id> --user bob --if-none-match 1
+```
+
+@@OUT p2-task-304
+
+Change the task. No `If-Match` header is 428, a malformed one is 400, an outdated one is 412, and the right one is 200 with the new ETag:
+
+```text
+tasksteams-api> python scripts/call.py PATCH /v1/tasks/<task id> --user bob --body requests/task-patch.json
+```
+
+@@OUT p2-ifmatch-missing
+
+@@OUT p2-ifmatch-bad
+
+```text
+tasksteams-api> python scripts/call.py PATCH /v1/tasks/<task id> --user bob --body requests/task-patch.json --if-match 7
+```
+
+@@OUT p2-task-patch-stale
+
+```text
+tasksteams-api> python scripts/call.py PATCH /v1/tasks/<task id> --user bob --body requests/task-patch.json --if-match 1
+```
+
+@@OUT p2-task-patch-ok
+
+**7. Rules that live in the database.** A cancelled task cannot be completed (the text comes from the stored function):
+
+@@OUT p2-complete-cancelled
+
+Carol, lead of the Mobile Team, reassigns a Mobile task to alice, who is not a member of that team:
+
+```text
+tasksteams-api> python scripts/call.py POST /v1/tasks/7a500000-0000-4000-8000-000000000007/reassign --user carol --body requests/reassign-outsider.json --if-match 1
+```
+
+@@OUT p2-reassign-outsider
+
+**8. Who may see and change what.** Alice (an admin) creates a team led by carol; bob is not in it and gets **404**, as if it did not exist:
+
+```text
+tasksteams-api> python scripts/call.py POST /v1/teams --user alice --body requests/team-secret.json
+```
+
+@@OUT p2-secret-create
+
+@@OUT p2-secret-bob
+
+Bob knows the Platform Team exists but is no lead, so changing it is **403**:
+
+```text
+tasksteams-api> python scripts/call.py PATCH /v1/teams/7ea00000-0000-4000-8000-000000000001 --user bob --body requests/team-patch.json --if-match 1
+```
+
+@@OUT p2-team-patch-403
+
+**9. The audit trail** names the caller, because every write transaction began with `set_config`:
+
+```text
+tasksteams-api> python scripts/call.py GET "/v1/audit-log?entityType=task&limit=2" --user alice
+```
+
+@@OUT p2-audit
+
+**10. Without a token**
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/me
+```
+
+@@OUT p2-no-token
+
+**11. The conformance script** from the platform checks all of this in one run:
+
+```text
+tasksteams-api> python scripts/conformance.py
+```
+
+@@OUT p2-conformance
+
+17 passed, 1 failed, as announced: `me` needs the `RateLimit-*` headers of chapter 05. Stop the API with Ctrl+C. Leave Docker running for chapter 03, or stop it with `docker compose down -v`.
+
+## How it works
+**One write, step by step** (task `PATCH`):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant R as router update_task
+    participant A as access.py
+    participant D as Postgres
+    C->>R: PATCH /v1/tasks/ID with If-Match
+    R->>R: parse_if_match (428 or 400)
+    R->>D: BEGIN, set_config app.current_user_id
+    R->>A: task_access (404 or 403)
+    A->>D: SELECT task, team membership
+    R->>D: SELECT version FOR UPDATE (412 if stale)
+    R->>D: UPDATE changed columns
+    D->>D: triggers: version+1, updated_at, audit row
+    R->>D: SELECT the task again, COMMIT
+    R-->>C: 200 with the new ETag
+```
+
+The version number is the whole ETag mechanism: the trigger `bump_version` raises it on every real change, the API prints it quoted, and the lock plus the comparison stop two writers from silently overwriting each other (the **lost update** problem).
+
+New terms: **repository** (a module that holds the SQL of one kind of data); **bound parameter** (a value sent beside the SQL text, never inside it); **keyset pagination** (continue after the last row seen instead of skipping N rows); **optimistic concurrency** (assume no conflict, detect it at write time with a version); **idempotent** (doing it twice has the effect of doing it once); **SQLSTATE** (the five-character error code of Postgres); **stored function** (a function that lives in the database).
+
+Why this, not that:
+
+| Choice | Alternative | Why we chose this |
+|--------|-------------|-------------------|
+| Keyset cursors | `OFFSET` and `LIMIT` | A page starting at row 10,000 with OFFSET reads and throws away 10,000 rows, and a row inserted meanwhile shifts every page. Keyset reads only what it returns and stays stable; the cost is no jump to page 40 |
+| `FOR UPDATE` plus a version check | Retry loops, or `UPDATE ... WHERE version = :v` and look at the row count | The lock gives a precise 412 with the current version in the message, and the rule is one pattern for three tables |
+| Idempotency key stored in the same transaction | A cache with a time to live | No window in which a crash leaves a created resource without its key; the database's unique index serializes duplicates for free |
+| Rules in stored functions | Rules in Python | The same rule for four backends in four languages; the price is that changing it means a database migration |
+| SQLAlchemy Core with `text()` | The ORM | The SQL is visible and reviewable and maps one-to-one to the functions of the schema; there is no object graph to keep in step |
+| Team access checked in the application | Postgres row-level security | RLS would also protect against our own bugs, but it needs one database role per user or a session setting for every query; we keep the rule in one readable module (`access.py`) and mention RLS as a hardening option |
+
+## Try it
+Exercise: **write the cursor yourself.** Copy `exercise/starter/cursor.py` into a folder of your own and finish `encode_cursor` and `decode_cursor`. `encode_cursor` turns a list into compact JSON (`separators=(",", ":")`), encodes it as base64url and removes the `=` padding. `decode_cursor` reverses it and raises `ValueError` for text that is not base64, not JSON or not a list. Run `python cursor.py`. The output must show a round trip and reject both `abc` and `e30`.
+
+@@FILE_STARTER cursor.py
+
+<details><summary>Solution</summary>
+
+@@FILE_EXERCISE cursor.py
+
+`urlsafe_b64decode` needs the padding that `rstrip(b"=")` removed, which `"=" * (-len(cursor) % 4)` puts back. Every failure mode (bad base64, bad JSON, wrong type, bad UTF-8) is a `ValueError` or a subclass of it, so one `except ValueError` in the caller is enough. Expected output:
+
+@@OUT p2-ex-cursor
+
+</details>
+
+## Check yourself
+1. Why does the API answer 404 and not 403 when bob asks for a team he does not belong to? <details><summary>Answer</summary>A 403 would confirm that the team exists. With 404 for both "unknown" and "not yours", ids cannot be probed (object level authorization, OWASP API1). 403 is for objects the caller may already see.</details>
+2. What exactly protects `PATCH` from a lost update? <details><summary>Answer</summary>The client sends the version it read in `If-Match`; the server locks the row with `FOR UPDATE` and compares. Two writers cannot both succeed with the same version, the second gets 412 and must read again.</details>
+3. A client sends the same create twice with one idempotency key and the second request arrives while the first is still running. What happens? <details><summary>Answer</summary>The second INSERT into `idempotency_keys` waits on the unique index until the first transaction commits, then conflicts and replays the stored response. Nothing is created twice.</details>
+4. Why are table names formatted into SQL in `lock_and_check` but values never? <details><summary>Answer</summary>Identifiers cannot be bound parameters, so they must be written into the text. They are always literals chosen by our code, never request data. Values come from requests and are always bound.</details>
+5. Why is `read_claims` dangerous, and what stays when we replace it? <details><summary>Answer</summary>Anyone can write a token with any claims; without a signature check the API believes them (chapter 03 demonstrates it). The `Principal`, scopes, roles and team checks stay, because they only consume claims.</details>
+
+## Common mistakes
+| Symptom or error text | Cause | Fix |
+|---|---|---|
+| `pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings` then `database_url` and `Field required [type=missing, input_value={}, input_type=dict]` | `DATABASE_URL` is not set: there is no `.env`, or you started Uvicorn in another folder | Copy `.env.example` to `.env` in the project folder and start Uvicorn there |
+| The API answers 503 `The database is not available.` (and `/health` answers 503 with `"database":"down"`) | Postgres is not running or not healthy | `docker compose ps`, then `docker compose up -d --wait`. The log line says `database unavailable: ConnectionTimeout` |
+| `412` with `The task changed since you read it (current version 1).` | Your `If-Match` is older than the stored version: someone changed the task, or you typed the wrong number | Read the task again (`GET`), copy the new ETag |
+| `400` with `If-Match must be one strong ETag such as "3".` | The header has no quotes (`If-Match: 1`), is weak (`W/"1"`) or is `*` | Send the quoted version; `--if-match 1` of `scripts/call.py` adds the quotes |
+| `422` with `This Idempotency-Key was already used with a different request.` | The same key was used for another body or URL | Use a new key for a new request, the same key only for a retry of the same request |
+| The seed data you edited in `db/seed.sql` does not show up | The schema and seed run only on an empty volume | `docker compose down -v`, then `docker compose up -d --wait` |
+| `404` for a team you can see in the database | The token's user is not a member and not an admin (404 hides existence) | Use a member's token, or alice, or add the membership with `PUT /v1/teams/{id}/members/{userId}` |
+
+## Best practice
+Authorize on the server for every object, check scope and role and membership together, and keep the rules that must be identical everywhere (version checks, atomic changes) in one place. Source: OWASP API Security Top 10 2023, API1 Broken Object Level Authorization https://owasp.org/API-Security/editions/2023/en/0x11-t10/ and PostgreSQL 17 documentation, Explicit Locking https://www.postgresql.org/docs/17/explicit-locking.html
+
+## Next lesson
+03. Identity: replace the stand-in `read_claims` with real validation of the Keycloak token (signature from the cached JWKS, issuer, audience, expiry), show that a forged token is rejected, and test every token rule offline.

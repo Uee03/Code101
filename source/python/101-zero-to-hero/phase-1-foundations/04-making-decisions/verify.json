@@ -1,0 +1,20 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "run comparisons.py",
+      "cwd": "code",
+      "cmd": "{python} comparisons.py",
+      "expect_stdout": "5 > 3 : True\n5 < 3 : False\n5 == 5 : True\n5 != 5 : False\n5 >= 5 : True\n\"a\" == \"A\" : False\nadult with ticket: True\nchild or has ticket: True\nno ticket: False"
+    },
+    { "name": "ticket age 3", "cwd": "code", "cmd": "{python} ticket_machine.py", "stdin": "3\n", "expect_contains": ["Ticket: free"] },
+    { "name": "ticket age 10", "cwd": "code", "cmd": "{python} ticket_machine.py", "stdin": "10\n", "expect_contains": ["Ticket: child price, 5.00"] },
+    { "name": "ticket age 30", "cwd": "code", "cmd": "{python} ticket_machine.py", "stdin": "30\n", "expect_contains": ["Ticket: adult price, 10.00"] },
+    { "name": "ticket age 70", "cwd": "code", "cmd": "{python} ticket_machine.py", "stdin": "70\n", "expect_contains": ["Ticket: senior price, 7.00"] },
+    { "name": "ticket age -1", "cwd": "code", "cmd": "{python} ticket_machine.py", "stdin": "-1\n", "expect_contains": ["Age cannot be negative."] },
+    { "name": "grade 30", "cwd": "exercise/solution", "cmd": "{python} grade_checker.py", "stdin": "30\n", "expect_contains": ["Fail"] },
+    { "name": "grade 60", "cwd": "exercise/solution", "cmd": "{python} grade_checker.py", "stdin": "60\n", "expect_contains": ["Pass"] },
+    { "name": "grade 90", "cwd": "exercise/solution", "cmd": "{python} grade_checker.py", "stdin": "90\n", "expect_contains": ["Merit"] },
+    { "name": "grade 101", "cwd": "exercise/solution", "cmd": "{python} grade_checker.py", "stdin": "101\n", "expect_contains": ["Invalid score"] }
+  ]
+}

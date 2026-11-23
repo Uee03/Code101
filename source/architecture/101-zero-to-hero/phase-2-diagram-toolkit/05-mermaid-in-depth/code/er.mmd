@@ -1,0 +1,12 @@
+erDiagram
+  PROJECTS ||--o{ TASKS : contains
+  PROJECTS {
+    uuid id PK
+    string name
+  }
+  TASKS {
+    uuid id PK
+    uuid project_id FK
+    string title
+    string status
+  }

@@ -1,0 +1,9 @@
+swagger_parser:
+  schema_path: contract/openapi.yaml
+  output_directory: lib/data/generated
+  generation:
+    root_api_class_name: TasksApi
+    http_client: dio
+    serializer: json_serializable
+    response_mode: first_success
+    generate_docs: true

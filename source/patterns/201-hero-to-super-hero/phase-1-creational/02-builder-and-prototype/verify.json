@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- builder ---\noffice: basic CPU, 16 GB RAM, 256 GB storage, no GPU\ngaming: fast CPU, 32 GB RAM, 2000 GB storage, big GPU\nRejected: at least 4 GB RAM is required\n--- prototype ---\narcher hp=30 items=bow\nscout hp=30 items=bow, map\narcher hp=30 items=bow, torch"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- builder ---\noffice: basic CPU, 16 GB RAM, 256 GB storage, no GPU\ngaming: fast CPU, 32 GB RAM, 2000 GB storage, big GPU\nRejected: at least 4 GB RAM is required\n--- prototype ---\narcher hp=30 items=bow\nscout hp=30 items=bow, map\narcher hp=30 items=bow, torch"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "To: ana@example.com, bo@example.com | Subject: Hello | Body: Hi!\nRejected: an email needs at least one recipient"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "To: ana@example.com, bo@example.com | Subject: Hello | Body: Hi!\nRejected: an email needs at least one recipient"
+    }
+  ]
+}

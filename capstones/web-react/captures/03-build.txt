@@ -1,0 +1,42 @@
+
+> tasks-web-react@1.0.0 prebuild
+> npm run api:gen
+
+
+> tasks-web-react@1.0.0 api:gen
+> openapi-typescript contract/openapi.yaml -o src/api/schema.d.ts
+
+✨ openapi-typescript 7.13.0
+🚀 contract/openapi.yaml → src/api/schema.d.ts [61.7ms]
+
+> tasks-web-react@1.0.0 build
+> tsc -b && vite build
+
+[36mvite v8.3.8 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 185 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.48 kB │ gzip:  0.30 kB
+dist/assets/index-DBP-3QQU.css           3.43 kB │ gzip:  1.01 kB
+dist/assets/NotFound-h5YtTxlZ.js         0.27 kB │ gzip:  0.21 kB
+dist/assets/Page-nkutFQt_.js             0.35 kB │ gzip:  0.26 kB
+dist/assets/Callback-DgZWG7qa.js         0.66 kB │ gzip:  0.41 kB
+dist/assets/ConfirmDialog-BE3uN2r0.js    0.86 kB │ gzip:  0.48 kB
+dist/assets/Login-BZ7-WvFH.js            1.05 kB │ gzip:  0.59 kB
+dist/assets/Dashboard-DCKaaQuf.js        1.09 kB │ gzip:  0.56 kB
+dist/assets/projects-Cg3uzJdN.js         1.18 kB │ gzip:  0.51 kB
+dist/assets/LoadMore-DVIA7Qm4.js         1.31 kB │ gzip:  0.73 kB
+dist/assets/Banner-evNRmnzB.js           1.55 kB │ gzip:  0.69 kB
+dist/assets/tasks-Dgzcax2y.js            1.62 kB │ gzip:  0.59 kB
+dist/assets/Projects-z4SC4j9T.js         1.74 kB │ gzip:  0.86 kB
+dist/assets/Teams-CZw-kVGH.js            1.76 kB │ gzip:  0.83 kB
+dist/assets/TeamDetail-D3z69Q46.js       2.13 kB │ gzip:  0.88 kB
+dist/assets/Audit-BPFFAUtD.js            2.31 kB │ gzip:  1.02 kB
+dist/assets/teams-xPOfFT30.js            4.31 kB │ gzip:  1.66 kB
+dist/assets/TaskDetail-BcJlfuwU.js       4.38 kB │ gzip:  1.57 kB
+dist/assets/Tasks-CMaUcqeU.js            4.66 kB │ gzip:  1.66 kB
+dist/assets/lib-D1qhtAYh.js            104.33 kB │ gzip: 34.24 kB
+dist/assets/index-RBUwMFym.js          331.61 kB │ gzip: 99.35 kB
+
+[32m✓ built in 309ms[39m

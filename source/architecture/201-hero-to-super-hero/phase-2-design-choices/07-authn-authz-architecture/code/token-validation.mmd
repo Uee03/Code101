@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant K as Keycloak
+    C->>A: request with Authorization Bearer token
+    A->>K: fetch the signing keys, only when the key id is not cached
+    A->>A: verify signature, issuer, audience and expiry
+    alt token missing, malformed, expired or wrongly signed
+        A-->>C: 401 problem details
+    else token is valid
+        A->>A: check the scope the operation needs and the role
+        alt scope or role missing
+            A-->>C: 403 problem details
+        else caller is not a member of the team
+            A-->>C: 404 problem details
+        else allowed
+            A-->>C: handler result, the user is the sub claim
+        end
+    end

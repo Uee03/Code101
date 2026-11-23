@@ -1,0 +1,17 @@
+name: code101-devloop
+
+services:
+  web:
+    build: .
+    image: code101-devloop-web:201
+    ports:
+      - "127.0.0.1:8080:8000"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./app
+          target: /srv/app
+          ignore:
+            - __pycache__/
+        - action: rebuild
+          path: ./requirements.txt

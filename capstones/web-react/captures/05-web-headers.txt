@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Mon, 23 Nov 2026 10:45:10 GMT
+Content-Type: text/html
+Content-Length: 486
+Last-Modified: Mon, 23 Nov 2026 10:45:02 GMT
+Connection: keep-alive
+ETag: "6b04192e-1e6"
+Expires: Mon, 23 Nov 2026 10:45:09 GMT
+Cache-Control: no-cache
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://localhost:8000 http://localhost:8180; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+X-Frame-Options: DENY
+Accept-Ranges: bytes
+
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+
+  0      0   0      0   0      0      0      0                              0
+  0    486   0      0   0      0      0      0                              0
+  0    486   0      0   0      0      0      0                              0
+  0    486   0      0   0      0      0      0                              0

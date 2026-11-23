@@ -1,0 +1,6 @@
+{
+  "customer": "Ada",
+  "lines": [
+    { "sku": "BOOK-1", "quantity": 2, "unitPriceCents": 1250 }
+  ]
+}

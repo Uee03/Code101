@@ -1,0 +1,9 @@
+HTTP/1.1 401 Unauthorized
+date: Mon, 23 Nov 2026 08:33:45 GMT
+server: uvicorn
+www-authenticate: Bearer realm="tasksteams"
+content-length: 203
+content-type: application/problem+json
+x-trace-id: 237db9331f20493f8fbab7bd34c5797a
+
+{"type":"https://code101.example/problems/unauthorized","title":"Unauthorized","status":401,"detail":"A bearer access token is required.","instance":"/v1/me","traceId":"237db9331f20493f8fbab7bd34c5797a"}

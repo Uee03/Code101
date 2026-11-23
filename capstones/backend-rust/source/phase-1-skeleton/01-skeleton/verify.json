@@ -1,0 +1,94 @@
+{
+  "requires": [
+    "docker",
+    "cargo"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start temporary Postgres and Keycloak (the conformance script needs Keycloak tokens)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "compile the API",
+      "cwd": "code",
+      "cmd": "cargo build --locked",
+      "timeout": 900
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "cargo run --locked --quiet",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "health probe",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py GET /health",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_contains": [
+        "HTTP 200",
+        "\"status\": \"ok\""
+      ]
+    },
+    {
+      "name": "validation answers with problem details",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py POST /v1/teams name=",
+      "expect_exit": 1,
+      "expect_contains": [
+        "HTTP 422",
+        "content-type: application/problem+json",
+        "\"pointer\": \"/name\""
+      ]
+    },
+    {
+      "name": "conformance script (phase 1 passes 6 of 18)",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_exit": 1,
+      "expect_contains": [
+        "PASS  keycloak discovery (issuer matches, PKCE S256 offered)",
+        "PASS  health (200, status ok, no token needed)",
+        "PASS  problem details shape (422 with errors[/name], 404 with type, title and status)",
+        "6 passed, 12 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "expect_stdout": "400 https://code101.example/problems/bad-request\n401 https://code101.example/problems/unauthorized\n403 https://code101.example/problems/forbidden\n404 https://code101.example/problems/not-found\n409 https://code101.example/problems/conflict\n412 https://code101.example/problems/precondition-failed\n422 https://code101.example/problems/validation-error\n428 https://code101.example/problems/precondition-required\n429 https://code101.example/problems/rate-limited\n500 https://code101.example/problems/internal-error"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/Cargo.lock",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/scripts/conformance.py"
+  ]
+}

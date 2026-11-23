@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "2\n80\n15\nno\n",
+      "expect_stdout": "People (whole number):\nBill (use a dot):\nTip percent (number only):\nTip: 12.00\nTotal: 92.00\nPer person: 46.00\nChange from 100: 8.00\n7 / 2 with integers: 3\n7 % 2 remainder: 1\nOptional whole-number coupon (try a word):\nCoupon parsed: False; value: 0"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "90\n3\n",
+      "expect_stdout": "Bill (use a dot):\nPeople (positive whole number):\nShare: 30.00"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

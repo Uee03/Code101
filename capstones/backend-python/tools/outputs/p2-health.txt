@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:40 GMT
+server: uvicorn
+content-length: 49
+content-type: application/json
+x-trace-id: e08123eedd0e477d81271056686f89e4
+
+{"status":"ok","version":"1.0.0","database":"up"}

@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- adapter ---\n20 C\n100 C\n10 C\n--- facade ---\nAmplifier: on, volume 5\nProjector: on, input player\nPlayer: playing Matrix\nPlayer: stopped\nProjector: off\nAmplifier: off"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- adapter ---\n20 C\n100 C\n10 C\n--- facade ---\nAmplifier: on, volume 5\nProjector: on, input player\nPlayer: playing Matrix\nPlayer: stopped\nProjector: off\nAmplifier: off"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Console: Build finished\nSMS to +100: Build finished"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Console: Build finished\nSMS to +100: Build finished"
+    }
+  ]
+}

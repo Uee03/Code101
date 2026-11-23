@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <label for="title-reactive">New task (reactive form)</label>
+  <input
+    id="title-reactive"
+    type="text"
+    formControlName="title"
+    [attr.aria-invalid]="title.invalid && title.touched"
+    aria-describedby="title-reactive-error">
+  <button type="submit">Add</button>
+  @if (title.invalid && title.touched) {
+    <p id="title-reactive-error" class="error" role="alert">
+      @if (title.hasError('required')) {
+        Enter a title.
+      } @else {
+        Use at least 3 characters.
+      }
+      <!-- TODO 2: show "Use at most 40 characters." when title.hasError('maxlength'). Restructure the @else so each case has its own message. -->
+    </p>
+  }
+</form>

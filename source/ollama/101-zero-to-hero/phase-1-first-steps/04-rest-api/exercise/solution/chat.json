@@ -1,0 +1,9 @@
+{
+  "model": "llama3.2:1b",
+  "messages": [
+    {"role": "system", "content": "Explain things in plain language."},
+    {"role": "user", "content": "What is a local language model?"}
+  ],
+  "stream": false,
+  "options": {"num_ctx": 2048, "num_predict": 128}
+}

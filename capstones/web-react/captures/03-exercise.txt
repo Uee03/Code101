@@ -1,0 +1,1 @@
+exercise: cursor stops at null

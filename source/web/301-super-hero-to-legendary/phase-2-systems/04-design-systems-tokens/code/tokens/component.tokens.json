@@ -1,0 +1,9 @@
+{
+  "button": {
+    "$type": "dimension",
+    "padding-block": { "$value": "{space.2}" },
+    "padding-inline": { "$value": "{space.4}" },
+    "radius": { "$value": "{radius.md}" },
+    "font-size": { "$value": "{font.size.md}" }
+  }
+}

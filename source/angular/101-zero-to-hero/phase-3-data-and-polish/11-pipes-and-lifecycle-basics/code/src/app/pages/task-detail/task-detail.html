@@ -1,0 +1,19 @@
+@if (store.status() === 'loading') {
+  <p role="status">Loading the task...</p>
+} @else {
+  @if (task(); as found) {
+    <h1>{{ found.title }}</h1>
+    <p>Task number {{ found.id }}. Status: {{ (found.done ? 'done' : 'to do') | titlecase }}.</p>
+    @if (found.due) {
+      <p>Due: {{ found.due | date: 'fullDate' }}</p>
+    }
+    <details>
+      <summary>Raw data</summary>
+      <pre>{{ found | json }}</pre>
+    </details>
+  } @else {
+    <h1>Task not found</h1>
+    <p>There is no task with the number "{{ id() }}".</p>
+  }
+}
+<p><a routerLink="/tasks">Back to the list</a></p>

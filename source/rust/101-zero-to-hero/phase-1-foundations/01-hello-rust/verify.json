@@ -1,0 +1,23 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Hello, world!"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Recipe: Tea\n1. Boil water.\n2. Add tea."
+    }
+  ]
+}

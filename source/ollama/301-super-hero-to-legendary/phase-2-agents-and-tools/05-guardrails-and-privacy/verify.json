@@ -1,0 +1,7 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "skip_lesson_check": ["code/ollama_http.py", "code/rag_core.py"],
+  "notes": "Written, not run. Static text/source comparison only. No Ollama command, API call or program was executed by the author. ollama_http.py and rag_core.py are byte-identical to files in lessons 201.01 and 301.01. Offline check for a learner: python -m unittest in the code folder (needs no model)."
+}

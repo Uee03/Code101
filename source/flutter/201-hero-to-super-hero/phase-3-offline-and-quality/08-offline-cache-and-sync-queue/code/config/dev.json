@@ -1,0 +1,8 @@
+{
+  "API_BASE_URL": "http://10.0.2.2:8000",
+  "DEV_PROJECT_ID": "9a000000-0000-4000-8000-000000000003",
+  "OIDC_ISSUER": "http://localhost:8180/realms/tasksteams",
+  "OIDC_CLIENT_ID": "tasks-mobile",
+  "OIDC_REDIRECT_URI": "com.code101.tasks:/oauth2redirect",
+  "OIDC_LOGOUT_URI": "com.code101.tasks:/logout"
+}

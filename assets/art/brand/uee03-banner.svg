@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 460" width="1500" height="460" role="img" aria-label="Uee03 banner">
+  <defs>
+    <radialGradient id="card" cx="18%" cy="0%" r="120%">
+      <stop offset="0" stop-color="#262C3A" />
+      <stop offset="0.7" stop-color="#1A1E28" />
+    </radialGradient>
+    <linearGradient id="bg" x1="90" y1="90" x2="390" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3E3760" />
+      <stop offset="1" stop-color="#2C2745" />
+    </linearGradient>
+    <linearGradient id="u" x1="146" y1="152" x2="334" y2="363" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B23FF" />
+      <stop offset="0.5" stop-color="#008BFF" />
+      <stop offset="1" stop-color="#E4FF30" />
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="460" rx="40" fill="url(#card)" />
+
+  <!-- mark -->
+  <g transform="translate(90 86) scale(0.5625)">
+    <rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bg)" />
+    <path d="M256 52 A204 204 0 0 1 460 256" fill="none" stroke="#008BFF" stroke-width="24"
+      stroke-linecap="round" opacity="0.95" />
+    <g fill="none" stroke="url(#u)" stroke-width="74" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M112 116 L112 300" />
+      <path d="M112 300 A144 144 0 0 0 400 300" />
+      <path d="M400 116 L400 396" />
+    </g>
+    <circle cx="430" cy="430" r="34" fill="#E4FF30" />
+  </g>
+
+  <!-- wordmark + tagline -->
+  <text x="470" y="238" font-family="'Segoe UI', 'Arial', sans-serif" font-size="150"
+    font-weight="800" letter-spacing="1" fill="#FFFFFF">Uee<tspan fill="#E4FF30">03</tspan></text>
+  <text x="476" y="312" font-family="'Segoe UI', 'Arial', sans-serif" font-size="40"
+    font-weight="500" letter-spacing="3" fill="#9AA6B6">ANIMATED ICONS &amp; MOTION ASSETS</text>
+</svg>

@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "10% off: 72.00\n15.00 off: 65.00\n50% off (max 20.00 off): 60.00\nBest for 80.00: 50% off (max 20.00 off)\nDiscount: 500.00 off (flat amount) -> 0.00"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "12.00 off over 50.00: 68.00\n12.00 off over 50.00: 30.00\n12.00 off over 50.00 (max 5.00 off): 75.00"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

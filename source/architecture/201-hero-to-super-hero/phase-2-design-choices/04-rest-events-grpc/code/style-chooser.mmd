@@ -1,0 +1,17 @@
+flowchart TD
+    Q1{"Does the caller need the answer now to continue?"}
+    Q2{"Is the caller a browser or an unknown public client?"}
+    Q3{"Internal caller with a strict shared contract and heavy call volume or streaming?"}
+    Q4{"Must more than one party react, or must the work survive a restart?"}
+    REST["REST over HTTP with JSON and an OpenAPI contract"]
+    GRPC["gRPC with Protocol Buffers over HTTP/2, after measuring the need"]
+    EVT["Events through a broker, consumers react on their own"]
+    JOB["One queue and one kind of worker, or 202 Accepted with a status URL"]
+    Q1 -->|"yes"| Q2
+    Q1 -->|"no"| Q4
+    Q2 -->|"yes"| REST
+    Q2 -->|"no"| Q3
+    Q3 -->|"yes"| GRPC
+    Q3 -->|"no"| REST
+    Q4 -->|"yes"| EVT
+    Q4 -->|"no"| JOB

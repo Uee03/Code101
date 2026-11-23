@@ -1,0 +1,24 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+[*.{csproj,props,json,yml,yaml}]
+indent_size = 2
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_var_for_built_in_types = true:suggestion
+dotnet_sort_system_directives_first = true
+
+# Analyzer severities: raise the few rules that matter to this team and silence the ones that do not apply.
+# CA2007 (ConfigureAwait) is noise in ASP.NET Core, which has no synchronization context.
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1852.severity = warning
+dotnet_diagnostic.CA2016.severity = warning
+dotnet_analyzer_diagnostic.category-Security.severity = warning

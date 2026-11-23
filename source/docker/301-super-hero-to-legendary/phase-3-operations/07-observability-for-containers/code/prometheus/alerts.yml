@@ -1,0 +1,17 @@
+groups:
+  - name: code101-api
+    rules:
+      - alert: ApiDown
+        expr: up{job="code101-api"} == 0
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: "code101-api target is down"
+      - alert: ApiHighErrorRatio
+        expr: sum(rate(app_requests_total{status=~"5.."}[5m])) / sum(rate(app_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: page
+        annotations:
+          summary: "More than 5 percent of requests fail with 5xx"

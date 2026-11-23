@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "sample quote: 3650\nstep 1 (extract functions, parameter object): 216 cases, 0 differences\nstep 2 (polymorphic carriers, move method): 216 cases, 0 differences\nbroken step (express applied last): 216 cases, 81 differences\nfirst difference: 1 kg post domestic express=True insured=False fragile=True: legacy 1180, candidate 1305\nerror message preserved: True"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "sample quote: 3650\nstep 1 (extract functions, parameter object): 216 cases, 0 differences\nstep 2 (polymorphic carriers, move method): 216 cases, 0 differences\nbroken step (express applied last): 216 cases, 81 differences\nfirst difference: 1 kg post domestic express=True insured=False fragile=True: legacy 1180, candidate 1305\nerror message preserved: True"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "3 cases, 0 differences"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "3 cases, 0 differences"
+    }
+  ]
+}

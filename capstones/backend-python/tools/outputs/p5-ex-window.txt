@@ -1,0 +1,4 @@
+first request:   allowed=True remaining=99 reset=60
+last allowed:    allowed=True remaining=0 reset=30
+over the limit:  allowed=False remaining=0 reset=30
+new window:      allowed=True remaining=99 reset=60

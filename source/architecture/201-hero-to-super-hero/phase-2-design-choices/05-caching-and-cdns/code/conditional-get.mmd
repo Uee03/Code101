@@ -1,0 +1,12 @@
+sequenceDiagram
+    autonumber
+    participant B as Browser
+    participant A as Backend API
+    B->>A: GET task T1 with bearer token
+    A-->>B: 200 OK with ETag for version 3
+    B->>A: GET task T1 with If-None-Match for version 3
+    alt version is still 3
+        A-->>B: 304 Not Modified without a body
+    else version changed
+        A-->>B: 200 OK with the new body and ETag for version 4
+    end

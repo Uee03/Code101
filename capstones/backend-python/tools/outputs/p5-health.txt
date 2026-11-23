@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 09:09:23 GMT
+content-length: 49
+content-type: application/json
+vary: Origin
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+x-trace-id: 08ee29c1e7ff4be182339a0cd382033e
+
+{"status":"ok","version":"1.0.0","database":"up"}

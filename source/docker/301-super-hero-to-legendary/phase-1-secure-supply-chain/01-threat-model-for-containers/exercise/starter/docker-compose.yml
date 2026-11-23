@@ -1,0 +1,10 @@
+services:
+  api:
+    image: python:latest
+    ports:
+      - "9000:9000"
+    environment:
+      API_TOKEN: abc123
+    user: "10001:10001"
+    cap_drop:
+      - ALL

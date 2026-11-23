@@ -1,0 +1,12 @@
+[package]
+name = "jwt_middleware"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "=1.0.100"
+axum = "=0.8.6"
+jsonwebtoken = { version = "=10.1.0", default-features = false, features = ["rust_crypto"] }
+serde = { version = "=1.0.228", features = ["derive"] }
+tokio = { version = "=1.48.0", features = ["macros", "rt-multi-thread", "net"] }
+tower = { version = "=0.5.2", features = ["util"] }

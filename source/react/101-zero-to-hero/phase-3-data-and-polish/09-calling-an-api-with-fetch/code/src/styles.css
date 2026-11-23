@@ -1,0 +1,111 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
+
+header,
+footer {
+  background: #e7f0fa;
+  padding: 0.5rem 1rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.count {
+  margin: 0.25rem 0 0;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #66788a;
+}
+
+.nav a {
+  color: #0759aa;
+  padding: 0.25rem 0.5rem;
+}
+
+.nav a.active {
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 3px solid #0759aa;
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.filter {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.panel {
+  margin-bottom: 1.5rem;
+}
+
+.books {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.card {
+  border: 1px solid #66788a;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.card h3,
+.card p {
+  margin: 0.25rem 0;
+}
+
+.badge {
+  color: #0b5d1e;
+  font-weight: bold;
+}
+
+form {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  border: 1px solid #66788a;
+  border-radius: 0.5rem;
+}
+
+.field {
+  margin: 0.5rem 0;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+input[type='text'],
+input:not([type]),
+input[type='number'] {
+  font: inherit;
+  padding: 0.4rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #a11a1a;
+  font-weight: bold;
+}

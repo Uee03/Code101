@@ -1,0 +1,24 @@
+services:
+  web:
+    image: "${COMPOSE_PROJECT_NAME}-web:demo"
+    build: .
+    ports:
+      - "127.0.0.1:8080:8000"
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      GREETING: ${GREETING}
+    depends_on:
+      - db
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:

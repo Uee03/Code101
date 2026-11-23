@@ -1,0 +1,8 @@
+**/ApiClient.kt
+**/auth/**
+README.md
+build.gradle
+settings.gradle
+gradle/**
+gradlew
+gradlew.bat

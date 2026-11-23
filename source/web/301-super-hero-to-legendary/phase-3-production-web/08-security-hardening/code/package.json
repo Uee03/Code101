@@ -1,0 +1,20 @@
+{
+  "name": "web301-08-security-hardening",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "policy": "tsc && node dist/print-policy.js",
+    "serve": "tsc && node dist/server.js",
+    "check:packages": "node scripts/check-package-policy.mjs"
+  },
+  "engines": {
+    "node": ">=26.13.1",
+    "npm": ">=11.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}

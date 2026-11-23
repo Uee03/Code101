@@ -1,0 +1,26 @@
+/* Exercise 02 solution. Link this file after styles.css in index.html. */
+
+@container card (min-width: 36rem) {
+  .product {
+    grid-template-columns: 14rem 1fr;
+  }
+
+  .product__media {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+.legacy-note {
+  margin-inline-start: 1rem;
+  padding-inline-end: 1rem;
+  border-inline-start: 4px solid currentColor;
+  text-align: start;
+}
+
+.page {
+  padding: clamp(0.75rem, 0.25rem + 3vw, 3rem);
+}
+
+.layout {
+  gap: clamp(0.75rem, 0.25rem + 3vw, 3rem);
+}

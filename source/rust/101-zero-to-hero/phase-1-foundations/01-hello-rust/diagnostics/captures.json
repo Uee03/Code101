@@ -1,0 +1,27 @@
+{
+  "run": {
+    "stdout": "Hello, world!\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Recipe: Tea\n1. Boil water.\n2. Add tea.\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Recipe: TODO\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error: expected `;`, found `println`\n --> src\\main.rs:2:21\n  |\n2 |     let name = \"Tea\"\n  |                     ^ help: add `;` here\n3 |     println!(\"{name}\");\n  |     ------- unexpected token\n\nerror: could not compile `hello_rust` (bin \"hello_rust\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "cargo-not-found": {
+    "stdout": "",
+    "stderr": "cargo : The term 'cargo' is not recognized as the name of a cmdlet, function, script file, or operable program. Check \nthe spelling of the name, or if a path was included, verify that the path is correct and try again.\nAt line:1 char:15\n+ $env:PATH=''; cargo --version\n+               ~~~~~\n    + CategoryInfo          : ObjectNotFound: (cargo:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException\n \n",
+    "exit": 1
+  }
+}

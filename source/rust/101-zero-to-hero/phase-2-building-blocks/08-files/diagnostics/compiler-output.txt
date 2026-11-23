@@ -1,0 +1,9 @@
+error: expected `;`, found `println`
+ --> src\main.rs:2:34
+  |
+2 |     let report = "Total items: 5"
+  |                                  ^ help: add `;` here
+3 |     println!("{report}");
+  |     ------- unexpected token
+
+error: could not compile `files` (bin "files") due to 1 previous error

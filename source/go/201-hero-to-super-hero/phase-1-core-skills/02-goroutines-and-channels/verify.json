@@ -1,0 +1,11 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "run", "cmd": "go run .", "cwd": "code",
+     "expect_stdout": "channel CHANNEL 7\ngopher GOPHER 6\ngoroutine GOROUTINE 9\nmutex MUTEX 5\nselect SELECT 6\nfirst\nsecond\n\"\" false\n30\ntrue false"},
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution", "cmd": "go run .", "cwd": "exercise/solution",
+     "expect_stdout": "[1 4 9 16 25]\nready\ntimeout"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

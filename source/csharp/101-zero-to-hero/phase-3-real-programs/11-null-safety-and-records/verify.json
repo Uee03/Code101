@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Note: (none)\nNote length: 0\nSame values: True\nOriginal: 12.50; revised: 13.00"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Ada: (no email)\nAda: ada@example.test"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

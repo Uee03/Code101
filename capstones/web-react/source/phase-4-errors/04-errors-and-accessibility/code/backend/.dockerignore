@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+**/__pycache__
+**/*.pyc
+.env
+.env.example
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
+db
+keycloak
+scripts
+requests
+pyproject.toml

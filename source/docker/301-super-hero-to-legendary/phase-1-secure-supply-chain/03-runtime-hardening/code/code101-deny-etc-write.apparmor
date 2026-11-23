@@ -1,0 +1,11 @@
+#include <tunables/global>
+
+profile code101-deny-etc-write flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  file,
+  network,
+  capability,
+
+  deny /etc/** w,
+}

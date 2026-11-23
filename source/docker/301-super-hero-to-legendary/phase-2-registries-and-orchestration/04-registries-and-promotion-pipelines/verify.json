@@ -1,0 +1,66 @@
+{
+  "requires": ["docker", "python"],
+  "steps": [
+    {
+      "name": "retention plan",
+      "cwd": "code",
+      "cmd": "{python} retention_plan.py inventory.json",
+      "expect_stdout": "Repository team/hello: keep the newest 2 plus anything deployed\nDELETE 1.0.0  2026-01-10  not deployed and not among the newest\nKEEP   1.1.0  2026-02-14  deployed to prod\nDELETE 1.2.0  2026-03-20  not deployed and not among the newest\nDELETE 1.3.0  2026-04-25  not deployed and not among the newest\nKEEP   1.4.0  2026-05-30  deployed to staging\nKEEP   1.5.0  2026-06-18  one of the newest 2\nDry run: 3 to delete, 3 to keep. Nothing was changed."
+    },
+    {
+      "name": "exercise starter plan",
+      "cwd": "exercise/starter",
+      "cmd": "{python} ../../code/retention_plan.py inventory.json",
+      "expect_contains": ["Dry run: 2 to delete, 2 to keep. Nothing was changed."]
+    },
+    {
+      "name": "exercise solution plan",
+      "cwd": "exercise/solution",
+      "cmd": "{python} ../../code/retention_plan.py inventory.json",
+      "expect_contains": ["Dry run: 1 to delete, 3 to keep. Nothing was changed."]
+    },
+    {
+      "name": "registry up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d"
+    },
+    {
+      "name": "registry answers",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:5050/v2/",
+      "expect_stdout": "{}",
+      "retries": 20,
+      "retry_delay": 1
+    },
+    {
+      "name": "build 1.0.0",
+      "cwd": "code",
+      "cmd": "docker build -t localhost:5050/team/hello:1.0.0 --build-arg VERSION=1.0.0 .",
+      "timeout": 600
+    },
+    {
+      "name": "push 1.0.0",
+      "cwd": "code",
+      "cmd": "docker push localhost:5050/team/hello:1.0.0",
+      "timeout": 300
+    },
+    {
+      "name": "catalog",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:5050/v2/_catalog",
+      "expect_stdout": "{\"repositories\":[\"team/hello\"]}"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "registry down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove local image",
+      "cwd": "code",
+      "cmd": "docker image rm localhost:5050/team/hello:1.0.0"
+    }
+  ]
+}

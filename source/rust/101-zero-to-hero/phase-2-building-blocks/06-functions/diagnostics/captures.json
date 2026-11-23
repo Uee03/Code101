@@ -1,0 +1,27 @@
+{
+  "run": {
+    "stdout": "Tip: 12.00\nTotal: 92.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Area: 12.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Area: 7.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0308]: mismatched types\n --> src\\main.rs:1:14\n  |\n1 | fn area() -> f64 {\n  |    ----      ^^^ expected `f64`, found `()`\n  |    |\n  |    implicitly returns `()` as its body has no tail or `return` expression\n2 |     3.0 * 4.0;\n  |              - help: remove this semicolon to return this value\n\nFor more information about this error, try `rustc --explain E0308`.\nerror: could not compile `functions` (bin \"functions\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "scope": {
+    "stdout": "",
+    "stderr": "error[E0425]: cannot find value `bill` in this scope\n --> src\\main.rs:6:37\n  |\n6 |     println!(\"{label}: {total:.2}; {bill}\");\n  |                                     ^^^^ not found in this scope\n\nFor more information about this error, try `rustc --explain E0425`.\nerror: could not compile `functions` (bin \"functions\") due to 1 previous error\n",
+    "exit": 101
+  }
+}

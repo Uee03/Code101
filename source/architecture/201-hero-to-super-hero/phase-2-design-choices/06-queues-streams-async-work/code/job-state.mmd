@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> Queued
+    Queued --> Running : worker takes the job
+    Running --> Succeeded : work finished and acknowledged
+    Running --> Queued : failure, tries left
+    Running --> DeadLettered : failure, no tries left
+    Succeeded --> [*]
+    DeadLettered --> [*]

@@ -1,0 +1,13 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "generate types", "cwd": "code", "cmd": "npm run api:gen", "timeout": 120 },
+    { "name": "build code", "cwd": "code", "cmd": "npm run build", "timeout": 300 },
+    { "name": "check build output", "cwd": "code", "cmd": "{python} -c \"import os; assert os.path.exists('dist/index.html')\"", "expect_stdout": "" },
+    { "name": "overlay solution", "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"", "expect_stdout": "" },
+    { "name": "install solution", "cwd": "sol", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "sol", "cmd": "npm run build", "timeout": 300 }
+  ],
+  "skip_lesson_check": ["code/contract/openapi.yaml", "code/.env.example", "code/vite.config.ts", "code/tsconfig.json", "code/tsconfig.app.json", "code/tsconfig.node.json", "code/.gitignore", "code/src/config.ts", "code/src/api/client.ts", "code/src/api/problem.ts", "code/src/api/unwrap.ts", "code/src/api/describe.ts", "code/src/auth/auth-middleware.ts", "code/src/auth/oidc-config.ts", "code/src/auth/RequireAuth.tsx", "code/src/auth/safe-route.ts", "code/src/auth/token-gate.ts", "code/src/auth/user-manager.ts", "code/src/hooks/me.ts", "code/src/pages/Login.tsx", "code/src/pages/Callback.tsx", "code/src/shared/AppErrorBoundary.tsx", "code/src/shared/ProblemPanel.tsx", "code/src/components/Field.tsx", "code/src/components/ErrorSummary.tsx", "code/src/core/PageTitle.tsx"]
+}

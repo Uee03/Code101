@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "80\n15\n2\n",
+      "expect_stdout": "Bill amount (e.g. 80):\nTip percent (e.g. 15):\nNumber of people:\nTip: 12.00\nTotal: 92.00\nEach: 46.00\nWhole division: 3 Remainder: 1"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "80\n15\n2\n",
+      "expect_stdout": "Bill amount (e.g. 80):\nTip percent (e.g. 15):\nNumber of people:\nTip: 8.00\nTotal: 88.00\nEach: 44.00\nWhole division: 3 Remainder: 1"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}

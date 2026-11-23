@@ -1,0 +1,5 @@
+# Modelfile.summariser: finish the TODOs, then run: python modelfile_lint.py Modelfile.summariser
+# TODO 1: write the FROM line with the same base model as Modelfile.reviewer.
+# TODO 2: add PARAMETER lines for a temperature below 0.3 and for num_ctx 2048.
+# TODO 3: cap the reply length with num_predict.
+# TODO 4: add a triple-quoted SYSTEM line that asks for a two-sentence summary and forbids new facts.

@@ -1,0 +1,5 @@
+{
+  "allowed_repositories": ["python"],
+  "forbidden_tags": [],
+  "require_digest": false
+}

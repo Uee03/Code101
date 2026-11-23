@@ -1,0 +1,15 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant G as Gateway
+    participant O as Orders
+    participant B as Broker
+    participant I as Inventory
+    C->>G: POST order
+    G->>G: start the trace and create a trace id
+    G->>O: forward with the traceparent header
+    O->>O: record a span and save the order and the outbox row
+    O->>B: publish OrderPlaced with the trace context inside the message
+    B->>I: deliver OrderPlaced with the same trace context
+    I->>I: record a span that belongs to the same trace
+    Note over G,I: One trace id lets a person follow one order through HTTP and the broker

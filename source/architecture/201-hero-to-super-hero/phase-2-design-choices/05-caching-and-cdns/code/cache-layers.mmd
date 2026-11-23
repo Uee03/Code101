@@ -1,0 +1,13 @@
+flowchart LR
+    B["Browser and its private cache"]
+    CDN["CDN edge, proposal for static files"]
+    ORI["Origin: web app files"]
+    API["Backend API"]
+    AC["Application cache, optional proposal"]
+    DB[("PostgreSQL, source of truth")]
+    B -->|"static files"| CDN
+    CDN -->|"miss only"| ORI
+    B -->|"JSON with bearer token, private data"| API
+    API -->|"read"| AC
+    AC -->|"miss only"| DB
+    API -->|"write"| DB

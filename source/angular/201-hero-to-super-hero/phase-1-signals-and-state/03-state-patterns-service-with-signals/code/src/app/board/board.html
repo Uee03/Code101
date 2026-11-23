@@ -1,0 +1,56 @@
+<section aria-labelledby="board-heading">
+  <h2 id="board-heading">Task store</h2>
+
+  <p>
+    <input id="fail" #fail type="checkbox" [checked]="api.failSaves()" (change)="setFail(fail.checked)">
+    <label for="fail">Make the server fail (saves and creates)</label>
+  </p>
+  <p>
+    <button type="button" (click)="store.changeElsewhere(1)">Pretend someone edits task 1</button>
+    <button type="button" (click)="store.load()">Reload</button>
+  </p>
+
+  <p role="status">{{ store.openCount() }} open in the loaded tasks{{ store.saving() ? ', saving...' : '' }}</p>
+  @if (store.message()) {
+    <p class="message" role="alert">{{ store.message() }}</p>
+  }
+
+  @switch (store.status()) {
+    @case ('loading') {
+      <p>Loading...</p>
+    }
+    @case ('error') {
+      <p class="message" role="alert">Could not load the tasks. <button type="button" (click)="store.list.retry()">Try again</button></p>
+    }
+    @default {
+      <ul>
+        @for (task of store.tasks(); track task.id) {
+          <li>
+            <label>
+              <input type="checkbox" [checked]="task.done" (change)="store.toggle(task)">
+              {{ task.title }}
+            </label>
+            <small>version {{ task.version }}</small>
+            <button type="button" (click)="store.show(task.id)">Details</button>
+          </li>
+        }
+      </ul>
+      @if (store.canLoadMore()) {
+        <button type="button" (click)="store.more()">Load more</button>
+      }
+      @if (store.status() === 'loadingMore') {
+        <p>Loading more...</p>
+      }
+    }
+  }
+
+  <form (submit)="$event.preventDefault(); add()">
+    <label for="title">New task</label>
+    <input id="title" #titleBox type="text" [value]="draft()" (input)="draft.set(titleBox.value)">
+    <button type="submit">Add</button>
+  </form>
+
+  @if (store.detail(); as one) {
+    <p>Details: "{{ one.value.title }}", ETag {{ one.etag }}.</p>
+  }
+</section>

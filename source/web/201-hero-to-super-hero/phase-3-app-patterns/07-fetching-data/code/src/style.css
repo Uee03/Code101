@@ -1,0 +1,92 @@
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#ffffff, #0b1220);
+  --surface: light-dark(#f1f5f9, #172033);
+  --text: light-dark(#0f172a, #e2e8f0);
+  --muted: light-dark(#475569, #a7b3c7);
+  --accent: light-dark(#1d4ed8, #7cb0ff);
+  --on-accent: light-dark(#ffffff, #0b1220);
+  --danger: light-dark(#b91c1c, #fca5a5);
+  --border: light-dark(#cbd5e1, #334155);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.shell {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  padding: 1.5rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+select {
+  min-block-size: 2.75rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.button {
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--danger);
+  border-radius: 0.5rem;
+  color: var(--danger);
+}
+
+.panel p {
+  margin: 0;
+}
+
+.panel .button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.tasks {
+  padding-inline-start: 1.25rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}

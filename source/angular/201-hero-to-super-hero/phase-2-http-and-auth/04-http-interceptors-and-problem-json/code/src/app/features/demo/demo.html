@@ -1,0 +1,26 @@
+<section aria-labelledby="demo-heading">
+  <h2 id="demo-heading">Ask the API for trouble</h2>
+  <p>Start the mock API in a second terminal (<code>npm run mock</code>), then press a button.</p>
+
+  <ul class="probes">
+    @for (probe of probes; track probe.path) {
+      <li><button type="button" (click)="run(probe)">{{ probe.label }}</button></li>
+    }
+  </ul>
+
+  <div role="status">
+    @switch (outcome().kind) {
+      @case ('loading') {
+        <p>Waiting for the answer...</p>
+      }
+    }
+  </div>
+
+  @let current = outcome();
+  @if (current.kind === 'ok') {
+    <p>{{ current.label }}: <code>{{ current.data }}</code></p>
+  } @else if (current.kind === 'problem') {
+    <p>{{ current.label }}:</p>
+    <app-problem-view [problem]="current.problem" />
+  }
+</section>

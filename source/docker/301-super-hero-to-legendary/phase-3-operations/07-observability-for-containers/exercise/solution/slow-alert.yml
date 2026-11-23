@@ -1,0 +1,10 @@
+groups:
+  - name: code101-api-exercise
+    rules:
+      - alert: ApiSlowP95
+        expr: histogram_quantile(0.95, sum by (le) (rate(app_request_duration_seconds_bucket[5m]))) > 0.5
+        for: 5m
+        labels:
+          severity: ticket
+        annotations:
+          summary: "p95 latency is above 500 ms"

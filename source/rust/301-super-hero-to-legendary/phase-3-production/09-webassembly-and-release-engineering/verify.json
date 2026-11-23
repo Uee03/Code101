@@ -1,0 +1,34 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example (native CLI; the WebAssembly build is not run by this verifier)",
+      "cwd": "code",
+      "cmd": "cargo run --quiet --bin slug-cli",
+      "timeout": 900,
+      "expect_stdout": "hello-rust-301"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 900
+    },
+    {
+      "name": "starter behaves as the review describes",
+      "cwd": "exercise/starter",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "Some(\"1\")\nhello\n8080\nadmin: true\nlogin user=ana token=admin-secret-123"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "Ok(())\nOk(())\nErr(CacheFull)\nSome(\"1\")\nSome(\"hello\")\nNone\nOk(8080)\nErr(\"invalid port: \\\"80x\\\"\")\ntrue\nfalse\nlogin user=\"ana\""
+    }
+  ]
+}

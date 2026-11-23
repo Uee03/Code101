@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "add\nCoffee\n350\nlist\ntotal\nquit\n",
+      "expect_stdout": "Self-check: OK\nLoaded: 0\nCommand: add, list, total, quit\nLabel (no commas or quotes):\nAmount in cents (350 means 3.50):\nAdded: Coffee: 3.50\nCommand: add, list, total, quit\n1 Coffee: 3.50\nCommand: add, list, total, quit\nTotal: 3.50\nCommand: add, list, total, quit\nSaved: 1 expenses"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "add\nCoffee\n350\ncount\nquit\n",
+      "expect_stdout": "Self-check: OK\nLoaded: 0\nCommand: add, list, total, count, quit\nLabel (no commas or quotes):\nAmount in cents (350 means 3.50):\nAdded: Coffee: 3.50\nCommand: add, list, total, count, quit\nCount: 1\nCommand: add, list, total, count, quit\nSaved: 1 expenses"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}

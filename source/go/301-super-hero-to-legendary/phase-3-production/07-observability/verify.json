@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "tidy",
+      "cmd": "go mod tidy",
+      "cwd": "code"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "level=INFO msg=login user=ada token=[redacted]"
+    }
+  ],
+  "skip_lesson_check": []
+}

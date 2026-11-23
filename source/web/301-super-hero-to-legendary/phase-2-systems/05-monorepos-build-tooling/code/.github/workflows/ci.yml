@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - name: Install exactly what the lockfile says, without running package scripts
+        run: npm ci --ignore-scripts
+
+      - name: Show affected workspaces (information only)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git diff --name-only "origin/${BASE_REF}...HEAD" | xargs node scripts/affected.mjs
+
+      - name: Build every project in dependency order
+        run: npm run build
+
+      - name: Keep the build output for the test job
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-output
+          path: |
+            packages/*/dist
+            apps/*/dist
+          retention-days: 3
+          if-no-files-found: error
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: build-output
+
+      - name: Run the tests on the built output
+        run: npm test

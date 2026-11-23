@@ -1,0 +1,37 @@
+# Adds the API to the platform stack. Compose merges this file into docker-compose.yml automatically,
+# so one command starts Postgres, Keycloak and the API on the same network (tasksteams-net).
+services:
+  api:
+    build:
+      context: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://tasks_app:${TASKS_APP_PASSWORD:-tasks_app_local_only}@db:5432/${POSTGRES_DB:-tasksteams}
+      TOKEN_ISSUER: http://localhost:${KEYCLOAK_PORT:-8180}/realms/tasksteams
+      TOKEN_AUDIENCE: tasks-api
+      JWKS_URL: http://keycloak:8080/realms/tasksteams/protocol/openid-connect/certs
+      PUBLIC_BASE_URL: http://localhost:8000
+      LOG_LEVEL: INFO
+      ENABLE_DOCS: "false"
+      RATE_LIMIT_USER: "100"
+      RATE_LIMIT_ANONYMOUS: "30"
+      RATE_LIMIT_WINDOW_SECONDS: "60"
+      MAX_BODY_BYTES: "1048576"
+      CORS_ORIGINS: http://localhost:4200,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - tasksteams
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    mem_limit: 256m
+    cpus: 1.0

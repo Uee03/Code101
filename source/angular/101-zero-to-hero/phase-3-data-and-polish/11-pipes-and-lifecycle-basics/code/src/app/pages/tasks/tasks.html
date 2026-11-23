@@ -1,0 +1,49 @@
+<h1>Tasks</h1>
+
+@switch (store.status()) {
+  @case ('loading') {
+    <p role="status">Loading tasks...</p>
+  }
+  @case ('error') {
+    <div class="problem" role="alert">
+      <span class="icon icon-alert" aria-hidden="true"></span>
+      <p>{{ store.message() }}</p>
+      <button type="button" (click)="store.load()">
+        <span class="icon icon-refresh" aria-hidden="true"></span>
+        Try again
+      </button>
+    </div>
+  }
+  @case ('ready') {
+    <app-new-task-reactive (added)="store.add($event)" />
+
+    @if (store.remaining() === 0) {
+      <p class="status">All tasks are done.</p>
+    } @else if (store.remaining() === 1) {
+      <p class="status">One task left.</p>
+    } @else {
+      <p class="status">{{ store.remaining() }} tasks left.</p>
+    }
+
+    <div class="filters" role="group" aria-label="Filter tasks">
+      @for (option of filters; track option) {
+        <button type="button" [class.active]="filter() === option" [attr.aria-pressed]="filter() === option" (click)="setFilter(option)">
+          {{ option }}
+        </button>
+      }
+    </div>
+
+    <ul class="tasks">
+      @for (task of visibleTasks(); track task.id; let i = $index) {
+        <li app-task-item [task]="task" [position]="i + 1" (toggled)="store.toggle($event)" (removed)="store.remove($event)"></li>
+      } @empty {
+        <li class="empty">No tasks in this view.</li>
+      }
+    </ul>
+  }
+}
+
+<p class="hint">
+  The tasks come from <code>/api/tasks.json</code>. Practice the error case:
+  <button type="button" (click)="store.load(brokenUrl)">Load from an address where nothing listens</button>
+</p>

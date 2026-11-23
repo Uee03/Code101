@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:41 GMT
+server: uvicorn
+content-length: 927
+content-type: application/json
+x-trace-id: 4d5beee0111a4cfdab53cbc67428da71
+
+{"items":[{"id":"7a500000-0000-4000-8000-000000000005","projectId":"9a000000-0000-4000-8000-000000000001","title":"Add rate limiting","description":"RateLimit headers and 429 responses.","status":"blocked","priority":"medium","assigneeId":"b0b00000-0000-4000-8000-000000000002","dueDate":null,"completedAt":null,"createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"},{"id":"7a500000-0000-4000-8000-000000000004","projectId":"9a000000-0000-4000-8000-000000000001","title":"Run the conformance script","description":"All checks green on every backend.","status":"todo","priority":"medium","assigneeId":null,"dueDate":"2027-02-19","completedAt":null,"createdBy":"b0b00000-0000-4000-8000-000000000002","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"}],"page":{"limit":25,"nextCursor":null}}

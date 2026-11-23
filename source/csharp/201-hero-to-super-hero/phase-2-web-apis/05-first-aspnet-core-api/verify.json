@@ -1,0 +1,85 @@
+{
+  "requires": [
+    "dotnet",
+    "curl"
+  ],
+  "steps": [
+    {
+      "name": "start-minimal",
+      "cwd": "code",
+      "cmd": "dotnet run --project MinimalNotes --urls http://localhost:5051",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "minimal-list",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5051/notes",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "[{\"id\":1,\"title\":\"Learn REPR\",\"done\":false}]"
+    },
+    {
+      "name": "minimal-create",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Content-Type: application/json\" -d @new-note.json http://localhost:5051/notes",
+      "expect_stdout": "{\"id\":2,\"title\":\"Write tests\",\"done\":false}"
+    },
+    {
+      "name": "start-controllers",
+      "cwd": "code",
+      "cmd": "dotnet run --project ControllerNotes --urls http://localhost:5052",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "controllers-list",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5052/notes",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "[{\"id\":1,\"title\":\"Learn REPR\",\"done\":false}]"
+    },
+    {
+      "name": "start-repr",
+      "cwd": "code",
+      "cmd": "dotnet run --project ReprNotes --urls http://localhost:5053",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "repr-list",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5053/notes",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "[{\"id\":1,\"title\":\"Learn REPR\",\"done\":false}]"
+    },
+    {
+      "name": "start-solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --urls http://localhost:5054",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "delete-existing",
+      "cwd": "exercise/solution",
+      "cmd": "curl -s -o NUL -w \"%{http_code}\" -X DELETE http://localhost:5054/notes/1",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "204"
+    },
+    {
+      "name": "delete-missing",
+      "cwd": "exercise/solution",
+      "cmd": "curl -s -o NUL -w \"%{http_code}\" -X DELETE http://localhost:5054/notes/1",
+      "expect_stdout": "404"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/MinimalNotes/MinimalNotes.csproj",
+    "code/ControllerNotes/ControllerNotes.csproj"
+  ]
+}

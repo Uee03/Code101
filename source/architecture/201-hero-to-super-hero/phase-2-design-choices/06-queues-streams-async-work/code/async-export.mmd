@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant Q as Queue
+    participant W as Worker
+    participant S as Storage
+    C->>A: POST request an audit export with Idempotency-Key
+    A->>Q: enqueue job J1 with the request details
+    A-->>C: 202 Accepted with a status URL
+    W->>Q: take job J1
+    W->>S: write the export file
+    alt work succeeded
+        W->>Q: acknowledge J1
+        W->>S: mark J1 as done
+    else work failed
+        W->>Q: negative acknowledgement, J1 returns for a retry
+        Note over W,Q: After a limited number of tries the job moves to a dead-letter queue
+    end
+    C->>A: GET the status URL
+    A-->>C: 200 OK with the state and, when done, a download link
+    Note over C,S: Proposal for discussion. The platform has no export feature.

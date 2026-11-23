@@ -1,0 +1,20 @@
+using System.Globalization;
+
+CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+Console.WriteLine("People (whole number):");
+int people = int.Parse(Console.ReadLine() ?? "");
+Console.WriteLine("Bill (use a dot):");
+double bill = double.Parse(Console.ReadLine() ?? "");
+Console.WriteLine("Tip percent (number only):");
+double percent = double.Parse(Console.ReadLine() ?? "");
+double tip = bill * percent / 100;
+double total = bill + tip;
+Console.WriteLine($"Tip: {tip:F2}");
+Console.WriteLine($"Total: {total:F2}");
+Console.WriteLine($"Per person: {total / people:F2}");
+Console.WriteLine($"Change from 100: {100 - total:F2}");
+Console.WriteLine($"7 / 2 with integers: {7 / 2}");
+Console.WriteLine($"7 % 2 remainder: {7 % 2}");
+Console.WriteLine("Optional whole-number coupon (try a word):");
+bool parsed = int.TryParse(Console.ReadLine(), out int coupon);
+Console.WriteLine($"Coupon parsed: {parsed}; value: {coupon}");

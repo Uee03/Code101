@@ -1,0 +1,95 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 695B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.25kB 0.0s done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 1.2s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183
+#4 resolve docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183 0.0s done
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/library/python:3.14.10-slim-trixie
+#5 DONE 1.0s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 238B done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 1.53kB done
+#7 DONE 0.0s
+
+#8 [builder 1/4] FROM docker.io/library/python:3.14.10-slim-trixie@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f
+#8 resolve docker.io/library/python:3.14.10-slim-trixie@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f 0.0s done
+#8 DONE 0.0s
+
+#9 [builder 2/4] RUN python -m venv /opt/venv
+#9 CACHED
+
+#10 [runtime 2/5] RUN groupadd --system --gid 10001 app  && useradd --uid 10001 --gid app --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin app
+#10 CACHED
+
+#11 [builder 4/4] RUN /opt/venv/bin/pip install --only-binary=:all: -r /tmp/requirements.txt
+#11 CACHED
+
+#12 [builder 3/4] COPY requirements.txt /tmp/requirements.txt
+#12 CACHED
+
+#13 [runtime 3/5] COPY --from=builder /opt/venv /opt/venv
+#13 CACHED
+
+#14 [runtime 4/5] WORKDIR /srv
+#14 CACHED
+
+#15 [runtime 5/5] COPY app ./app
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:3dc1f9cf32e4ca2e3a1994eadf3049399ff2f28514d8a39ccd9cc3a380b2de2a done
+#16 exporting config sha256:e6eb6b97a09d016c5fb328fabef9c6f016eaead1df07dcc11542cf614b4141fc done
+#16 exporting attestation manifest sha256:48f9c0bd0106b5501ad910b64954c42a104415bbdfa92bf2e94c3cf21698e014 0.0s done
+#16 exporting manifest list sha256:027e8d15a04fc77c8aa4e2b3e98aaa85e71beed1f29cf4379b4c1002b9d484af
+#16 exporting manifest list sha256:027e8d15a04fc77c8aa4e2b3e98aaa85e71beed1f29cf4379b4c1002b9d484af 0.0s done
+#16 naming to docker.io/library/code101-react-author-3-api:latest done
+#16 unpacking to docker.io/library/code101-react-author-3-api:latest
+#16 unpacking to docker.io/library/code101-react-author-3-api:latest 2.6s done
+#16 DONE 2.6s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image code101-react-author-3-api Building 
+ Image code101-react-author-3-api Built 
+ Network tasksteams-net Creating 
+ Volume code101-react-author-3_pg_data Creating 
+ Volume code101-react-author-3_pg_data Creating 
+ Network tasksteams-net Creating 
+ Volume code101-react-author-3_pg_data Created 
+ Volume code101-react-author-3_pg_data Created 
+ Network tasksteams-net Created 
+ Network tasksteams-net Created 
+ Container code101-react-author-3-keycloak-1 Creating 
+ Container code101-react-author-3-db-1 Creating 
+ Container code101-react-author-3-keycloak-1 Created 
+ Container code101-react-author-3-db-1 Created 
+ Container code101-react-author-3-api-1 Creating 
+ Container code101-react-author-3-api-1 Created 
+ Container code101-react-author-3-keycloak-1 Starting 
+ Container code101-react-author-3-db-1 Starting 
+ Container code101-react-author-3-keycloak-1 Started 
+ Container code101-react-author-3-db-1 Started 
+ Container code101-react-author-3-db-1 Waiting 
+ Container code101-react-author-3-db-1 Healthy 
+ Container code101-react-author-3-api-1 Starting 
+ Container code101-react-author-3-api-1 Started 
+ Container code101-react-author-3-api-1 Waiting 
+ Container code101-react-author-3-db-1 Waiting 
+ Container code101-react-author-3-keycloak-1 Waiting 
+ Container code101-react-author-3-db-1 Healthy 
+ Container code101-react-author-3-api-1 Healthy 
+ Container code101-react-author-3-keycloak-1 Healthy 

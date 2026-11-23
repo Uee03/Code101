@@ -1,0 +1,16 @@
+error[E0384]: cannot assign twice to immutable variable `total`
+ --> src\main.rs:4:9
+  |
+2 |     let total = 0;
+  |         ----- first assignment to `total`
+3 |     for number in 1..=3 {
+4 |         total = total + number;
+  |         ^^^^^^^^^^^^^^^^^^^^^^ cannot assign twice to immutable variable
+  |
+help: consider making this binding mutable
+  |
+2 |     let mut total = 0;
+  |         +++
+
+For more information about this error, try `rustc --explain E0384`.
+error: could not compile `loops` (bin "loops") due to 1 previous error

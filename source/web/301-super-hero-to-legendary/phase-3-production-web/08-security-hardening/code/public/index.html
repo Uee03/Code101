@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security lab</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <h1>Security lab</h1>
+    <p>Each button tries something a strict policy should stop or tame. Open the browser console to see the reports.</p>
+    <ul>
+      <li><button id="inline-handler" type="button">Add an inline event handler</button></li>
+      <li><button id="raw-html" type="button">Write untrusted text with innerHTML</button></li>
+      <li><button id="safe-html" type="button">Write untrusted text through the policy</button></li>
+      <li><button id="run-eval" type="button">Call eval</button></li>
+    </ul>
+    <output id="result" role="status">Nothing tried yet.</output>
+  </main>
+  <script nonce="{{NONCE}}" src="/app.js"></script>
+</body>
+</html>

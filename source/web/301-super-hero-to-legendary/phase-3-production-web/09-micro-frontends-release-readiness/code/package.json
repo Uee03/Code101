@@ -1,0 +1,19 @@
+{
+  "name": "web301-09-micro-frontends-release",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "demo": "tsc && node dist/demo.js",
+    "check": "tsc && node dist/check-release.js data/release-candidate.json"
+  },
+  "engines": {
+    "node": ">=26.13.1",
+    "npm": ">=11.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}

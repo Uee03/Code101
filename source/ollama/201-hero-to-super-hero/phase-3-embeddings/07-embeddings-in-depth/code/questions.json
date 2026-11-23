@@ -1,0 +1,10 @@
+[
+  {"question": "When can I visit on a Saturday?", "marker": "10:00 on Saturdays"},
+  {"question": "Can I send back a part I did not use?", "marker": "within 30 days"},
+  {"question": "What does fixing a flat tyre cost?", "marker": "costs 8 euros"},
+  {"question": "How far in advance must I book a bike service?", "marker": "at least two days ahead"},
+  {"question": "How long is the frame guarantee?", "marker": "five-year warranty"},
+  {"question": "What do I need to leave before a test ride?", "marker": "photo ID"},
+  {"question": "How can I keep my bicycle over the winter?", "marker": "25 euros per month"},
+  {"question": "Do points turn into discounts?", "marker": "500 points"}
+]

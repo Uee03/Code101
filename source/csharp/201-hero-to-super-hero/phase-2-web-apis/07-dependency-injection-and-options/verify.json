@@ -1,0 +1,66 @@
+{
+  "requires": [
+    "dotnet",
+    "curl"
+  ],
+  "steps": [
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --urls http://localhost:5071",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "lifetimes-first",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5071/lifetimes",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "{\"scopedShared\":true,\"transientShared\":false,\"singletonInstances\":1,\"scopedInstances\":1,\"transientInstances\":2}"
+    },
+    {
+      "name": "lifetimes-second",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5071/lifetimes",
+      "expect_stdout": "{\"scopedShared\":true,\"transientShared\":false,\"singletonInstances\":1,\"scopedInstances\":2,\"transientInstances\":4}"
+    },
+    {
+      "name": "heading",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5071/heading",
+      "expect_stdout": "MY NOTES"
+    },
+    {
+      "name": "settings",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5071/settings/static",
+      "expect_stdout": "{\"title\":\"My notes\",\"pageSize\":5}"
+    },
+    {
+      "name": "start-override",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --urls http://localhost:5072 --Notes:PageSize=9",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "override",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5072/settings/static",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "{\"title\":\"My notes\",\"pageSize\":9}"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Hello, Ada\nSame inside scope: True\nSame across scopes: False"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "run demo",
+      "cwd": "code",
+      "cmd": "node scripts/demo.mjs",
+      "expect_stdout": "ok 20\nerr JSON does not match the expected shape\nerr Invalid JSON\ntrue\n5 0"
+    },
+    { "name": "consumer type tests", "cwd": "code", "cmd": "npm run check:consumer --silent", "expect_stdout": "" },
+    {
+      "name": "api surface",
+      "cwd": "code",
+      "cmd": "node scripts/check-surface.mjs",
+      "expect_stdout": "Public API unchanged: 8 exports"
+    },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "api surface solution",
+      "cwd": "work",
+      "cmd": "node scripts/check-surface.mjs",
+      "expect_stdout": "Public API unchanged: 10 exports"
+    }
+  ]
+}

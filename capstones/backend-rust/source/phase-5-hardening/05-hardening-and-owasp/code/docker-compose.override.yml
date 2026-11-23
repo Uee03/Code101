@@ -1,0 +1,38 @@
+# Compose merges this file into docker-compose.yml (the platform file) automatically.
+# It adds the API as a third service on the same network as Postgres and Keycloak.
+services:
+  api:
+    build: .
+    image: code101/tasks-api-rust:local
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    environment:
+      BIND_ADDR: 0.0.0.0:8000
+      PUBLIC_BASE_URL: http://localhost:8000
+      DATABASE_URL: postgres://tasks_app:tasks_app_local_only@db:5432/${POSTGRES_DB:-tasksteams}
+      TOKEN_ISSUER: http://localhost:${KEYCLOAK_PORT:-8180}/realms/tasksteams
+      TOKEN_AUDIENCE: tasks-api
+      JWKS_URL: http://keycloak:8080/realms/tasksteams/protocol/openid-connect/certs
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200,http://localhost:5173}
+      RATE_LIMIT_USER: ${RATE_LIMIT_USER:-100}
+      RATE_LIMIT_ANON: ${RATE_LIMIT_ANON:-30}
+      RATE_LIMIT_WINDOW_SECS: ${RATE_LIMIT_WINDOW_SECS:-60}
+      RUST_LOG: info
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/tasks-api", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 3s
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - tasksteams

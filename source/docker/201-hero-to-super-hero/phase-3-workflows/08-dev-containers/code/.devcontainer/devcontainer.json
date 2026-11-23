@@ -1,0 +1,31 @@
+{
+  "name": "code101-docker-201-devloop",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "init": true,
+  "containerEnv": {
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "app",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "python --version && pytest --version",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.testing.pytestEnabled": true
+      }
+    }
+  }
+}

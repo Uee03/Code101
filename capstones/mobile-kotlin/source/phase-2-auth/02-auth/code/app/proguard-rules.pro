@@ -1,0 +1,3 @@
+-keepattributes Signature,InnerClasses,EnclosingMethod
+-keep class net.openid.appauth.** { *; }
+-keep class com.code101.tasks.generated.model.** { *; }

@@ -1,0 +1,23 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "80\n15\n",
+      "timeout": 300,
+      "expect_stdout": "Bill amount (for example 80):\nTip percent (for example 15):\nTip: 12.00\nTotal: 92.00\nChange from 100: 8.00\n7 % 3 = 1"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "90\n3\n",
+      "timeout": 300,
+      "expect_stdout": "Total bill:\nPeople (greater than zero):\nEach: 30.00"
+    }
+  ]
+}

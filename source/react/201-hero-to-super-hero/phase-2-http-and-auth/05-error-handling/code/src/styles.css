@@ -1,0 +1,28 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+button,
+select {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+}
+
+.problem {
+  border: 2px solid #a11a1a;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+:focus-visible {
+  outline: 3px solid #0759aa;
+  outline-offset: 2px;
+}

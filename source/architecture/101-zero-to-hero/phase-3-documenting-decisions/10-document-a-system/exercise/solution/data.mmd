@@ -1,0 +1,16 @@
+erDiagram
+  MEMBER ||--o{ LOAN : borrows
+  BOOK ||--o{ LOAN : appears_in
+  MEMBER {
+    int id PK
+    string name
+  }
+  BOOK {
+    int id PK
+    string title
+  }
+  LOAN {
+    int id PK
+    int member_id FK
+    int book_id FK
+  }

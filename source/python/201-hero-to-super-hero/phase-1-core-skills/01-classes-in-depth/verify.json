@@ -1,0 +1,1 @@
+{"requires":["python"],"steps":[{"name":"model demo","cwd":"code","cmd":"{python} models.py","expect_stdout":"Read the docs (3 words)\nnotebooks: 1, 0\nequal values: True"},{"name":"exercise solution","cwd":"exercise/solution","cmd":"{python} exercise.py","expect_stdout":"3 0"}]}

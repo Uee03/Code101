@@ -1,0 +1,12 @@
+<header class="bar">
+  <a routerLink="/" class="brand">Task board</a>
+  <nav aria-label="Main">
+    <a routerLink="/tasks" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">Tasks</a>
+    <a routerLink="/tasks/new" routerLinkActive="active" ariaCurrentWhenActive="page">New task</a>
+    <a routerLink="/explorer" routerLinkActive="active" ariaCurrentWhenActive="page">API explorer</a>
+  </nav>
+</header>
+
+<main class="page">
+  <router-outlet />
+</main>

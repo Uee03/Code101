@@ -1,0 +1,37 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "run SQL once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": " book_id |    title     | price | available | published_on \n---------+--------------+-------+-----------+--------------\n       1 | Field Notes  | 12.50 | t         | 2024-01-15\n       2 | Quiet Rivers | 20.00 | f         | (none)\n       3 | City Maps    |  8.00 | t         | 2023-06-01\n       4 | Forest Walks | 15.00 | t         | 2025-03-10\n(4 rows)"
+    },
+    {
+      "name": "exercise solution once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "    title     | price \n--------------+-------\n Field Notes  | 12.50\n Quiet Rivers | 20.00\n City Maps    |  8.00\n Forest Walks | 15.00\n(4 rows)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+name: performance
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Build
+        run: npm run build
+
+      - name: Check size budgets (hard limit)
+        run: npm run budget
+
+      - name: Keep the build for inspection
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-over-budget
+          path: dist
+          retention-days: 3

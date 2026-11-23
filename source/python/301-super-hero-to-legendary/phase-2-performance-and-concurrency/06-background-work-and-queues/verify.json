@@ -1,0 +1,22 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "outbox, retries with backoff and an idempotent receiver",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "outbox rows after complete: 1\nsecond complete refused: task 1 is missing or already done\noutbox rows still: 1\nt=0.0 {'done': 0, 'retry': 1, 'dead': 0}\nt=0.5 {'done': 0, 'retry': 0, 'dead': 0}\nt=1.0 {'done': 0, 'retry': 1, 'dead': 0}\nt=3.0 {'done': 1, 'retry': 0, 'dead': 0}\nemails sent: {'outbox-1': 'task 1 done'}\nmailer attempts: 3\nreplayed delivery, emails sent: 1"
+    },
+    {
+      "name": "unit tests",
+      "cwd": "code",
+      "cmd": "{python} -m unittest"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "a ran\nb ran\na skipped\nc failed, so it is not marked as seen: True\n['a', 'b']"
+    }
+  ]
+}

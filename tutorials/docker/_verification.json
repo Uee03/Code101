@@ -1,0 +1,50 @@
+[
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-1-containers/01-what-is-a-container",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-1-containers/01-what-is-a-container\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-1-containers/02-images-and-containers",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-1-containers/02-images-and-containers\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-1-containers/03-your-first-dockerfile",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-1-containers/03-your-first-dockerfile\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-1-containers/04-data-that-survives",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-1-containers/04-data-that-survives\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-2-compose/05-environment-and-secrets",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-2-compose/05-environment-and-secrets\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-2-compose/06-networks-and-compose",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-2-compose/06-networks-and-compose\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-2-compose/07-healthchecks-and-cleanup",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-2-compose/07-healthchecks-and-cleanup\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  },
+  {
+    "lesson": "source/docker/101-zero-to-hero/phase-2-compose/08-two-service-project",
+    "stdout": "[PASS      ] source/docker/101-zero-to-hero/phase-2-compose/08-two-service-project\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": "",
+    "exit": 0
+  }
+]

@@ -1,0 +1,5 @@
+# Example settings to restore a base backup to a moment in time. NOT applied by this lesson.
+# Also create an empty file named recovery.signal in the restored data directory (not standby.signal).
+restore_command = 'cp /mnt/wal_archive/%f %p'
+recovery_target_time = '2026-11-23 09:55:00+00'
+recovery_target_action = 'pause'

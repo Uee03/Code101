@@ -1,0 +1,8 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution-test", "cmd": "go test ./...", "cwd": "exercise/solution", "expect_contains": ["ok"]}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

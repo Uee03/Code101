@@ -1,0 +1,6 @@
+:root { font-family: system-ui, sans-serif; color: #17212b; background: #fff; }
+body { margin: 0; }
+main { max-width: 65rem; margin: auto; padding: 1rem; }
+button, input, select, textarea { font: inherit; padding: .5rem; }
+button, a { min-height: 24px; min-width: 24px; }
+:focus-visible { outline: 2px solid #0759aa; outline-offset: 3px; }

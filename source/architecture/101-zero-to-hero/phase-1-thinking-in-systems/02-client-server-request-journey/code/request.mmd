@@ -1,0 +1,8 @@
+sequenceDiagram
+  actor Visitor
+  participant Browser
+  participant Server
+  Visitor->>Browser: Open catalogue
+  Browser->>Server: GET /catalogue
+  Server-->>Browser: 200 OK and page
+  Browser-->>Visitor: Show catalogue

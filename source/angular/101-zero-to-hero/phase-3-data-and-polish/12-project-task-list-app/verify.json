@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 900
+    },
+    {
+      "name": "build code",
+      "cwd": "code",
+      "cmd": "npm run build",
+      "timeout": 900
+    },
+    {
+      "name": "overlay solution",
+      "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','.angular','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "install solution",
+      "cwd": "sol",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 900
+    },
+    {
+      "name": "build solution",
+      "cwd": "sol",
+      "cmd": "npm run build",
+      "timeout": 900
+    }
+  ],
+  "skip_lesson_check": []
+}

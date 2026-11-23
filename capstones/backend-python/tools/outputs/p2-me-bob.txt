@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:41 GMT
+server: uvicorn
+content-length: 403
+content-type: application/json
+x-trace-id: fb1e2fce88e64cceb281ca0b858517c1
+
+{"id":"b0b00000-0000-4000-8000-000000000002","username":"bob","email":"bob@tasksteams.test","displayName":"Bob Member","roles":["member"],"scopes":["email","openid","profile","tasks:admin","tasks:read","tasks:write"],"teams":[{"teamId":"7ea00000-0000-4000-8000-000000000002","name":"Mobile Team","role":"member"},{"teamId":"7ea00000-0000-4000-8000-000000000001","name":"Platform Team","role":"member"}]}

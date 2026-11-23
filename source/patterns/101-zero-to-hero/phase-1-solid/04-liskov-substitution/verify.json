@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nCard refunded 1500\nCrash: gift cards cannot be refunded\n--- after ---\nCard charged 1500\nGift card used for 1500\nCard refunded 1500"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nCard refunded 1500\nCrash: gift cards cannot be refunded\n--- after ---\nCard charged 1500\nGift card used for 1500\nCard refunded 1500"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Email: Report ready\nEmail: Report ready [report.pdf]\nSMS: Report ready"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Email: Report ready\nEmail: Report ready [report.pdf]\nSMS: Report ready"
+    }
+  ]
+}

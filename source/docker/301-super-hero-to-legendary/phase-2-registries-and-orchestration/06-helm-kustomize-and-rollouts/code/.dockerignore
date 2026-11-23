@@ -1,0 +1,6 @@
+.git
+*.md
+*.yaml
+kustomize
+helm
+__pycache__

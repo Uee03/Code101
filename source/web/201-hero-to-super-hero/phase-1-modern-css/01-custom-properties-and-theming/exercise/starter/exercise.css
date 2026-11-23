@@ -1,0 +1,13 @@
+/* Exercise 01. Link this file after styles.css in index.html. */
+
+:root {
+  /* TODO 1: add a --success token with light-dark(<value for light>, <value for dark>) */
+}
+
+.badge {
+  /* TODO 2: draw a pill: padding, a 1px border and text colour from --success, radius 999px */
+}
+
+.card--inverted {
+  /* TODO 3: swap --surface, --text, --muted and --border for this card only, then re-apply color */
+}

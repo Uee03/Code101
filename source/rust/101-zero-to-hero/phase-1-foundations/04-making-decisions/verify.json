@@ -1,0 +1,23 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "30\n",
+      "timeout": 300,
+      "expect_stdout": "Age:\nTicket: adult, 10.00\nAdult with ticket: true\nChild or has ticket: true\nNo ticket: false\nWeekend desk"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "60\n",
+      "timeout": 300,
+      "expect_stdout": "Score (0-100):\nPass"
+    }
+  ]
+}

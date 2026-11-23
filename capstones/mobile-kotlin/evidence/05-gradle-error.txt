@@ -1,0 +1,18 @@
+Starting a Gradle Daemon, 12 stopped Daemons could not be reused, use --status for details
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:preReleaseBuild' (registered by plugin 'com.android.internal.application').
+> Release API and issuer must use HTTPS without credentials
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 10s
+1 actionable task: 1 executed

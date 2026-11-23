@@ -1,0 +1,8 @@
+HTTP/1.1 422 Unprocessable Content
+date: Mon, 23 Nov 2026 08:33:42 GMT
+server: uvicorn
+content-length: 290
+content-type: application/problem+json
+x-trace-id: b864006b207d4518b0b0130ab2d6f193
+
+{"type":"https://code101.example/problems/validation-error","title":"Validation failed","status":422,"detail":"This Idempotency-Key was already used with a different request.","instance":"/v1/projects/9a000000-0000-4000-8000-000000000001/tasks","traceId":"b864006b207d4518b0b0130ab2d6f193"}

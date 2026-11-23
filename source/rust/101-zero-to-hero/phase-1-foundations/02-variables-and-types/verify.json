@@ -1,0 +1,23 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Item: Tea; description: Green tea\nBoxes: 4; price: 2.50\nIn stock: true; aisle: B\nSold: 2; servings: 3"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "Rice: 7 left"
+    }
+  ]
+}

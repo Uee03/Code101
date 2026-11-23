@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "[log] CreateTask\ncreated task 1\n[log] CreateTask\ncreated task 2\n[log] CreateTask\nrejected: title is required\n[log] CompleteTask\ncompleted task 1\n[log] CompleteTask\nrejected: task 1 is already done\n[log] OpenTasksFor\nopen for alice: Review PR\n[log] CreateTask\ncreated task 3\n[log] OpenTasksFor\nstale read: Review PR\n[log] OpenTasksFor\nafter catch-up: Review PR, Ship\nrejected: handler already registered for CreateTask\nrejected: no handler for Unknown"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "[log] CreateTask\ncreated task 1\n[log] CreateTask\ncreated task 2\n[log] CreateTask\nrejected: title is required\n[log] CompleteTask\ncompleted task 1\n[log] CompleteTask\nrejected: task 1 is already done\n[log] OpenTasksFor\nopen for alice: Review PR\n[log] CreateTask\ncreated task 3\n[log] OpenTasksFor\nstale read: Review PR\n[log] OpenTasksFor\nafter catch-up: Review PR, Ship\nrejected: handler already registered for CreateTask\nrejected: no handler for Unknown"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "HELLO ANA\nrequests seen: 1"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "HELLO ANA\nrequests seen: 1"
+    }
+  ]
+}

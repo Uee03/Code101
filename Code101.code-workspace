@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Git/Claude"
+		},
+		{
+			"path": "../../Git/Art"
+		}
+	],
+	"settings": {
+		"dotnet.defaultSolution": "Code101/capstones/backend-dotnet/source/phase-1-skeleton/01-skeleton/code/TasksApi.slnx"
+	}
+}

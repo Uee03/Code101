@@ -1,0 +1,114 @@
+{
+  "requires": [
+    "docker",
+    "cargo"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "build the image and start Postgres, Keycloak and the API (cold Rust builds are slow)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build --wait",
+      "timeout": 900
+    },
+    {
+      "name": "health probe",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py GET /health",
+      "retries": 20,
+      "retry_delay": 1,
+      "expect_contains": [
+        "HTTP 200",
+        "\"database\": \"up\""
+      ]
+    },
+    {
+      "name": "the image runs as a non-root user",
+      "cwd": "code",
+      "cmd": "docker inspect --format \"{{.Config.User}}\" code101/tasks-api-rust:local",
+      "expect_stdout": "nonroot:nonroot"
+    },
+    {
+      "name": "conformance script (phase 4 passes 17 of 18: only the RateLimit headers are missing)",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_exit": 1,
+      "expect_contains": [
+        "PASS  health (200, status ok, no token needed)",
+        "PASS  audit log (task create and update are in the audit trail)",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "17 passed, 1 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "expect_stdout": "true\nfalse\nfalse\nfalse"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove the image built for this check",
+      "cwd": "code",
+      "cmd": "docker image rm code101/tasks-api-rust:local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/Cargo.lock",
+    "code/.env.example",
+    "code/.gitignore",
+    "code/rustfmt.toml",
+    "code/docker-compose.yml",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/scripts/api.py",
+    "code/scripts/conformance.py",
+    "code/src/app.rs",
+    "code/src/auth.rs",
+    "code/src/config.rs",
+    "code/src/error.rs",
+    "code/src/extract.rs",
+    "code/src/http.rs",
+    "code/src/jwks.rs",
+    "code/src/lib.rs",
+    "code/src/models.rs",
+    "code/src/state.rs",
+    "code/src/validation.rs",
+    "code/src/handlers/audit.rs",
+    "code/src/handlers/comments.rs",
+    "code/src/handlers/health.rs",
+    "code/src/handlers/me.rs",
+    "code/src/handlers/members.rs",
+    "code/src/handlers/mod.rs",
+    "code/src/handlers/projects.rs",
+    "code/src/handlers/tasks.rs",
+    "code/src/handlers/teams.rs",
+    "code/src/handlers/users.rs",
+    "code/src/store/audit.rs",
+    "code/src/store/comments.rs",
+    "code/src/store/idempotency.rs",
+    "code/src/store/mod.rs",
+    "code/src/store/page.rs",
+    "code/src/store/projects.rs",
+    "code/src/store/tasks.rs",
+    "code/src/store/teams.rs",
+    "code/src/store/users.rs"
+  ]
+}

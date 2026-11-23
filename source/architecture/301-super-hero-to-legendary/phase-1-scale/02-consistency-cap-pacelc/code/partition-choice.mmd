@@ -1,0 +1,16 @@
+sequenceDiagram
+    autonumber
+    participant W as Writer client
+    participant A as Node A
+    participant B as Node B
+    participant R as Reader client
+    Note over A,B: A network partition begins before the copy reaches B
+    W->>A: write task status done
+    A-->>W: accepted
+    R->>B: read the task
+    alt design chooses consistency
+        B-->>R: error or timeout, B cannot confirm it has the latest value
+    else design chooses availability
+        B-->>R: answers with the last value it has, which may be old
+    end
+    Note over A,B: When the partition heals, B catches up from A

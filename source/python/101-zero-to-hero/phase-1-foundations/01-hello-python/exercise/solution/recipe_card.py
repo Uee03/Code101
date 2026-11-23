@@ -1,0 +1,5 @@
+print("Recipe: Tea")
+print()
+print("Ingredients:")
+print("- 1 tea bag")
+print("- 1 cup of hot water")

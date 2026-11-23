@@ -1,0 +1,23 @@
+@let item = current();
+<h1>{{ item.task.title }}</h1>
+
+<dl>
+  <dt>Status</dt>
+  <dd>{{ item.task.status }}</dd>
+  <dt>Priority</dt>
+  <dd>{{ item.task.priority }}</dd>
+  <dt>Due date</dt>
+  <dd>{{ item.task.dueDate ? (item.task.dueDate | date: 'mediumDate') : 'none' }}</dd>
+  <dt>Version (ETag)</dt>
+  <dd>{{ item.etag }}</dd>
+</dl>
+
+<button type="button" (click)="markDone()" [disabled]="saving() || item.task.status === 'done'">
+  {{ saving() ? 'Saving...' : 'Mark as done' }}
+</button>
+
+@if (problem(); as failure) {
+  <app-problem-view [problem]="failure" />
+}
+
+<p><a routerLink="/tasks">Back to the tasks</a></p>

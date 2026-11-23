@@ -1,0 +1,32 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "stdin": "3\n",
+      "expect_stdout": "How many squares (1 to 20)?\n1 squared is 1\n2 squared is 4\n3 squared is 9\nAfter growing: last is 25\nCopy: Memory, original: memory"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "stdin": "3\n4\n5\n6\n",
+      "expect_stdout": "How many numbers (1 to 10)?\nSum: 15"
+    }
+  ],
+  "skip_lesson_check": []
+}

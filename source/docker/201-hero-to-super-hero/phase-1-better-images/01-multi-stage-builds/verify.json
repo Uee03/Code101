@@ -1,0 +1,21 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "build go multi-stage", "cwd": "code/go-app", "cmd": "docker build -t code101-go:201 .", "timeout": 600 },
+    { "name": "build go single-stage", "cwd": "code/go-app", "cmd": "docker build -f Dockerfile.single -t code101-go-single:201 .", "timeout": 600 },
+    { "name": "build node multi-stage", "cwd": "code/node-app", "cmd": "docker build -t code101-node:201 .", "timeout": 600 },
+    { "name": "run go", "cwd": "code", "cmd": "docker run -d --rm --name {project}-go -p 127.0.0.1:8080:8080 code101-go:201" },
+    { "name": "probe go", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "Hello from a multi-stage Go image", "retries": 20, "retry_delay": 1 },
+    { "name": "stop go", "cwd": "code", "cmd": "docker stop {project}-go" },
+    { "name": "run node", "cwd": "code", "cmd": "docker run -d --rm --name {project}-node -p 127.0.0.1:8080:8080 code101-node:201" },
+    { "name": "probe node", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"message\":\"Hello from a multi-stage Node image\",\"version\":\"1.0.0\"}", "retries": 20, "retry_delay": 1 },
+    { "name": "solution check stage", "cwd": "code/node-app", "cmd": "docker build --target check -f ../../exercise/solution/node-app/Dockerfile -t code101-node-check:201 .", "timeout": 600 }
+  ],
+  "cleanup": [
+    { "name": "stop go", "cmd": "docker rm -f {project}-go" },
+    { "name": "stop node", "cmd": "docker rm -f {project}-node" },
+    { "name": "remove images", "cmd": "docker image rm code101-go:201 code101-go-single:201 code101-node:201 code101-node-check:201" }
+  ],
+  "skip_lesson_check": []
+}

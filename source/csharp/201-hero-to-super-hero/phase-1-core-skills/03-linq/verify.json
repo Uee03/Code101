@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Books over 20: 1,5\nOver 40 (query syntax): 2,3\nGrace: 90.00 in 2 order(s)\nAda: 79.00 in 3 order(s)\nLinus: 12.25 in 1 order(s)\nAverage: 30.21\nAny over 50: True\nAll over 10: False\nZed: none\nCities: 1:London, 2:New York, 3:London\nPage 2: 3,4\nLive: 2,4; snapshot: 2\ncount=2, sum=3, source ran 2 time(s)"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Big spenders: Ada, Grace\nTop category: Games\nMonth 1: 85.50\nMonth 2: 87.25\nMonth 3: 8.50"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

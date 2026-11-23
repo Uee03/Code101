@@ -1,0 +1,80 @@
+CREATE TABLE teams (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  member_count INTEGER NOT NULL DEFAULT 0,
+  version INTEGER NOT NULL,
+  updated_at TEXT NOT NULL,
+  payload_json TEXT NOT NULL
+);
+CREATE TABLE projects (
+  id TEXT NOT NULL PRIMARY KEY,
+  team_id TEXT NOT NULL,
+  "key" TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  archived INTEGER NOT NULL DEFAULT 0,
+  version INTEGER NOT NULL,
+  payload_json TEXT NOT NULL
+);
+CREATE INDEX projects_team ON projects(team_id);
+CREATE TABLE tasks (
+  id TEXT NOT NULL PRIMARY KEY,
+  project_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  status TEXT NOT NULL,
+  priority TEXT NOT NULL,
+  assignee_id TEXT,
+  due_date TEXT,
+  completed_at TEXT,
+  version INTEGER NOT NULL,
+  created_at TEXT NOT NULL,
+  sync_state TEXT NOT NULL CHECK(sync_state IN ('synced','pending','conflict','failed')),
+  server_json TEXT,
+  payload_json TEXT NOT NULL
+);
+CREATE INDEX tasks_project ON tasks(project_id,created_at DESC,id DESC);
+CREATE TABLE comments (
+  id TEXT NOT NULL PRIMARY KEY,
+  task_id TEXT NOT NULL,
+  author_id TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  sync_state TEXT NOT NULL,
+  payload_json TEXT NOT NULL
+);
+CREATE INDEX comments_task ON comments(task_id,created_at);
+CREATE TABLE outbox (
+  seq INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  id TEXT NOT NULL UNIQUE,
+  kind TEXT NOT NULL CHECK(kind IN ('create_task','update_task','complete_task','create_comment')),
+  entity_id TEXT NOT NULL,
+  parent_id TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  base_version INTEGER,
+  state TEXT NOT NULL CHECK(state IN ('pending','in_flight','failed','conflict')),
+  attempts INTEGER NOT NULL DEFAULT 0,
+  next_attempt_at INTEGER NOT NULL DEFAULT 0,
+  last_problem_type TEXT,
+  problem_json TEXT,
+  server_json TEXT,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX outbox_ready ON outbox(state,next_attempt_at);
+CREATE INDEX outbox_entity ON outbox(entity_id,seq);
+CREATE TABLE app_settings (
+  "key" TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+CREATE TABLE cached_pages (
+  page_key TEXT NOT NULL PRIMARY KEY,
+  ids TEXT NOT NULL,
+  next_cursor TEXT
+);
+CREATE TABLE sync_leases (
+  name TEXT NOT NULL PRIMARY KEY,
+  owner TEXT NOT NULL,
+  expires INTEGER NOT NULL
+);

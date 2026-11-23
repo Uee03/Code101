@@ -1,0 +1,60 @@
+{
+  "requires": [
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "typecheck code",
+      "cwd": "code",
+      "cmd": "npx tsc --noEmit",
+      "expect_stdout": ""
+    },
+    {
+      "name": "syntax check cors server",
+      "cwd": "code",
+      "cmd": "node --check server/cors-server.mjs",
+      "expect_stdout": ""
+    },
+    {
+      "name": "build code",
+      "cwd": "code",
+      "cmd": "npx vite build",
+      "timeout": 240
+    },
+    {
+      "name": "check build output",
+      "cwd": "code",
+      "cmd": "{python} -c \"import glob, os; assert os.path.exists('dist/index.html'); assert len(glob.glob('dist/assets/*.js')) >= 1\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "overlay solution",
+      "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "install solution",
+      "cwd": "sol",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "typecheck solution",
+      "cwd": "sol",
+      "cmd": "npx tsc --noEmit",
+      "expect_stdout": ""
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore",
+    "code/tsconfig.json",
+    "code/src/dom.ts"
+  ]
+}

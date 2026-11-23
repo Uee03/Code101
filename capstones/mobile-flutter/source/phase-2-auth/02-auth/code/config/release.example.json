@@ -1,0 +1,7 @@
+{
+  "API_BASE_URL": "https://tasks.example.invalid",
+  "OIDC_ISSUER": "https://identity.example.invalid/realms/tasksteams",
+  "OIDC_CLIENT_ID": "tasks-mobile",
+  "OIDC_REDIRECT_URI": "com.code101.tasks:/oauth2redirect",
+  "OIDC_LOGOUT_URI": "com.code101.tasks:/logout"
+}

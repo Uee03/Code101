@@ -1,0 +1,14 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build code", "cwd": "code", "cmd": "npm run build", "timeout": 300 },
+    { "name": "check build output", "cwd": "code", "cmd": "{python} -c \"import os; assert os.path.exists('dist/index.html')\"", "expect_stdout": "" },
+    { "name": "serve code", "cwd": "code", "cmd": "npm run dev -- --port 18111", "bg": true, "wait": 3 },
+    { "name": "probe code", "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://localhost:18111/'); s=r.read().decode(); assert r.status == 200 and '/src/main.tsx' in s\"", "retries": 10, "retry_delay": 1, "expect_stdout": "" },
+    { "name": "overlay solution", "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"", "expect_stdout": "" },
+    { "name": "install solution", "cwd": "sol", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "sol", "cmd": "npm run build", "timeout": 300 }
+  ],
+  "skip_lesson_check": ["code/package.json", "code/vite.config.ts", "code/tsconfig.json", "code/tsconfig.app.json", "code/tsconfig.node.json", "code/index.html", "code/.gitignore", "code/public/api/books.json", "code/public/icons/LICENSE-ICONS-CC0.txt", "code/public/icons/ui/plus.svg", "code/public/icons/ui/x.svg", "code/public/icons/ui/check-circle.svg", "code/src/main.tsx", "code/src/books.ts", "code/src/api.ts", "code/src/App.tsx", "code/src/styles.css", "code/src/components/Header.tsx", "code/src/components/Footer.tsx", "code/src/components/Panel.tsx", "code/src/components/Counter.tsx", "code/src/components/BookList.tsx", "code/src/components/BookCard.tsx", "code/src/components/AddBookForm.tsx", "code/src/components/FilterBar.tsx", "code/src/components/Icon.tsx"]
+}

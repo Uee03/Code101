@@ -1,0 +1,776 @@
+{
+  "1": {
+    "up": {
+      "command": "docker compose -p code101-db01 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db01_default Creating \n Volume code101-db01_pg_data Creating \n Volume code101-db01_pg_data Creating \n Network code101-db01_default Creating \n Volume code101-db01_pg_data Created \n Volume code101-db01_pg_data Created \n Network code101-db01_default Created \n Network code101-db01_default Created \n Container code101-db01-db-1 Creating \n Container code101-db01-db-1 Created \n Container code101-db01-db-1 Starting \n Container code101-db01-db-1 Started \n Container code101-db01-db-1 Waiting \n Container code101-db01-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db01 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db01 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:08.001 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:07 UTC\n2026-11-23 06:12:08.006 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": "       message       \n---------------------\n PostgreSQL is ready\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "interactive_query": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q",
+      "exit": 0,
+      "stdout": "       message       \n---------------------\n PostgreSQL is ready\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "relation_error": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"SELECT * FROM missing_books;\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  relation \"missing_books\" does not exist\nLINE 1: SELECT * FROM missing_books;\n                      ^\n"
+    },
+    "syntax_error": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"SELEC title FROM books;\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  syntax error at or near \"SELEC\"\nLINE 1: SELEC title FROM books;\n        ^\n"
+    },
+    "password_error": {
+      "command": "docker compose -p code101-db02 exec -T -e PGPASSWORD=wrong db psql -X -w -h db -U learner -d code101 -c \"SELECT 1;\"",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "psql: error: connection to server at \"db\" (172.18.0.2), port 5432 failed: FATAL:  password authentication failed for user \"learner\"\n"
+    },
+    "port_error": {
+      "command": "docker run --name code101-author-port-conflict -d -p 127.0.0.1:5432:5432 postgres:17-alpine",
+      "exit": 125,
+      "stdout": "6e6732052b40aa9888c87584a8ca55cf249af86c9e0ac6ae99f97dcda197bf98\n",
+      "stderr": "docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint code101-author-port-conflict (de0da993f60c926fae4ad2a77d8710887f4da5ac14f9e53201e66800ceacbd85): Bind for 127.0.0.1:5432 failed: port is already allocated\n\nRun 'docker run --help' for more information\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "      message      \n-------------------\n A place for facts\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "starter": {
+      "command": "docker compose -p code101-db01 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "stop": {
+      "command": "docker compose -p code101-db01 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db01-db-1 Stopping \n Container code101-db01-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db01 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "refused_error": {
+      "command": "docker run --rm --name code101-author-client postgres:17-alpine psql -X -w postgresql://learner:learn_local_only@host.docker.internal:5432/code101?sslmode=disable&connect_timeout=3 -c \"SELECT 1;\"",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "psql: error: connection to server at \"host.docker.internal\" (192.168.65.254), port 5432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?\n"
+    },
+    "down": {
+      "command": "docker compose -p code101-db01 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db01-db-1 Stopping \n Container code101-db01-db-1 Stopped \n Container code101-db01-db-1 Removing \n Container code101-db01-db-1 Removed \n Volume code101-db01_pg_data Removing \n Network code101-db01_default Removing \n Volume code101-db01_pg_data Removed \n Network code101-db01_default Removed \n"
+    }
+  },
+  "2": {
+    "up": {
+      "command": "docker compose -p code101-db02 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db02_default Creating \n Network code101-db02_default Creating \n Volume code101-db02_pg_data Creating \n Volume code101-db02_pg_data Creating \n Volume code101-db02_pg_data Created \n Volume code101-db02_pg_data Created \n Network code101-db02_default Created \n Network code101-db02_default Created \n Container code101-db02-db-1 Creating \n Container code101-db02-db-1 Created \n Container code101-db02-db-1 Starting \n Container code101-db02-db-1 Started \n Container code101-db02-db-1 Waiting \n Container code101-db02-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db02 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db02 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:16.312 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:16 UTC\n2026-11-23 06:12:16.317 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db02 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " database | username \n----------+----------\n code101  | learner\n(1 row)\n\n     message      \n------------------\n Connection works\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "solution": {
+      "command": "docker compose -p code101-db02 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " connected_as \n--------------\n learner\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "starter": {
+      "command": "docker compose -p code101-db02 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "stop": {
+      "command": "docker compose -p code101-db02 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db02-db-1 Stopping \n Container code101-db02-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db02 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db02 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db02-db-1 Stopping \n Container code101-db02-db-1 Stopped \n Container code101-db02-db-1 Removing \n Container code101-db02-db-1 Removed \n Volume code101-db02_pg_data Removing \n Network code101-db02_default Removing \n Volume code101-db02_pg_data Removed \n Network code101-db02_default Removed \n"
+    }
+  },
+  "3": {
+    "up": {
+      "command": "docker compose -p code101-db03 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db03_default Creating \n Volume code101-db03_pg_data Creating \n Volume code101-db03_pg_data Creating \n Network code101-db03_default Creating \n Volume code101-db03_pg_data Created \n Volume code101-db03_pg_data Created \n Network code101-db03_default Created \n Network code101-db03_default Created \n Container code101-db03-db-1 Creating \n Container code101-db03-db-1 Created \n Container code101-db03-db-1 Starting \n Container code101-db03-db-1 Started \n Container code101-db03-db-1 Waiting \n Container code101-db03-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db03 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db03 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:23.475 UTC [58] LOG:  database system was shut down at 2026-11-23 06:12:23 UTC\n2026-11-23 06:12:23.480 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db03 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " book_id |    title     | price | available | published_on \n---------+--------------+-------+-----------+--------------\n       1 | Field Notes  | 12.50 | t         | 2024-01-15\n       2 | Quiet Rivers | 20.00 | f         | (none)\n       3 | City Maps    |  8.00 | t         | 2023-06-01\n       4 | Forest Walks | 15.00 | t         | 2025-03-10\n(4 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db03 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "    title     | price \n--------------+-------\n Field Notes  | 12.50\n Quiet Rivers | 20.00\n City Maps    |  8.00\n Forest Walks | 15.00\n(4 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db03 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db03 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db03-db-1 Stopping \n Container code101-db03-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db03 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db03 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db03-db-1 Stopping \n Container code101-db03-db-1 Stopped \n Container code101-db03-db-1 Removing \n Container code101-db03-db-1 Removed \n Volume code101-db03_pg_data Removing \n Network code101-db03_default Removing \n Volume code101-db03_pg_data Removed \n Network code101-db03_default Removed \n"
+    }
+  },
+  "4": {
+    "up": {
+      "command": "docker compose -p code101-db04 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Volume code101-db04_pg_data Creating \n Volume code101-db04_pg_data Creating \n Network code101-db04_default Creating \n Network code101-db04_default Creating \n Volume code101-db04_pg_data Created \n Volume code101-db04_pg_data Created \n Network code101-db04_default Created \n Network code101-db04_default Created \n Container code101-db04-db-1 Creating \n Container code101-db04-db-1 Created \n Container code101-db04-db-1 Starting \n Container code101-db04-db-1 Started \n Container code101-db04-db-1 Waiting \n Container code101-db04-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db04 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db04 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:30.751 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:30 UTC\n2026-11-23 06:12:30.756 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db04 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": "    title    | price \n-------------+-------\n City Maps   |  8.00\n Field Notes | 12.50\n(2 rows)\n\n    title     \n--------------\n Field Notes\n Forest Walks\n(2 rows)\n\n    title     \n--------------\n Quiet Rivers\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db04 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "    title     | price \n--------------+-------\n Forest Walks | 15.00\n Field Notes  | 12.50\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db04 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db04 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db04-db-1 Stopping \n Container code101-db04-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db04 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db04 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db04-db-1 Stopping \n Container code101-db04-db-1 Stopped \n Container code101-db04-db-1 Removing \n Container code101-db04-db-1 Removed \n Network code101-db04_default Removing \n Volume code101-db04_pg_data Removing \n Volume code101-db04_pg_data Removed \n Network code101-db04_default Removed \n"
+    }
+  },
+  "5": {
+    "up": {
+      "command": "docker compose -p code101-db05 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Volume code101-db05_pg_data Creating \n Volume code101-db05_pg_data Creating \n Network code101-db05_default Creating \n Network code101-db05_default Creating \n Volume code101-db05_pg_data Created \n Volume code101-db05_pg_data Created \n Network code101-db05_default Created \n Network code101-db05_default Created \n Container code101-db05-db-1 Creating \n Container code101-db05-db-1 Created \n Container code101-db05-db-1 Starting \n Container code101-db05-db-1 Started \n Container code101-db05-db-1 Waiting \n Container code101-db05-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db05 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db05 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:38.270 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:38 UTC\n2026-11-23 06:12:38.274 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db05 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " book_id |    title    | price \n---------+-------------+-------\n       1 | Field Notes | 13.50\n(1 row)\n\n book_id |    title     \n---------+--------------\n       2 | Quiet Rivers\n(1 row)\n\n book_id |    title     | price \n---------+--------------+-------\n       1 | Field Notes  | 13.50\n       3 | City Maps    |  8.00\n       4 | Forest Walks | 15.00\n(3 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db05 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " book_id |   title   | available \n---------+-----------+-----------\n       3 | City Maps | f\n(1 row)\n\n book_id |    title     \n---------+--------------\n       4 | Forest Walks\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db05 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db05 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db05-db-1 Stopping \n Container code101-db05-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db05 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db05 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db05-db-1 Stopping \n Container code101-db05-db-1 Stopped \n Container code101-db05-db-1 Removing \n Container code101-db05-db-1 Removed \n Network code101-db05_default Removing \n Volume code101-db05_pg_data Removing \n Volume code101-db05_pg_data Removed \n Network code101-db05_default Removed \n"
+    }
+  },
+  "6": {
+    "up": {
+      "command": "docker compose -p code101-db06 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db06_default Creating \n Volume code101-db06_pg_data Creating \n Volume code101-db06_pg_data Creating \n Network code101-db06_default Creating \n Volume code101-db06_pg_data Created \n Volume code101-db06_pg_data Created \n Network code101-db06_default Created \n Network code101-db06_default Created \n Container code101-db06-db-1 Creating \n Container code101-db06-db-1 Created \n Container code101-db06-db-1 Starting \n Container code101-db06-db-1 Started \n Container code101-db06-db-1 Waiting \n Container code101-db06-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db06 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db06 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:45.727 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:45 UTC\n2026-11-23 06:12:45.732 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db06 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " member_id | name \n-----------+------\n         1 | Ava\n         2 | Ben\n         3 | Cora\n(3 rows)\n\n loan_id | member_id |    title     \n---------+-----------+--------------\n       1 |         1 | Field Notes\n       2 |         1 | Quiet Rivers\n       3 |         2 | City Maps\n(3 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "fk_error": {
+      "command": "docker compose -p code101-db06 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"INSERT INTO practice.loans (member_id, title) VALUES (999, 'Unknown');\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  insert or update on table \"loans\" violates foreign key constraint \"fk_loans_members\"\nDETAIL:  Key (member_id)=(999) is not present in table \"members\".\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db06 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " loan_id | member_id |    title     \n---------+-----------+--------------\n       4 |         2 | Forest Walks\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table practice.members\ndrop cascades to table practice.loans\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db06 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table practice.members\ndrop cascades to table practice.loans\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db06 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db06-db-1 Stopping \n Container code101-db06-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db06 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db06 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db06-db-1 Stopping \n Container code101-db06-db-1 Stopped \n Container code101-db06-db-1 Removing \n Container code101-db06-db-1 Removed \n Volume code101-db06_pg_data Removing \n Network code101-db06_default Removing \n Volume code101-db06_pg_data Removed \n Network code101-db06_default Removed \n"
+    }
+  },
+  "7": {
+    "up": {
+      "command": "docker compose -p code101-db07 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Volume code101-db07_pg_data Creating \n Volume code101-db07_pg_data Creating \n Network code101-db07_default Creating \n Network code101-db07_default Creating \n Volume code101-db07_pg_data Created \n Volume code101-db07_pg_data Created \n Network code101-db07_default Created \n Network code101-db07_default Created \n Container code101-db07-db-1 Creating \n Container code101-db07-db-1 Created \n Container code101-db07-db-1 Starting \n Container code101-db07-db-1 Started \n Container code101-db07-db-1 Waiting \n Container code101-db07-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db07 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db07 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:12:52.965 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:52 UTC\n2026-11-23 06:12:52.969 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db07 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " name |    title     \n------+--------------\n Ava  | Field Notes\n Ava  | Quiet Rivers\n Ben  | City Maps\n(3 rows)\n\n name |    title     \n------+--------------\n Ava  | Field Notes\n Ava  | Quiet Rivers\n Ben  | City Maps\n Cora | (none)\n(4 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db07 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " name | title  \n------+--------\n Cora | (none)\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table practice.members\ndrop cascades to table practice.loans\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db07 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table practice.members\ndrop cascades to table practice.loans\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db07 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db07-db-1 Stopping \n Container code101-db07-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db07 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db07 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db07-db-1 Stopping \n Container code101-db07-db-1 Stopped \n Container code101-db07-db-1 Removing \n Container code101-db07-db-1 Removed \n Volume code101-db07_pg_data Removing \n Network code101-db07_default Removing \n Volume code101-db07_pg_data Removed \n Network code101-db07_default Removed \n"
+    }
+  },
+  "8": {
+    "up": {
+      "command": "docker compose -p code101-db08 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db08_default Creating \n Volume code101-db08_pg_data Creating \n Volume code101-db08_pg_data Creating \n Network code101-db08_default Creating \n Volume code101-db08_pg_data Created \n Volume code101-db08_pg_data Created \n Network code101-db08_default Created \n Network code101-db08_default Created \n Container code101-db08-db-1 Creating \n Container code101-db08-db-1 Created \n Container code101-db08-db-1 Starting \n Container code101-db08-db-1 Started \n Container code101-db08-db-1 Waiting \n Container code101-db08-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db08 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db08 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:13:00.095 UTC [57] LOG:  database system was shut down at 2026-11-23 06:12:59 UTC\n2026-11-23 06:13:00.100 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db08 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " sale_rows | items_sold | average_price \n-----------+------------+---------------\n         5 |          7 |          9.00\n(1 row)\n\n  category  | sale_rows | items_sold | revenue \n------------+-----------+------------+---------\n books      |         2 |          3 |   35.00\n stationery |         2 |          3 |   11.00\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db08 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " category | revenue \n----------+---------\n books    |   35.00\n games    |   12.00\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.sales\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db08 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.sales\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db08 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db08-db-1 Stopping \n Container code101-db08-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db08 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db08 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db08-db-1 Stopping \n Container code101-db08-db-1 Stopped \n Container code101-db08-db-1 Removing \n Container code101-db08-db-1 Removed \n Volume code101-db08_pg_data Removing \n Network code101-db08_default Removing \n Volume code101-db08_pg_data Removed \n Network code101-db08_default Removed \n"
+    }
+  },
+  "9": {
+    "up": {
+      "command": "docker compose -p code101-db09 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Volume code101-db09_pg_data Creating \n Volume code101-db09_pg_data Creating \n Network code101-db09_default Creating \n Network code101-db09_default Creating \n Volume code101-db09_pg_data Created \n Volume code101-db09_pg_data Created \n Network code101-db09_default Created \n Network code101-db09_default Created \n Container code101-db09-db-1 Creating \n Container code101-db09-db-1 Created \n Container code101-db09-db-1 Starting \n Container code101-db09-db-1 Started \n Container code101-db09-db-1 Waiting \n Container code101-db09-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db09 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db09 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:13:07.284 UTC [57] LOG:  database system was shut down at 2026-11-23 06:13:07 UTC\n2026-11-23 06:13:07.288 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " name |       email       \n------+-------------------\n Cora | cora@example.test\n(1 row)\n\n    title    | stock \n-------------+-------\n Trail Guide |     0\n(1 row)\n\n name |       email       \n------+-------------------\n Ava  | ava@example.test\n Ben  | ben@example.test\n Cora | cora@example.test\n(3 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"library\" does not exist, skipping\n"
+    },
+    "null_error": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"INSERT INTO library.members (name, email) VALUES (NULL, 'missing@example.test');\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  null value in column \"name\" of relation \"members\" violates not-null constraint\nDETAIL:  Failing row contains (4, null, missing@example.test, 2026-11-23).\n"
+    },
+    "unique_error": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"INSERT INTO library.members (name, email) VALUES ('Again', 'ava@example.test');\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  duplicate key value violates unique constraint \"uq_members_email\"\nDETAIL:  Key (email)=(ava@example.test) already exists.\n"
+    },
+    "check_error": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"INSERT INTO library.books (title, stock, price) VALUES ('Broken', -1, 2);\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  new row for relation \"books\" violates check constraint \"ck_books_stock\"\nDETAIL:  Failing row contains (4, Broken, -1, 2.00).\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "    title     | stock | price \n--------------+-------+-------\n Forest Walks |     0 | 15.00\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table library.members\ndrop cascades to table library.books\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db09 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to 2 other objects\nDETAIL:  drop cascades to table library.members\ndrop cascades to table library.books\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db09 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db09-db-1 Stopping \n Container code101-db09-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db09 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db09 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db09-db-1 Stopping \n Container code101-db09-db-1 Stopped \n Container code101-db09-db-1 Removing \n Container code101-db09-db-1 Removed \n Volume code101-db09_pg_data Removing \n Network code101-db09_default Removing \n Volume code101-db09_pg_data Removed \n Network code101-db09_default Removed \n"
+    }
+  },
+  "10": {
+    "up": {
+      "command": "docker compose -p code101-db10 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db10_default Creating \n Network code101-db10_default Creating \n Volume code101-db10_pg_data Creating \n Volume code101-db10_pg_data Creating \n Volume code101-db10_pg_data Created \n Volume code101-db10_pg_data Created \n Network code101-db10_default Created \n Network code101-db10_default Created \n Container code101-db10-db-1 Creating \n Container code101-db10-db-1 Created \n Container code101-db10-db-1 Starting \n Container code101-db10-db-1 Started \n Container code101-db10-db-1 Waiting \n Container code101-db10-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db10 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db10 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:13:15.070 UTC [57] LOG:  database system was shut down at 2026-11-23 06:13:14 UTC\n2026-11-23 06:13:15.075 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db10 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": " owner | balance \n-------+---------\n Ava   |   75.00\n Ben   |   75.00\n(2 rows)\n\n owner | balance \n-------+---------\n Ava   |   75.00\n Ben   |   75.00\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"bank\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db10 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": " owner | balance \n-------+---------\n Ava   |   95.00\n Ben   |   55.00\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table bank.accounts\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db10 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table bank.accounts\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db10 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db10-db-1 Stopping \n Container code101-db10-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db10 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db10 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db10-db-1 Stopping \n Container code101-db10-db-1 Stopped \n Container code101-db10-db-1 Removing \n Container code101-db10-db-1 Removed \n Volume code101-db10_pg_data Removing \n Network code101-db10_default Removing \n Volume code101-db10_pg_data Removed \n Network code101-db10_default Removed \n"
+    }
+  },
+  "11": {
+    "up": {
+      "command": "docker compose -p code101-db11 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Volume code101-db11_pg_data Creating \n Volume code101-db11_pg_data Creating \n Network code101-db11_default Creating \n Network code101-db11_default Creating \n Volume code101-db11_pg_data Created \n Volume code101-db11_pg_data Created \n Network code101-db11_default Created \n Network code101-db11_default Created \n Container code101-db11-db-1 Creating \n Container code101-db11-db-1 Created \n Container code101-db11-db-1 Starting \n Container code101-db11-db-1 Started \n Container code101-db11-db-1 Waiting \n Container code101-db11-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db11 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db11 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:13:22.412 UTC [57] LOG:  database system was shut down at 2026-11-23 06:13:22 UTC\n2026-11-23 06:13:22.418 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db11 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "exit": 0,
+      "stdout": "              QUERY PLAN               \n---------------------------------------\n Seq Scan on books\n   Filter: (title = 'City Maps'::text)\n(2 rows)\n\n              QUERY PLAN               \n---------------------------------------\n Seq Scan on books\n   Filter: (title = 'City Maps'::text)\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  schema \"practice\" does not exist, skipping\n"
+    },
+    "solution": {
+      "command": "docker compose -p code101-db11 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "            QUERY PLAN             \n-----------------------------------\n Seq Scan on books\n   Filter: (price < '15'::numeric)\n(2 rows)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db11 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/setup.sql:1: NOTICE:  drop cascades to table practice.books\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db11 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db11-db-1 Stopping \n Container code101-db11-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db11 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "down": {
+      "command": "docker compose -p code101-db11 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db11-db-1 Stopping \n Container code101-db11-db-1 Stopped \n Container code101-db11-db-1 Removing \n Container code101-db11-db-1 Removed \n Volume code101-db11_pg_data Removing \n Network code101-db11_default Removing \n Volume code101-db11_pg_data Removed \n Network code101-db11_default Removed \n"
+    }
+  },
+  "12": {
+    "up": {
+      "command": "docker compose -p code101-db12 up -d --wait",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Network code101-db12_default Creating \n Volume code101-db12_pg_data Creating \n Volume code101-db12_pg_data Creating \n Network code101-db12_default Creating \n Volume code101-db12_pg_data Created \n Volume code101-db12_pg_data Created \n Network code101-db12_default Created \n Network code101-db12_default Created \n Container code101-db12-db-1 Creating \n Container code101-db12-db-1 Created \n Container code101-db12-db-1 Starting \n Container code101-db12-db-1 Started \n Container code101-db12-db-1 Waiting \n Container code101-db12-db-1 Healthy \n"
+    },
+    "ps": {
+      "command": "docker compose -p code101-db12 ps --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db running healthy\n",
+      "stderr": ""
+    },
+    "logs": {
+      "command": "docker compose -p code101-db12 logs --no-log-prefix --tail 2 db",
+      "exit": 0,
+      "stdout": "2026-11-23 06:22:59.095 UTC [57] LOG:  database system was shut down at 2026-11-23 06:22:58 UTC\n2026-11-23 06:22:59.100 UTC [1] LOG:  database system is ready to accept connections\n",
+      "stderr": ""
+    },
+    "main": {
+      "command": "docker compose -p code101-db12 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/run.sql",
+      "exit": 0,
+      "stdout": " name |    title    |   due_on   \n------+-------------+------------\n Ava  | Field Notes | 2026-12-01\n Ben  | City Maps   | 2026-12-05\n(2 rows)\n\n name | active_loans \n------+--------------\n Ava  |            1\n Ben  |            1\n Cora |            0\n(3 rows)\n\n loan_id | book_id \n---------+---------\n       1 |       1\n       2 |       2\n(2 rows)\n\n   reading_as   \n----------------\n library_reader\n(1 row)\n\n",
+      "stderr": "psql:/scripts/schema.sql:1: NOTICE:  schema \"library\" does not exist, skipping\n"
+    },
+    "dump": {
+      "command": "docker compose -p code101-db12 exec -T db pg_dump -U learner -d code101 -Fc --no-owner --no-acl -f /tmp/library.dump",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "copy_out": {
+      "command": "docker compose -p code101-db12 cp db:/tmp/library.dump ./library.dump",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " code101-db12-db-1 Copying code101-db12-db-1:/tmp/library.dump to ./library.dump\n code101-db12-db-1 Copied code101-db12-db-1:/tmp/library.dump to ./library.dump\n"
+    },
+    "copy_in": {
+      "command": "docker compose -p code101-db12 cp ./library.dump db:/tmp/restore.dump",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " code101-db12-db-1 Copying ./library.dump to code101-db12-db-1:/tmp/restore.dump\n code101-db12-db-1 Copied ./library.dump to code101-db12-db-1:/tmp/restore.dump\n"
+    },
+    "createdb": {
+      "command": "docker compose -p code101-db12 exec -T db createdb -U learner code101_restore",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "restore": {
+      "command": "docker compose -p code101-db12 exec -T db pg_restore -U learner -d code101_restore --no-owner --no-acl /tmp/restore.dump",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "restored_count": {
+      "command": "docker compose -p code101-db12 exec -T db psql -X -q -U learner -d code101_restore -c \"SELECT COUNT(*) AS restored_loans FROM library.loans;\"",
+      "exit": 0,
+      "stdout": " restored_loans \n----------------\n              3\n(1 row)\n\n",
+      "stderr": ""
+    },
+    "solution": {
+      "command": "docker compose -p code101-db12 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "exit": 0,
+      "stdout": "    title     | times_borrowed \n--------------+----------------\n City Maps    |              1\n Field Notes  |              1\n Forest Walks |              0\n Quiet Rivers |              1\n(4 rows)\n\n",
+      "stderr": "psql:/scripts/schema.sql:1: NOTICE:  drop cascades to 3 other objects\nDETAIL:  drop cascades to table library.members\ndrop cascades to table library.books\ndrop cascades to table library.loans\n"
+    },
+    "starter": {
+      "command": "docker compose -p code101-db12 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/starter/exercise.sql",
+      "exit": 0,
+      "stdout": "    next_step     \n------------------\n Try the exercise\n(1 row)\n\n",
+      "stderr": "psql:/scripts/schema.sql:1: NOTICE:  drop cascades to 3 other objects\nDETAIL:  drop cascades to table library.members\ndrop cascades to table library.books\ndrop cascades to table library.loans\n"
+    },
+    "stop": {
+      "command": "docker compose -p code101-db12 stop",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db12-db-1 Stopping \n Container code101-db12-db-1 Stopped \n"
+    },
+    "stopped": {
+      "command": "docker compose -p code101-db12 ps --all --format \"{{.Service}} {{.State}} {{.Health}}\"",
+      "exit": 0,
+      "stdout": "db exited \n",
+      "stderr": ""
+    },
+    "permission_error": {
+      "command": "docker compose -p code101-db12 exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -c \"SET ROLE library_reader; DELETE FROM library.loans;\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "ERROR:  permission denied for table loans\n"
+    },
+    "down": {
+      "command": "docker compose -p code101-db12 down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-db12-db-1 Stopping \n Container code101-db12-db-1 Stopped \n Container code101-db12-db-1 Removing \n Container code101-db12-db-1 Removed \n Network code101-db12_default Removing \n Volume code101-db12_pg_data Removing \n Volume code101-db12_pg_data Removed \n Network code101-db12_default Removed \n"
+    }
+  }
+}

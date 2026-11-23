@@ -1,0 +1,6 @@
+{
+  "model": "llama3.2:1b",
+  "prompt": "Explain a local language model in one short sentence.",
+  "stream": false,
+  "options": {"num_ctx": 2048, "num_predict": 128}
+}

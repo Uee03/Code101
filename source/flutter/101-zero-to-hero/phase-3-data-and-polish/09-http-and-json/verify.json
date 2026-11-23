@@ -1,0 +1,14 @@
+{
+  "requires": ["flutter", "python"],
+  "steps": [
+    {"name": "add the Android scaffold around the lesson files", "cwd": "code", "cmd": "flutter create --platforms=android --project-name todo_http --no-pub .", "timeout": 600},
+    {"name": "delete the generated test folder", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.rmtree('test', ignore_errors=True)\""},
+    {"name": "restore packages", "cwd": "code", "cmd": "flutter pub get", "timeout": 600, "expect_contains": ["Got dependencies!"]},
+    {"name": "analyze once", "cwd": "code", "cmd": "flutter analyze --no-pub", "timeout": 300, "expect_contains": ["No issues found!"]},
+    {"name": "overlay the exercise solution", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.copytree('../exercise/solution/lib', 'lib', dirs_exist_ok=True)\""},
+    {"name": "analyze the solution once", "cwd": "code", "cmd": "flutter analyze --no-pub", "timeout": 300, "expect_contains": ["No issues found!"]},
+    {"name": "build a debug APK once", "cwd": "code", "cmd": "flutter build apk --debug --no-pub", "timeout": 1200, "expect_contains": ["app-debug.apk"]}
+  ],
+  "cleanup": [],
+  "skip_lesson_check": []
+}

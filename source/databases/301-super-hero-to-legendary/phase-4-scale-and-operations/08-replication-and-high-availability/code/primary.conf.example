@@ -1,0 +1,9 @@
+# Example settings for a primary that feeds a standby and archives WAL. NOT applied by this lesson.
+wal_level = replica
+max_wal_senders = 10
+max_replication_slots = 10
+max_slot_wal_keep_size = '20GB'
+archive_mode = on
+archive_command = 'test ! -f /mnt/wal_archive/%f && cp %p /mnt/wal_archive/%f'
+synchronous_commit = on
+synchronous_standby_names = 'ANY 1 (standby1, standby2)'

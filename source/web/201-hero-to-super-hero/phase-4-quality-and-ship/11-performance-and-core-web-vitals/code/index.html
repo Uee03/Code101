@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance lab</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <header class="hero">
+    <img class="hero__image" src="/images/tile.svg?tile=0" width="960" height="320" alt="" fetchpriority="high" decoding="async">
+    <h1 class="hero__title">Performance lab</h1>
+  </header>
+
+  <main class="shell">
+    <section aria-labelledby="vitals-title">
+      <h2 id="vitals-title">Live measurements for this visit</h2>
+      <dl class="vitals">
+        <dt>Largest Contentful Paint (LCP)</dt>
+        <dd id="lcp">waiting...</dd>
+        <dt>Cumulative Layout Shift (CLS, simplified)</dt>
+        <dd id="cls">0.000</dd>
+        <dt>Slowest interaction (like INP)</dt>
+        <dd id="inp">no interaction yet</dd>
+      </dl>
+    </section>
+
+    <section aria-labelledby="interaction-title">
+      <h2 id="interaction-title">Responsiveness</h2>
+      <div class="actions">
+        <button id="slow" class="button" type="button">Slow click (blocks 300 ms)</button>
+        <button id="fast" class="button button--ghost" type="button">Fast click (same work, in slices)</button>
+      </div>
+      <p id="work-status" role="status">Click a button, then read "Slowest interaction" above.</p>
+    </section>
+
+    <section aria-labelledby="shift-title">
+      <h2 id="shift-title">Layout stability</h2>
+      <div class="actions">
+        <button id="banner-a" class="button" type="button">Insert banner A after 1 second</button>
+        <button id="banner-b" class="button button--ghost" type="button">Insert banner B after 1 second</button>
+      </div>
+      <div id="slot-a" class="slot"></div>
+      <p class="muted">Content below slot A. Slot A reserves no space.</p>
+      <div id="slot-b" class="slot slot--reserved"></div>
+      <p class="muted">Content below slot B. Slot B reserves space (dashed box).</p>
+      <p class="muted">Reload the page to reset.</p>
+    </section>
+
+    <section aria-labelledby="report-title">
+      <h2 id="report-title">Code splitting</h2>
+      <button id="report-button" class="button" type="button">Load report module</button>
+      <pre id="report" class="report" role="status"></pre>
+    </section>
+
+    <section aria-labelledby="gallery-title">
+      <h2 id="gallery-title">Gallery (lazy images)</h2>
+      <ul id="gallery" class="gallery"></ul>
+    </section>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

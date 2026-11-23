@@ -1,0 +1,16 @@
+{
+  "name": "web-lesson-12",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "engines": {
+    "node": "26.13.1",
+    "npm": "11.20.0"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

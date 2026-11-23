@@ -1,0 +1,7 @@
+.git
+*.md
+*.yaml
+*.yml
+k8s
+secrets
+__pycache__

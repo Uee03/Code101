@@ -1,0 +1,5 @@
+<section aria-labelledby="theme-heading">
+  <h2 id="theme-heading">3. effect: a side effect, not a way to compute state</h2>
+  <button type="button" [attr.aria-pressed]="theme() === 'dark'" (click)="toggle()">Dark theme</button>
+  <p>Theme: {{ theme() }}. Changes this visit: {{ changes() }}.</p>
+</section>

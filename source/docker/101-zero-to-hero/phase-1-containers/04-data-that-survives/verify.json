@@ -1,0 +1,66 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "volume",
+      "cwd": "code",
+      "cmd": "docker volume create code101-verify-04-store"
+    },
+    {
+      "name": "write",
+      "cwd": "code",
+      "cmd": "docker run --name code101-verify-04-writer --mount type=volume,src=code101-verify-04-store,dst=/data alpine:3.22 sh -c \"echo 'Saved recipe' > /data/note.txt\""
+    },
+    {
+      "name": "remove writer",
+      "cwd": "code",
+      "cmd": "docker rm code101-verify-04-writer"
+    },
+    {
+      "name": "read after removal",
+      "cwd": "code",
+      "cmd": "docker run --name code101-verify-04-reader --mount type=volume,src=code101-verify-04-store,dst=/data alpine:3.22 cat /data/note.txt",
+      "expect_stdout": "Saved recipe"
+    },
+    {
+      "name": "solution volume",
+      "cwd": "exercise/solution",
+      "cmd": "docker volume create code101-verify-04-exercise"
+    },
+    {
+      "name": "solution write",
+      "cwd": "exercise/solution",
+      "cmd": "docker run --name code101-verify-04-solution --mount type=volume,src=code101-verify-04-exercise,dst=/data alpine:3.22 sh -c \"echo 'Saved shopping list' > /data/note.txt\""
+    },
+    {
+      "name": "solution remove",
+      "cwd": "code",
+      "cmd": "docker rm code101-verify-04-solution"
+    },
+    {
+      "name": "solution read",
+      "cwd": "exercise/solution",
+      "cmd": "docker run --name code101-verify-04-solution --mount type=volume,src=code101-verify-04-exercise,dst=/data alpine:3.22 cat /data/note.txt",
+      "expect_stdout": "Saved shopping list"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove containers",
+      "cwd": "code",
+      "cmd": "docker rm -f code101-verify-04-writer code101-verify-04-reader code101-verify-04-solution"
+    },
+    {
+      "name": "remove volume",
+      "cwd": "code",
+      "cmd": "docker volume rm code101-verify-04-store code101-verify-04-exercise"
+    }
+  ]
+}

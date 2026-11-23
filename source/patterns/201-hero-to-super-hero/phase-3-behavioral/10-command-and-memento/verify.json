@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- command ---\ntext: [Hello, world]\ntext: [HELLO, WORLD]\ntext: [Hello, world]\ntext: [Hello]\ntext: []\nundo possible: False\n--- memento ---\nhp=10 gold=25 items=sword, map\nhp=70 gold=0 items=sword, map\nhp=100 gold=0 items=sword"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- command ---\ntext: [Hello, world]\ntext: [HELLO, WORLD]\ntext: [Hello, world]\ntext: [Hello]\ntext: []\nundo possible: False\n--- memento ---\nhp=10 gold=25 items=sword, map\nhp=70 gold=0 items=sword, map\nhp=100 gold=0 items=sword"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "value: 5\nvalue: 15\nvalue: 5\nvalue: 0"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "value: 5\nvalue: 15\nvalue: 5\nvalue: 0"
+    }
+  ]
+}

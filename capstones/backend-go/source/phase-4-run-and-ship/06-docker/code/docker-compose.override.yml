@@ -1,0 +1,31 @@
+# Adds the Go API to the platform stack of docker-compose.yml. Compose merges this file automatically,
+# so `docker compose up` starts db, keycloak and api together on the network tasksteams-net.
+services:
+  api:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    environment:
+      LISTEN_ADDR: 0.0.0.0:8000
+      LOG_FORMAT: json
+      # Disposable local password of the platform database; inside the network the host is the service name "db".
+      DATABASE_URL: postgres://tasks_app:tasks_app_local_only@db:5432/tasksteams
+      PUBLIC_URL: http://localhost:8000
+      # The issuer is what the token says (the browser-facing address); the keys are fetched over the internal network.
+      KEYCLOAK_ISSUER: http://localhost:${KEYCLOAK_PORT:-8180}/realms/tasksteams
+      KEYCLOAK_AUDIENCE: tasks-api
+      KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/tasksteams/protocol/openid-connect/certs
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "/app/api", "healthcheck"]
+      interval: 5s
+      timeout: 4s
+      retries: 10
+      start_period: 3s
+    networks:
+      - tasksteams

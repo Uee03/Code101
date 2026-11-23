@@ -1,0 +1,21 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "create .env", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\"" },
+    { "name": "up", "cwd": "code", "cmd": "docker compose up -d --build", "timeout": 600 },
+    { "name": "probe", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"service\": \"api\", \"db_resolves\": true}", "retries": 20, "retry_delay": 1 },
+    { "name": "dns from api", "cwd": "code", "cmd": "docker compose exec -T api python app.py --check db", "expect_stdout": "db resolves" },
+    { "name": "dns from edge", "cwd": "code", "cmd": "docker compose exec -T edge python app.py --check db", "expect_stdout": "db does not resolve" },
+    { "name": "published port", "cwd": "code", "cmd": "docker compose port api 8000", "expect_stdout": "127.0.0.1:8080" },
+    { "name": "limits", "cwd": "code", "cmd": "docker inspect --format \"{{.HostConfig.Memory}} {{.HostConfig.NanoCpus}}\" code101-net-api-1", "expect_stdout": "268435456 500000000" },
+    { "name": "oom", "cwd": "code", "cmd": "docker run --name {project}-oom --memory 64m python:3.13-slim python -c \"data = b'x' * (200 * 1024 * 1024); print(len(data))\"", "expect_exit": 137 },
+    { "name": "oom state", "cwd": "code", "cmd": "docker inspect --format \"{{.State.OOMKilled}} {{.State.ExitCode}}\" {project}-oom", "expect_stdout": "true 137" }
+  ],
+  "cleanup": [
+    { "name": "remove oom container", "cmd": "docker rm -f {project}-oom" },
+    { "name": "down", "cwd": "code", "cmd": "docker compose down -v --remove-orphans" },
+    { "name": "remove images", "cmd": "docker image rm code101-net-api:201 code101-net-edge:201" }
+  ],
+  "skip_lesson_check": []
+}

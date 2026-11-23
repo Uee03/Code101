@@ -1,0 +1,13 @@
+{
+  "requires": ["flutter", "dart", "python"],
+  "steps": [
+    {"name": "add the Android scaffold around the lesson files", "cwd": "code", "cmd": "flutter create --org com.code101 --project-name tasks --platforms=android --no-pub .", "timeout": 600},
+    {"name": "delete the generated test folder", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.rmtree('test', ignore_errors=True)\""},
+    {"name": "restore packages", "cwd": "code", "cmd": "flutter pub get", "timeout": 600, "expect_contains": ["Got dependencies!"]},
+    {"name": "analyze once", "cwd": "code", "cmd": "flutter analyze --no-pub", "timeout": 300, "expect_contains": ["No issues found!"]},
+    {"name": "build a debug APK once", "cwd": "code", "cmd": "flutter build apk --debug --no-pub", "timeout": 1200, "expect_contains": ["app-debug.apk"]},
+    {"name": "solution: main.dart", "cwd": "exercise/solution", "cmd": "dart run main.dart", "timeout": 120, "expect_stdout": "2 open of 3\nError: Exception: service unavailable"}
+  ],
+  "cleanup": [],
+  "skip_lesson_check": []
+}

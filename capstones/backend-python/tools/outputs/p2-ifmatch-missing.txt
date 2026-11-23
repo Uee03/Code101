@@ -1,0 +1,8 @@
+HTTP/1.1 428 Precondition Required
+date: Mon, 23 Nov 2026 08:33:43 GMT
+server: uvicorn
+content-length: 302
+content-type: application/problem+json
+x-trace-id: 261b32fd7ae540589b0f62123556c613
+
+{"type":"https://code101.example/problems/precondition-required","title":"Precondition required","status":428,"detail":"The If-Match header is required. Read the resource first and send its ETag.","instance":"/v1/tasks/e8787266-112f-4a3c-a9b1-9e2bea4b62ec","traceId":"261b32fd7ae540589b0f62123556c613"}

@@ -1,0 +1,18 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant G as API gateway
+    participant A as Backend API
+    participant K as Identity provider
+    C->>G: request with bearer token
+    G->>K: fetch the signing keys, cached
+    G->>G: validate the token, apply a rate limit, add a request id
+    alt token is invalid
+        G-->>C: 401
+    else token is valid
+        G->>A: forward the request with the token and the request id
+        A->>A: validate the token again, check scope, role and team membership
+        A-->>G: response
+        G-->>C: response
+    end
+    Note over G,A: Proposal. The gateway does coarse checks, the API still owns object-level rules.

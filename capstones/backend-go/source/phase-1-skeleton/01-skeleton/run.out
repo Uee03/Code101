@@ -1,0 +1,7 @@
+time=2026-11-23T10:49:22.794+02:00 level=INFO msg=listening addr=127.0.0.1:8000
+time=2026-11-23T10:49:23.759+02:00 level=INFO msg=request method=GET path=/v1/me status=200 bytes=205 duration_ms=0 trace_id=255efbf7d0eba9bf39b9cdfa89ace454
+time=2026-11-23T10:49:23.763+02:00 level=ERROR msg=request method=POST path=/v1/teams status=501 bytes=240 duration_ms=0 trace_id=52757cef1dd18a0803c4c8c405983dbc
+time=2026-11-23T10:49:23.764+02:00 level=INFO msg=request method=GET path=/v1/me status=200 bytes=205 duration_ms=0 trace_id=4bff13d8d3a2fdfc339c9b64a0ca1e43
+time=2026-11-23T10:49:23.790+02:00 level=WARN msg=request method=GET path=/v1/audit-log status=404 bytes=192 duration_ms=0 trace_id=97efb8654d7917e8d49409d5c8ab0880
+time=2026-11-23T10:49:23.791+02:00 level=WARN msg=request method=POST path=/v1/teams status=422 bytes=290 duration_ms=0 trace_id=397141f0303159a6fda0b0646b7551f5
+time=2026-11-23T10:49:23.792+02:00 level=WARN msg=request method=GET path=/v1/tasks/e38d1b70-cc70-4890-9df9-cbb102e798e1 status=404 bytes=225 duration_ms=0 trace_id=ee818a2c9df7c1dc3314c4d9ccb163f0

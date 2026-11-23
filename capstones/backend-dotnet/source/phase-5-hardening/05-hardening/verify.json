@@ -1,0 +1,209 @@
+{
+  "requires": [
+    "docker",
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "build the image and start Postgres, Keycloak and the API",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--build','--wait']))\"",
+      "timeout": 900,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "health through the published port",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 10,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\",\"database\":\"up\"}"
+    },
+    {
+      "name": "conformance: all 18 checks pass",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "timeout": 420,
+      "retries": 3,
+      "retry_delay": 5,
+      "expect_contains": [
+        "PASS  health (200, status ok, no token needed)",
+        "PASS  me (alice is admin, RateLimit headers present)",
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  401 without token (401 problem details with a Bearer challenge)",
+        "PASS  403 for member on admin route (bob (member) gets 403 on the audit log and on creating a team)",
+        "PASS  cleanup (team deleted, then 404)",
+        "18 passed, 0 failed"
+      ]
+    },
+    {
+      "name": "headers on an anonymous request: rate limit and security headers",
+      "cwd": "code",
+      "cmd": "curl -s -i http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "HTTP/1.1 401 Unauthorized",
+        "RateLimit-Limit: 30",
+        "X-Content-Type-Options: nosniff",
+        "Content-Security-Policy: default-src 'none'; frame-ancestors 'none'",
+        "Cache-Control: no-store",
+        "Referrer-Policy: no-referrer",
+        "WWW-Authenticate: Bearer realm=\"tasksteams\""
+      ]
+    },
+    {
+      "name": "a token that is not a token",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py --token abc.def.ghi GET /v1/teams",
+      "expect_exit": 1,
+      "expect_contains": [
+        "HTTP 401 Unauthorized",
+        "error=\"invalid_token\"",
+        "The access token is invalid or has expired."
+      ]
+    },
+    {
+      "name": "make a 1.2 MB request body",
+      "cmd": "{python} -c \"import json; open('big.json', 'w').write(json.dumps({'name': 'x' * 1200000}))\"",
+      "timeout": 60
+    },
+    {
+      "name": "a body over 1 MB is refused",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py --as alice POST /v1/teams --body-file ../big.json",
+      "expect_exit": 1,
+      "expect_contains": [
+        "HTTP 413 Payload Too Large",
+        "The request body is larger than the 1 MB limit."
+      ]
+    },
+    {
+      "name": "a wrong Host header is refused by the framework",
+      "cwd": "code",
+      "cmd": "curl -s -i http://127.0.0.1:8000/health -H \"Host: evil.example\"",
+      "expect_contains": [
+        "HTTP/1.1 400 Bad Request",
+        "The request hostname is invalid."
+      ]
+    },
+    {
+      "name": "a browser preflight from an allowed origin",
+      "cwd": "code",
+      "cmd": "curl -s -i -X OPTIONS http://127.0.0.1:8000/v1/teams -H \"Origin: http://localhost:4200\" -H \"Access-Control-Request-Method: GET\"",
+      "expect_contains": [
+        "HTTP/1.1 204 No Content",
+        "Access-Control-Allow-Origin: http://localhost:4200"
+      ]
+    },
+    {
+      "name": "the request log is JSON and has no token in it",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} logs api --no-log-prefix --tail 40",
+      "expect_contains": [
+        "\"Category\":\"TasksApi.Common.RequestLoggingMiddleware\"",
+        "GET /v1/me 401"
+      ]
+    },
+    {
+      "name": "exercise solution: copy over the project",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', '_ex', ignore=shutil.ignore_patterns('bin', 'obj')); shutil.copytree('exercise/solution', '_ex', dirs_exist_ok=True)\"",
+      "timeout": 60
+    },
+    {
+      "name": "exercise solution builds",
+      "cwd": "_ex",
+      "cmd": "dotnet build --nologo",
+      "timeout": 300,
+      "expect_contains": [
+        "0 Error(s)"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary containers, network and volume",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans",
+      "timeout": 120
+    },
+    {
+      "name": "remove the image built for this lab",
+      "cmd": "{python} -c \"import subprocess; subprocess.call(['docker', 'image', 'rm', 'code101/tasksteams-backend-dotnet:1.0'])\"",
+      "timeout": 120
+    },
+    {
+      "name": "release the build output",
+      "cmd": "{python} -c \"import shutil, time; time.sleep(2); [shutil.rmtree(p, ignore_errors=True) for p in ('code/src/TasksApi/bin', 'code/src/TasksApi/obj', '_ex')]\"",
+      "timeout": 60
+    }
+  ],
+  "skip_lesson_check": [
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/global.json",
+    "code/keycloak/realm-tasksteams.json",
+    "code/openapi.yaml",
+    "code/requests/empty-team.json",
+    "code/requests/new-team.json",
+    "code/scripts/call.py",
+    "code/scripts/conformance.py",
+    "code/scripts/show_token.py",
+    "code/src/TasksApi/Common/DbErrors.cs",
+    "code/src/TasksApi/Common/ETags.cs",
+    "code/src/TasksApi/Common/Optional.cs",
+    "code/src/TasksApi/Common/Paging.cs",
+    "code/src/TasksApi/Common/ProblemException.cs",
+    "code/src/TasksApi/Common/ProblemResponses.cs",
+    "code/src/TasksApi/Common/ResponseHeaders.cs",
+    "code/src/TasksApi/Contracts/Dtos.cs",
+    "code/src/TasksApi/Contracts/MeDto.cs",
+    "code/src/TasksApi/Contracts/Requests.cs",
+    "code/src/TasksApi/Contracts/TeamDto.cs",
+    "code/src/TasksApi/Data/Entities.cs",
+    "code/src/TasksApi/Data/Idempotency.cs",
+    "code/src/TasksApi/Data/Like.cs",
+    "code/src/TasksApi/Data/Projections.cs",
+    "code/src/TasksApi/Data/TasksDbContext.cs",
+    "code/src/TasksApi/Features/Audit/ListAuditEndpoint.cs",
+    "code/src/TasksApi/Features/Comments/CreateCommentEndpoint.cs",
+    "code/src/TasksApi/Features/Comments/DeleteCommentEndpoint.cs",
+    "code/src/TasksApi/Features/Comments/ListCommentsEndpoint.cs",
+    "code/src/TasksApi/Features/Members/ListMembersEndpoint.cs",
+    "code/src/TasksApi/Features/Members/PutMemberEndpoint.cs",
+    "code/src/TasksApi/Features/Members/RemoveMemberEndpoint.cs",
+    "code/src/TasksApi/Features/Platform/HealthEndpoint.cs",
+    "code/src/TasksApi/Features/Platform/ListUsersEndpoint.cs",
+    "code/src/TasksApi/Features/Platform/MeEndpoint.cs",
+    "code/src/TasksApi/Features/Projects/CreateProjectEndpoint.cs",
+    "code/src/TasksApi/Features/Projects/DeleteProjectEndpoint.cs",
+    "code/src/TasksApi/Features/Projects/GetProjectEndpoint.cs",
+    "code/src/TasksApi/Features/Projects/ListProjectsEndpoint.cs",
+    "code/src/TasksApi/Features/Projects/UpdateProjectEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/CompleteTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/CreateTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/DeleteTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/GetTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/ListTasksEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/ReassignTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Tasks/TaskRules.cs",
+    "code/src/TasksApi/Features/Tasks/UpdateTaskEndpoint.cs",
+    "code/src/TasksApi/Features/Teams/CreateTeamEndpoint.cs",
+    "code/src/TasksApi/Features/Teams/DeleteTeamEndpoint.cs",
+    "code/src/TasksApi/Features/Teams/GetTeamEndpoint.cs",
+    "code/src/TasksApi/Features/Teams/ListTeamsEndpoint.cs",
+    "code/src/TasksApi/Features/Teams/UpdateTeamEndpoint.cs",
+    "code/src/TasksApi/Security/AccessPolicies.cs",
+    "code/src/TasksApi/Security/CurrentUser.cs",
+    "code/src/TasksApi/Security/TeamAccess.cs",
+    "code/src/TasksApi/Security/UserProvisioningMiddleware.cs",
+    "code/src/TasksApi/TasksApi.csproj",
+    "code/TasksApi.slnx"
+  ],
+  "exclusive": "tasksteams"
+}

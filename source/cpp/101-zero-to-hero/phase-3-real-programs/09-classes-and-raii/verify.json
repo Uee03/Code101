@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/account",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "enter main\nWithdraw 12.50 worked: true\nWithdraw 1000.00 worked: false\nAda has 37.50\nenter inner block\nworking inside the block\nleave inner block\nafter the block\nleave main"
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/account",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "Spent 5.00: true\nSpent 50.00: false\nLeft: 15.00"
+    }
+  ],
+  "skip_lesson_check": []
+}

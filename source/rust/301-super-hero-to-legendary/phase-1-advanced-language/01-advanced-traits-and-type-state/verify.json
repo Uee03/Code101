@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "invoice #1 [Draft] total 1245.50\ninvoice #1 [Submitted] total 1245.50\ninvoice #1 [Approved] total 1245.50 by ana\nrejected: invoice #2 [Draft] total 0.00"
+    },
+    {
+      "name": "example tests and compile_fail doc test",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "db.internal sent 2 message(s)\nreopened, still 2 sent"
+    }
+  ]
+}

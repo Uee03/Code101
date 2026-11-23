@@ -1,0 +1,77 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example (code)",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build",
+      "timeout": 600
+    },
+    {
+      "name": "probe",
+      "cwd": "code",
+      "cmd": "curl -fsS http://127.0.0.1:8080/",
+      "expect_stdout": "{\"message\": \"Hello from Compose\", \"database\": \"workshop\", \"host\": \"db\"}",
+      "retries": 40,
+      "retry_delay": 2
+    },
+    {
+      "name": "down before solution",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove code image before solution",
+      "cwd": "code",
+      "cmd": "docker image rm {project}-web:demo"
+    },
+    {
+      "name": "create .env from .env.example (exercise/solution)",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "solution up",
+      "cwd": "exercise/solution",
+      "cmd": "docker compose -p {project} up -d --build",
+      "timeout": 600
+    },
+    {
+      "name": "solution probe",
+      "cwd": "exercise/solution",
+      "cmd": "curl -fsS http://127.0.0.1:8080/",
+      "expect_stdout": "{\"message\": \"Hello from Compose\", \"database\": \"workshop\", \"host\": \"db\"}",
+      "retries": 40,
+      "retry_delay": 2
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "down code",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "down solution",
+      "cwd": "exercise/solution",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove built image",
+      "cwd": "code",
+      "cmd": "docker image rm {project}-web:demo"
+    }
+  ]
+}

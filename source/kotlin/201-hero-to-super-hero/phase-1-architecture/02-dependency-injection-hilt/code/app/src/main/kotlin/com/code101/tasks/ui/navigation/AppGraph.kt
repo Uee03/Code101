@@ -1,0 +1,52 @@
+package com.code101.tasks.ui.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.code101.tasks.ui.projects.ProjectsScreen
+import com.code101.tasks.ui.projects.ProjectsViewModel
+import com.code101.tasks.ui.tasks.TasksScreen
+import com.code101.tasks.ui.tasks.TasksViewModel
+import com.code101.tasks.ui.teams.TeamsScreen
+import com.code101.tasks.ui.teams.TeamsViewModel
+
+@Composable
+fun AppGraph() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = TeamsRoute) {
+        composable<TeamsRoute> {
+            val viewModel: TeamsViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            TeamsScreen(
+                state = state,
+                onRetry = viewModel::load,
+                onOpenTeam = { teamId -> navController.navigate(ProjectsRoute(teamId)) },
+            )
+        }
+        composable<ProjectsRoute> {
+            val viewModel: ProjectsViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            ProjectsScreen(
+                state = state,
+                onRetry = viewModel::load,
+                onOpenProject = { projectId -> navController.navigate(TasksRoute(projectId)) },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<TasksRoute> {
+            val viewModel: TasksViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            TasksScreen(
+                state = state,
+                onRetry = viewModel::load,
+                onAdd = viewModel::addTask,
+                onBack = { navController.popBackStack() },
+            )
+        }
+    }
+}

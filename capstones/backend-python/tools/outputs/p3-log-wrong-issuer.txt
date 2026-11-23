@@ -1,0 +1,1 @@
+{"time": "2026-11-23T08:37:12.087+00:00", "level": "WARNING", "logger": "tasksteams.auth", "message": "token rejected", "traceId": "391ddc1018484d4a9b614131374b1443", "event": "token_rejected", "reason": "InvalidIssuerError: Invalid issuer"}

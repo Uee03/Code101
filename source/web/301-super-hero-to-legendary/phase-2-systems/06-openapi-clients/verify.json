@@ -1,0 +1,29 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "generate types", "cwd": "code", "cmd": "npm run generate --silent" },
+    { "name": "build code", "cwd": "code", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "run demo",
+      "cwd": "code",
+      "cmd": "node dist/demo.js",
+      "expect_stdout": "WARN Deprecated API in use. Sunset: 2027-10-31\nok Write the ADR (etag \"3\", version 3)\ncontract violation at priority\nproblem 404 Task not found\nproblem 412 Version conflict (version_conflict)\nok 1 task(s)\nunexpected status 502\nrequests:\nGET /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=Bearer demo-token\nGET /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=Bearer demo-token\nGET /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=Bearer demo-token\nPATCH /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=Bearer demo-token\nGET /v1/projects/0b6d7a52-4c1e-4f0a-8d33-5e9f2c7a1b40/tasks auth=Bearer demo-token\nGET /v1/projects/0b6d7a52-4c1e-4f0a-8d33-5e9f2c7a1b40/tasks auth=Bearer demo-token"
+    },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npm run build --silent", "expect_stdout": "" },
+    {
+      "name": "run solution exercise",
+      "cwd": "work",
+      "cmd": "node dist/exercise.js",
+      "expect_stdout": "ok after 1 retry(ies)\nPATCH /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=none\nGET /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=none\nPATCH /v1/tasks/3f2b1c5e-8a41-4d3b-9c6e-1a2b3c4d5e6f auth=none"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/src/api/schema.d.ts"
+  ]
+}

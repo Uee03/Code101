@@ -1,0 +1,224 @@
+{
+  "requires": [
+    "node",
+    "npm",
+    "npx",
+    "python",
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "install locked dependencies",
+      "cwd": "code",
+      "cmd": "npm ci --no-audit --no-fund",
+      "timeout": 420
+    },
+    {
+      "name": "build once",
+      "cwd": "code",
+      "cmd": "npm run build",
+      "timeout": 420,
+      "expect_contains": [
+        "Application bundle generation complete.",
+        "Generated 27 operations: getHealth, getMe, listTasks"
+      ]
+    },
+    {
+      "name": "Node generated-client injector spike",
+      "cwd": "code",
+      "cmd": "npx tsx scripts/node-spike.ts",
+      "expect_contains": [
+        "Node HttpClient injector: ready"
+      ]
+    },
+    {
+      "name": "copy fake local backend environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; p=Path('smoke-backend'); (p/'.env').write_bytes((p/'.env.example').read_bytes())\""
+    },
+    {
+      "name": "start temporary platform and Python API",
+      "cwd": "code/smoke-backend",
+      "cmd": "docker compose -p {project} up -d --build --wait --wait-timeout 400",
+      "timeout": 420
+    },
+    {
+      "name": "start Angular dev server",
+      "cwd": "code",
+      "cmd": "npm start",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "probe dev server once ready",
+      "cwd": "code",
+      "cmd": "node -e \"fetch('http://localhost:4200/').then(r=>{if(r.status!==200)process.exit(1);console.log('Dev server: 200')}).catch(()=>process.exit(1))\"",
+      "retries": 30,
+      "retry_delay": 2,
+      "expect_contains": [
+        "Dev server: 200"
+      ]
+    },
+    {
+      "name": "one generated-client smoke scenario",
+      "cwd": "code",
+      "cmd": "npm run smoke",
+      "timeout": 420,
+      "expect_contains": [
+        "health: ok",
+        "me: alice (admin)",
+        "Anonymous request: 401 Unauthorized",
+        "authorization: code_challenge_method=S256; login page: 200",
+        "Tokens: memory only; nonce and PKCE_verifier: sessionStorage; ts.hint: non-secret localStorage flag",
+        "teams: 2",
+        "tasks: 5; nextCursor: null"
+      ]
+    },
+    {
+      "name": "exercise starter runs",
+      "cwd": "exercise/starter",
+      "cmd": "node main.mjs",
+      "expect_stdout": "TODO: finish the exercise"
+    },
+    {
+      "name": "exercise solution runs",
+      "cwd": "exercise/solution",
+      "cmd": "node main.mjs",
+      "expect_stdout": "limit=25&cursor=opaque_cursor"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary platform resources",
+      "cwd": "code/smoke-backend",
+      "cmd": "docker compose -p {project} down -v --remove-orphans",
+      "timeout": 420
+    },
+    {
+      "name": "remove built Python API image",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess; subprocess.run(['docker','image','rm','{project}-api'],check=True)\"",
+      "timeout": 180
+    }
+  ],
+  "skip_lesson_check": [
+    "code/package-lock.json",
+    "code/contract/openapi.yaml",
+    "code/smoke-backend/app/access.py",
+    "code/smoke-backend/app/auth.py",
+    "code/smoke-backend/app/config.py",
+    "code/smoke-backend/app/db.py",
+    "code/smoke-backend/app/db_errors.py",
+    "code/smoke-backend/app/dependencies.py",
+    "code/smoke-backend/app/errors.py",
+    "code/smoke-backend/app/http.py",
+    "code/smoke-backend/app/idempotency.py",
+    "code/smoke-backend/app/logging_config.py",
+    "code/smoke-backend/app/main.py",
+    "code/smoke-backend/app/middleware.py",
+    "code/smoke-backend/app/pagination.py",
+    "code/smoke-backend/app/ratelimit.py",
+    "code/smoke-backend/app/schemas.py",
+    "code/smoke-backend/app/tokens.py",
+    "code/smoke-backend/app/__init__.py",
+    "code/smoke-backend/db/schema.sql",
+    "code/smoke-backend/db/seed.sql",
+    "code/smoke-backend/keycloak/realm-tasksteams.json",
+    "code/smoke-backend/app/repositories/audit.py",
+    "code/smoke-backend/app/repositories/comments.py",
+    "code/smoke-backend/app/repositories/members.py",
+    "code/smoke-backend/app/repositories/projects.py",
+    "code/smoke-backend/app/repositories/sql.py",
+    "code/smoke-backend/app/repositories/tasks.py",
+    "code/smoke-backend/app/repositories/teams.py",
+    "code/smoke-backend/app/repositories/users.py",
+    "code/smoke-backend/app/repositories/__init__.py",
+    "code/smoke-backend/app/routers/audit.py",
+    "code/smoke-backend/app/routers/comments.py",
+    "code/smoke-backend/app/routers/health.py",
+    "code/smoke-backend/app/routers/me.py",
+    "code/smoke-backend/app/routers/members.py",
+    "code/smoke-backend/app/routers/projects.py",
+    "code/smoke-backend/app/routers/tasks.py",
+    "code/smoke-backend/app/routers/teams.py",
+    "code/smoke-backend/app/routers/users.py",
+    "code/smoke-backend/app/routers/__init__.py",
+    "code/src/app/api/api-configuration.ts",
+    "code/src/app/api/api.ts",
+    "code/src/app/api/functions.ts",
+    "code/src/app/api/models.ts",
+    "code/src/app/api/request-builder.ts",
+    "code/src/app/api/strict-http-response.ts",
+    "code/src/app/api/models/audit-entity-type-array.ts",
+    "code/src/app/api/models/audit-entity-type.ts",
+    "code/src/app/api/models/audit-entry.ts",
+    "code/src/app/api/models/audit-page.ts",
+    "code/src/app/api/models/comment-create.ts",
+    "code/src/app/api/models/comment-page.ts",
+    "code/src/app/api/models/comment.ts",
+    "code/src/app/api/models/health.ts",
+    "code/src/app/api/models/me.ts",
+    "code/src/app/api/models/member-page.ts",
+    "code/src/app/api/models/member-put.ts",
+    "code/src/app/api/models/member.ts",
+    "code/src/app/api/models/page-info.ts",
+    "code/src/app/api/models/problem.ts",
+    "code/src/app/api/models/project-create.ts",
+    "code/src/app/api/models/project-page.ts",
+    "code/src/app/api/models/project-update.ts",
+    "code/src/app/api/models/project.ts",
+    "code/src/app/api/models/reassign-request.ts",
+    "code/src/app/api/models/role-array.ts",
+    "code/src/app/api/models/role.ts",
+    "code/src/app/api/models/task-create.ts",
+    "code/src/app/api/models/task-page.ts",
+    "code/src/app/api/models/task-priority-array.ts",
+    "code/src/app/api/models/task-priority.ts",
+    "code/src/app/api/models/task-status-array.ts",
+    "code/src/app/api/models/task-status.ts",
+    "code/src/app/api/models/task-update.ts",
+    "code/src/app/api/models/task.ts",
+    "code/src/app/api/models/team-create.ts",
+    "code/src/app/api/models/team-page.ts",
+    "code/src/app/api/models/team-role-array.ts",
+    "code/src/app/api/models/team-role.ts",
+    "code/src/app/api/models/team-update.ts",
+    "code/src/app/api/models/team.ts",
+    "code/src/app/api/models/user-page.ts",
+    "code/src/app/api/models/user-summary.ts",
+    "code/src/app/api/models/validation-problem.ts",
+    "code/src/app/api/fn/audit/list-audit-log.ts",
+    "code/src/app/api/fn/comments/create-comment.ts",
+    "code/src/app/api/fn/comments/delete-comment.ts",
+    "code/src/app/api/fn/comments/list-comments.ts",
+    "code/src/app/api/fn/members/list-members.ts",
+    "code/src/app/api/fn/members/put-member.ts",
+    "code/src/app/api/fn/members/remove-member.ts",
+    "code/src/app/api/fn/platform/get-health.ts",
+    "code/src/app/api/fn/platform/get-me.ts",
+    "code/src/app/api/fn/platform/list-users.ts",
+    "code/src/app/api/fn/projects/create-project.ts",
+    "code/src/app/api/fn/projects/delete-project.ts",
+    "code/src/app/api/fn/projects/get-project.ts",
+    "code/src/app/api/fn/projects/list-projects.ts",
+    "code/src/app/api/fn/projects/update-project.ts",
+    "code/src/app/api/fn/tasks/complete-task.ts",
+    "code/src/app/api/fn/tasks/create-task.ts",
+    "code/src/app/api/fn/tasks/delete-task.ts",
+    "code/src/app/api/fn/tasks/get-task.ts",
+    "code/src/app/api/fn/tasks/list-tasks.ts",
+    "code/src/app/api/fn/tasks/reassign-task.ts",
+    "code/src/app/api/fn/tasks/update-task.ts",
+    "code/src/app/api/fn/teams/create-team.ts",
+    "code/src/app/api/fn/teams/delete-team.ts",
+    "code/src/app/api/fn/teams/get-team.ts",
+    "code/src/app/api/fn/teams/list-teams.ts",
+    "code/src/app/api/fn/teams/update-team.ts"
+  ]
+}

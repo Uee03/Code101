@@ -1,0 +1,34 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "create a virtual environment",
+      "cwd": "code",
+      "cmd": "{python} -m venv .venv"
+    },
+    {
+      "name": "install the pinned dependency (needs network)",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'pip', 'install', '-r', 'requirements.txt']))\"",
+      "timeout": 600
+    },
+    {
+      "name": "demo of the controls",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), 'demo.py']))\"",
+      "expect_stdout": "allowed: hooks.partner.example -> 8.8.8.8:443\nrefused: only https is allowed\nrefused: host 'evil.example' is not on the allow-list\nrefused: metadata.partner.example resolves to a non-public address\nmass assignment refused: True\nalice sees: {'id': 1, 'title': 'Pay invoice'}\nbob gets: task not found\nsecret repr: Secret('****')\ntoken check: True False"
+    },
+    {
+      "name": "tests",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'unittest']))\"",
+      "timeout": 120
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "/dashboard -> True\n//evil.example/x -> False\nhttps://app.example/home -> True\nhttps://evil.example/ -> False\njavascript:alert(1) -> False\n/\\evil.example -> False"
+    }
+  ]
+}

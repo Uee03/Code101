@@ -1,0 +1,33 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --release --quiet",
+      "timeout": 600,
+      "expect_stdout": "loop and iter agree: true\npush made more than one allocator call: true\nwith_capacity made exactly one allocator call: true\nformat! and push_str agree: true"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "id,name,role\n[]\nonly"
+    },
+    {
+      "name": "solution tests",
+      "cwd": "exercise/solution",
+      "cmd": "cargo test --quiet",
+      "timeout": 300
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+.git
+.gitignore
+.dockerignore
+.env
+.env.example
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+bin/
+*.exe
+requests/
+scripts/
+db/
+keycloak/

@@ -1,0 +1,11 @@
+[project]
+name = "tasksteams-api"
+version = "1.0.0"
+description = "Tasks and Teams API, the Python backend of the Code101 capstones"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.165,<0.166",
+    "uvicorn>=0.54,<0.55",
+    "pydantic>=2.14,<3",
+    "pydantic-settings>=2.16,<3",
+]

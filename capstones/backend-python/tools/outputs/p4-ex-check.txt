@@ -1,0 +1,5 @@
+PASS pinned base images
+PASS multi-stage build
+PASS runs as a non-root user
+PASS has a health check
+4 of 4 checks passed

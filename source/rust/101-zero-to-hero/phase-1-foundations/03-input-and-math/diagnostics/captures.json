@@ -1,0 +1,52 @@
+{
+  "run": {
+    "stdout": "Bill amount (for example 80):\nTip percent (for example 15):\nTip: 12.00\nTotal: 92.00\nChange from 100: 8.00\n7 % 3 = 1\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Total bill:\nPeople (greater than zero):\nEach: 30.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Total bill:\nPeople (greater than zero):\nEach: 93.00\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0308]: mismatched types\n --> src\\main.rs:2:21\n  |\n2 |     let bill: f64 = \"80\";\n  |               ---   ^^^^ expected `f64`, found `&str`\n  |               |\n  |               expected due to this\n\nFor more information about this error, try `rustc --explain E0308`.\nerror: could not compile `input_and_math` (bin \"input_and_math\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "dollars": {
+    "stdout": "Bill amount (for example 80):\n",
+    "stderr": "\nthread 'main' (24420) panicked at src\\main.rs:7:48:\nUse a number: ParseFloatError { kind: Invalid }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "percent": {
+    "stdout": "Bill amount (for example 80):\n",
+    "stderr": "\nthread 'main' (24724) panicked at src\\main.rs:7:48:\nUse a number: ParseFloatError { kind: Invalid }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "decimal-comma": {
+    "stdout": "Bill amount (for example 80):\n",
+    "stderr": "\nthread 'main' (9412) panicked at src\\main.rs:7:48:\nUse a number: ParseFloatError { kind: Invalid }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "empty": {
+    "stdout": "Bill amount (for example 80):\n",
+    "stderr": "\nthread 'main' (5336) panicked at src\\main.rs:7:48:\nUse a number: ParseFloatError { kind: Empty }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "no-trim": {
+    "stdout": "Bill amount (for example 80):\n",
+    "stderr": "\nthread 'main' (13544) panicked at src\\main.rs:7:41:\nUse a number: ParseFloatError { kind: Invalid }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "zero-people": {
+    "stdout": "Total bill:\nPeople (greater than zero):\nEach: inf\n",
+    "stderr": "",
+    "exit": 0
+  }
+}

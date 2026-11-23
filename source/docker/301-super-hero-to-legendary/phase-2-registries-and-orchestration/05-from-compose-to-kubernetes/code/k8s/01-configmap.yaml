@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: code101
+data:
+  GREETING: "hello from kubernetes"
+  WARMUP_SECONDS: "5"
+  API_TOKEN_FILE: "/etc/api-secret/API_TOKEN"

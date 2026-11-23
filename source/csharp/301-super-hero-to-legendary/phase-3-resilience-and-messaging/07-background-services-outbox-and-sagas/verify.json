@@ -1,0 +1,22 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "timeout": 240,
+      "expect_stdout": "placed orders 1 and 2; outbox rows waiting: 2\nrelay failures: 2\nbroker deliveries: 3\nmessages handled once: 2\noutbox rows waiting: 0\nsaga step: reserve-stock\nsaga step: charge-payment\nsaga step charge-payment failed: card declined\nsaga compensate: reserve-stock\nsaga result: compensated"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove-database",
+      "cwd": "code",
+      "cmd": "cmd /c del /q outbox.db"
+    }
+  ],
+  "skip_lesson_check": []
+}

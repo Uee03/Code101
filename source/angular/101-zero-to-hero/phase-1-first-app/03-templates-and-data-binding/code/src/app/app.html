@@ -1,0 +1,25 @@
+<main class="page">
+  <h1>{{ title }}</h1>
+  <app-greeting />
+
+  <section aria-labelledby="task-heading">
+    <h2 id="task-heading">One task</h2>
+    <p class="task" [class.done]="done()">{{ taskTitle }} ({{ taskTitle.length }} characters)</p>
+    <p>Status: {{ done() ? 'done' : 'to do' }}</p>
+    <button type="button" [attr.aria-pressed]="done()" (click)="toggleDone()">
+      {{ done() ? 'Mark as to do' : 'Mark as done' }}
+    </button>
+    <p><a [href]="docsUrl">Open the Angular docs</a></p>
+  </section>
+
+  <section aria-labelledby="events-heading">
+    <h2 id="events-heading">Events</h2>
+    <button type="button" (click)="countClick()">Clicked {{ clicks() }} times</button>
+    <p>
+      <label for="note">Note</label>
+      <input id="note" #noteBox type="text" [value]="note()" (input)="updateNote(noteBox.value)">
+    </p>
+    <p>You typed: {{ note() }}</p>
+    <button type="button" [disabled]="note() === ''" (click)="updateNote('')">Clear note</button>
+  </section>
+</main>

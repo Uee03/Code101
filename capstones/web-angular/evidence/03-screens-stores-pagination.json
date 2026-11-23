@@ -1,0 +1,95 @@
+{
+  "records": [
+    {
+      "cmd": "docker info",
+      "exit": 0,
+      "stdout": "Client:\n Version:    29.9.3\n Context:    desktop-linux\n Debug Mode: false\n Plugins:\n  agent: Docker AI Agent Runner (Docker Inc.)\n    Version:  v1.153.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-agent.exe\n  ai: Docker AI Agent - Ask Gordon (Docker Inc.)\n    Version:  v1.33.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-ai.exe\n  buildx: Docker Buildx (Docker Inc.)\n    Version:  v0.38.1\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-buildx.exe\n  compose: Docker Compose (Docker Inc.)\n    Version:  v5.7.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-compose.exe\n  debug: Get a shell into any image or container (Docker Inc.)\n    Version:  0.49.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-debug.exe\n  desktop: Docker Desktop commands (Docker Inc.)\n    Version:  4.99.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-desktop.exe\n  dhi: CLI for managing Docker Hardened Images (Docker Inc.)\n    Version:  v0.0.10\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-dhi.exe\n  extension: Manages Docker extensions (Docker Inc.)\n    Version:  v0.2.32\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-extension.exe\n  init: Creates Docker-related starter files for your project (Docker Inc.)\n    Version:  v1.4.1\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-init.exe\n  mcp: Docker MCP Plugin (Docker Inc.)\n    Version:  v0.44.3\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-mcp.exe\n  model: Docker Model Runner (Docker Inc.)\n    Version:  v1.2.9\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-model.exe\n  offload: Docker Offload (Docker Inc.)\n    Version:  v0.7.36\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-offload.exe\n  pass: Docker Pass Secrets Manager Plugin (beta) (Docker Inc.)\n    Version:  v0.3.2\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-pass.exe\n  sandbox: \"docker sandbox\" is deprecated, use Docker Sandboxes instead (Docker Inc.)\n    Version:  v0.13.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-sandbox.exe\n  scout: Docker Scout (Docker Inc.)\n    Version:  v1.28.0\n    Path:     C:\\Users\\mruee\\.docker\\cli-plugins\\docker-scout.exe\n\nServer:\n Containers: 0\n  Running: 0\n  Paused: 0\n  Stopped: 0\n Images: 5\n Server Version: 29.9.3\n Storage Driver: overlayfs\n  driver-type: io.containerd.snapshotter.v1\n Logging Driver: local\n Cgroup Driver: cgroupfs\n Cgroup Version: 2\n Plugins:\n  Volume: local\n  Network: bridge host ipvlan macvlan null overlay\n  Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog\n CDI spec directories:\n  /etc/cdi\n  /var/run/cdi\n Discovered Devices:\n  cdi: docker.com/gpu=webgpu\n Swarm: inactive\n Runtimes: nvidia runc io.containerd.runc.v2\n Default Runtime: runc\n Init Binary: docker-init\n containerd version: b7a25261e029d68978bbf290df0a62fc819b3c51\n runc version: v1.5.2-0-g29dd3dc2\n init version: de40ad0\n Security Options:\n  seccomp\n   Profile: builtin\n  cgroupns\n Kernel Version: 6.18.58.1-microsoft-standard-WSL2\n Operating System: Docker Desktop\n OSType: linux\n Architecture: x86_64\n CPUs: 16\n Total Memory: 15.58GiB\n Name: docker-desktop\n ID: f4c84fb0-5b15-49ee-b2c9-0a4037906960\n Docker Root Dir: /var/lib/docker\n Debug Mode: false\n HTTP Proxy: http.docker.internal:3128\n HTTPS Proxy: http.docker.internal:3128\n No Proxy: hubproxy.docker.internal\n Labels:\n  com.docker.desktop.address=npipe://\\\\.\\pipe\\docker_cli\n Experimental: false\n Insecure Registries:\n  hubproxy.docker.internal:5555\n  127.0.0.0/8\n  ::1/128\n Live Restore Enabled: false\n Firewall Backend: iptables\n\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "npm ci --no-audit --no-fund",
+      "exit": 0,
+      "stdout": "\nadded 267 packages in 18s\n",
+      "stderr": "npm warn install-scripts 4 packages have install scripts not yet covered by allowScripts:\nnpm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)\nnpm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)\nnpm warn install-scripts   lmdb@3.5.9 (install: node-gyp-build-optional-packages)\nnpm warn install-scripts   msgpackr-extract@3.0.7 (install: node-gyp-build-optional-packages)\nnpm warn install-scripts\nnpm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.\n"
+    },
+    {
+      "cmd": "npm run build",
+      "exit": 0,
+      "stdout": "\n> web-angular@1.0.0 prebuild\n> npm run api:gen\n\n\n> web-angular@1.0.0 api:gen\n> ng-openapi-gen && node scripts/generated-summary.mjs\n\nUsing OpenAPI specification version: 3.1.1\nGeneration from contract/openapi.yaml finished with 33 models and 7 services.\nGenerated 27 operations: getHealth, getMe, listTasks\n\n> web-angular@1.0.0 build\n> ng build\n\n> Building...\n\u221a Building...\nInitial chunk files | Names         |  Raw size | Estimated transfer size\nmain-BQYMYLKV.js    | main          | 331.52 kB |                87.21 kB\nstyles-BBWXR33N.css | styles        |   2.01 kB |               690 bytes\n\n                    | Initial total | 333.53 kB |                87.90 kB\n\nLazy chunk files    | Names         |  Raw size | Estimated transfer size\nchunk-CoIPYCyJ.js   | -             |  48.84 kB |                10.70 kB\nchunk-CZRzhI41.js   | tasks         |   9.89 kB |                 3.06 kB\nchunk-4tUMC57H.js   | task-detail   |   9.19 kB |                 2.86 kB\nchunk-D8VpwHP6.js   | -             |   8.17 kB |               970 bytes\nchunk-DdrtHEXe.js   | team-detail   |   5.71 kB |                 1.91 kB\nchunk-DJXPLwon.js   | teams         |   4.88 kB |                 1.93 kB\nchunk-CVs7BSXb.js   | projects      |   4.83 kB |                 1.88 kB\nchunk-rCz98edj.js   | audit         |   3.71 kB |                 1.58 kB\nchunk--vAifg6e.js   | dashboard     |   1.50 kB |               766 bytes\nchunk-DeLj2_Zr.js   | -             |   1.01 kB |                 1.01 kB\nchunk-BKiqp5U-.js   | login         | 850 bytes |               850 bytes\nchunk-D5aZtdSw.js   | forbidden     | 472 bytes |               472 bytes\nchunk-K06ukxxF.js   | not-found     | 456 bytes |               456 bytes\nchunk-B8OtmRba.js   | callback      | 440 bytes |               440 bytes\nchunk-BkVZxGs6.js   | -             | 119 bytes |               119 bytes\n\nApplication bundle generation complete. [4.394 seconds] - 2026-11-23T10:29:12.284Z\n\nOutput location: F:\\Projects\\Uee03\\Code101\\capstones\\web-angular\\source\\phase-3-screens\\03-screens-stores-pagination\\code\\dist\\web-angular\n\n",
+      "stderr": "Overwriting variant method part '$Json' for media type 'application/merge-patch+json' by media type 'application/json'.\nOverwriting variant method part '$Json' for media type 'application/merge-patch+json' by media type 'application/json'.\nOverwriting variant method part '$Json' for media type 'application/merge-patch+json' by media type 'application/json'.\n"
+    },
+    {
+      "cmd": "npx tsx scripts/node-spike.ts",
+      "exit": 0,
+      "stdout": "Node HttpClient injector: ready\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "\"C:\\Python315\\python.exe\" -c \"from pathlib import Path; p=Path('smoke-backend'); (p/'.env').write_bytes((p/'.env.example').read_bytes())\"",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": "docker compose -p code101-verify-03-screens-stores-pagination up -d --build --wait --wait-timeout 400",
+      "exit": 0,
+      "stdout": "#1 [internal] load local bake definitions\n#1 reading from stdin 769B done\n#1 DONE 0.0s\n\n#2 [internal] load build definition from Dockerfile\n#2 transferring dockerfile: 1.25kB done\n#2 DONE 0.0s\n\n#3 resolve image config for docker-image://docker.io/docker/dockerfile:1\n#3 DONE 1.2s\n\n#4 docker-image://docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183\n#4 resolve docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183 0.0s done\n#4 CACHED\n\n#5 [internal] load metadata for docker.io/library/python:3.14.10-slim-trixie\n#5 DONE 0.8s\n\n#6 [internal] load .dockerignore\n#6 transferring context: 238B done\n#6 DONE 0.0s\n\n#7 [internal] load build context\n#7 transferring context: 1.53kB done\n#7 DONE 0.0s\n\n#8 [builder 1/4] FROM docker.io/library/python:3.14.10-slim-trixie@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f\n#8 resolve docker.io/library/python:3.14.10-slim-trixie@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f 0.0s done\n#8 DONE 0.0s\n\n#9 [runtime 4/5] WORKDIR /srv\n#9 CACHED\n\n#10 [runtime 3/5] COPY --from=builder /opt/venv /opt/venv\n#10 CACHED\n\n#11 [runtime 2/5] RUN groupadd --system --gid 10001 app  && useradd --uid 10001 --gid app --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin app\n#11 CACHED\n\n#12 [builder 2/4] RUN python -m venv /opt/venv\n#12 CACHED\n\n#13 [builder 3/4] COPY requirements.txt /tmp/requirements.txt\n#13 CACHED\n\n#14 [builder 4/4] RUN /opt/venv/bin/pip install --only-binary=:all: -r /tmp/requirements.txt\n#14 CACHED\n\n#15 [runtime 5/5] COPY app ./app\n#15 CACHED\n\n#16 exporting to image\n#16 exporting layers done\n#16 exporting manifest sha256:a572f652e8b431f062b68bc8667c5860b5c2dd4cca034f64c020a663ef6e752a 0.0s done\n#16 exporting config sha256:ed70c5a8fa2935c5b8bd1a489ee0a5e8c069e492ec76a9f30f9af05b1180ff38 0.0s done\n#16 exporting attestation manifest sha256:8a471a45f3e14bc418a95a7d0132d0b4126e9cdf123cbfd36c7c4157858242d2 0.0s done\n#16 exporting manifest list sha256:125f000b22d3854a3da800bbf65081451fa70cac18b9e9dac77ec7d338c24b72 0.0s done\n#16 naming to docker.io/library/code101-verify-03-screens-stores-pagination-api:latest done\n#16 unpacking to docker.io/library/code101-verify-03-screens-stores-pagination-api:latest\n#16 unpacking to docker.io/library/code101-verify-03-screens-stores-pagination-api:latest 2.7s done\n#16 DONE 2.8s\n\n#17 resolving provenance for metadata file\n#17 DONE 0.0s\n",
+      "stderr": " Image code101-verify-03-screens-stores-pagination-api Building \n Image code101-verify-03-screens-stores-pagination-api Built \n Network tasksteams-net Creating \n Network tasksteams-net Creating \n Volume code101-verify-03-screens-stores-pagination_pg_data Creating \n Volume code101-verify-03-screens-stores-pagination_pg_data Creating \n Volume code101-verify-03-screens-stores-pagination_pg_data Created \n Volume code101-verify-03-screens-stores-pagination_pg_data Created \n Network tasksteams-net Created \n Network tasksteams-net Created \n Container code101-verify-03-screens-stores-pagination-db-1 Creating \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Creating \n Container code101-verify-03-screens-stores-pagination-db-1 Created \n Container code101-verify-03-screens-stores-pagination-api-1 Creating \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Created \n Container code101-verify-03-screens-stores-pagination-api-1 Created \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Starting \n Container code101-verify-03-screens-stores-pagination-db-1 Starting \n Container code101-verify-03-screens-stores-pagination-db-1 Started \n Container code101-verify-03-screens-stores-pagination-db-1 Waiting \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Started \n Container code101-verify-03-screens-stores-pagination-db-1 Healthy \n Container code101-verify-03-screens-stores-pagination-api-1 Starting \n Container code101-verify-03-screens-stores-pagination-api-1 Started \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Waiting \n Container code101-verify-03-screens-stores-pagination-api-1 Waiting \n Container code101-verify-03-screens-stores-pagination-db-1 Waiting \n Container code101-verify-03-screens-stores-pagination-db-1 Healthy \n Container code101-verify-03-screens-stores-pagination-api-1 Healthy \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Healthy \n"
+    },
+    {
+      "cmd": "node -e \"fetch('http://localhost:4200/').then(r=>{if(r.status!==200)process.exit(1);console.log('Dev server: 200')}).catch(()=>process.exit(1))\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": "node -e \"fetch('http://localhost:4200/').then(r=>{if(r.status!==200)process.exit(1);console.log('Dev server: 200')}).catch(()=>process.exit(1))\"",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": "node -e \"fetch('http://localhost:4200/').then(r=>{if(r.status!==200)process.exit(1);console.log('Dev server: 200')}).catch(()=>process.exit(1))\"",
+      "exit": 0,
+      "stdout": "Dev server: 200\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "npm run smoke",
+      "exit": 0,
+      "stdout": "\n> web-angular@1.0.0 smoke\n> tsx scripts/smoke.ts\n\nauthorization: code_challenge_method=S256; login page: 200\nTokens: memory only; nonce and PKCE_verifier: sessionStorage; ts.hint: non-secret localStorage flag\nBearer host boundary and returnUrl: checked\nAnonymous request: 401 Unauthorized\nAnonymous detail: A bearer access token is required.\nhealth: ok\nme: alice (admin)\nteams: 2\ntasks page: 2\ntasks page: 2\ntasks page: 1\ntasks: 5; nextCursor: null\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "node main.mjs",
+      "exit": 0,
+      "stdout": "TODO: finish the exercise\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "node main.mjs",
+      "exit": 0,
+      "stdout": "limit=25&cursor=opaque_cursor\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "['taskkill', '/PID', '7344', '/T', '/F']",
+      "exit": 0,
+      "stdout": "SUCCESS: The process with PID 14796 (child process of PID 4312) has been terminated.\r\nSUCCESS: The process with PID 4312 (child process of PID 29148) has been terminated.\r\nSUCCESS: The process with PID 29148 (child process of PID 19640) has been terminated.\r\nSUCCESS: The process with PID 19640 (child process of PID 7344) has been terminated.\r\nSUCCESS: The process with PID 7344 (child process of PID 26760) has been terminated.\r\n",
+      "stderr": ""
+    },
+    {
+      "cmd": "docker compose -p code101-verify-03-screens-stores-pagination down -v --remove-orphans",
+      "exit": 0,
+      "stdout": "",
+      "stderr": " Container code101-verify-03-screens-stores-pagination-api-1 Stopping \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Stopping \n Container code101-verify-03-screens-stores-pagination-api-1 Stopped \n Container code101-verify-03-screens-stores-pagination-api-1 Removing \n Container code101-verify-03-screens-stores-pagination-api-1 Removed \n Container code101-verify-03-screens-stores-pagination-db-1 Stopping \n Container code101-verify-03-screens-stores-pagination-db-1 Stopped \n Container code101-verify-03-screens-stores-pagination-db-1 Removing \n Container code101-verify-03-screens-stores-pagination-db-1 Removed \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Stopped \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Removing \n Container code101-verify-03-screens-stores-pagination-keycloak-1 Removed \n Volume code101-verify-03-screens-stores-pagination_pg_data Removing \n Network tasksteams-net Removing \n Volume code101-verify-03-screens-stores-pagination_pg_data Removed \n Network tasksteams-net Removed \n"
+    },
+    {
+      "cmd": "\"C:\\Python315\\python.exe\" -c \"import subprocess; subprocess.run(['docker','image','rm','code101-verify-03-screens-stores-pagination-api'],check=True)\"",
+      "exit": 0,
+      "stdout": "Untagged: code101-verify-03-screens-stores-pagination-api:latest\nDeleted: sha256:125f000b22d3854a3da800bbf65081451fa70cac18b9e9dac77ec7d338c24b72\n",
+      "stderr": ""
+    }
+  ],
+  "errors": []
+}

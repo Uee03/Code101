@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant D as Database
+    C->>A: PATCH task with If-Match 3
+    A->>D: read the current version of the task
+    D-->>A: current version number
+    alt versions are equal
+        A->>D: apply the change, version increases
+        A-->>C: 200 OK with the new ETag
+    else versions differ
+        A-->>C: 412 precondition-failed problem details
+    end

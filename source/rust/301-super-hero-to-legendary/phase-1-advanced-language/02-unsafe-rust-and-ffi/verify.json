@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example (needs a C compiler for build.rs)",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 600,
+      "expect_stdout": "abc -> 0x024d0127\nWikipedia -> 0x11e60398\n[10, 2, 30, 4, 5]"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "[40, 20, 30, 10]\nsame index: true\nout of range: true"
+    }
+  ]
+}

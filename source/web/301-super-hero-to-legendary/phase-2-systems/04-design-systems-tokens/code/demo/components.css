@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text-default);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-md);
+}
+
+main {
+  max-width: 40rem;
+  margin: var(--space-6) auto;
+  padding-inline: var(--space-4);
+}
+
+.card {
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.card p {
+  color: var(--color-text-muted);
+}
+
+.button {
+  background: var(--color-action-background);
+  color: var(--color-action-text);
+  border: 0;
+  border-radius: var(--button-radius);
+  padding: var(--button-padding-block) var(--button-padding-inline);
+  font-size: var(--button-font-size);
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

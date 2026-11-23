@@ -1,0 +1,7 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "skip_lesson_check": ["code/ollama_http.py"],
+  "notes": "Written, not run. Static text/source comparison only. No Docker, Postgres, Ollama, pip or program was executed by the author. code/ollama_http.py is identical to lesson 201.01. requirements.txt pins the one direct dependency; no lockfile exists because pip freeze needs a run. Offline check for a learner: python -m unittest in the code folder (needs no database)."
+}

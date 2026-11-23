@@ -1,0 +1,28 @@
+:root { color-scheme: light dark; font: 1rem/1.6 system-ui, sans-serif; --surface: #ffffff; --ink: #172033; --line: #5b6779; --accent: #134a9c; }
+@media (prefers-color-scheme: dark) { :root { --surface: #101927; --ink: #f0f3f9; --line: #acb8cc; --accent: #a7cbff; } }
+* { box-sizing: border-box; }
+html { scroll-padding-top: 7rem; }
+body { margin: 0; color: var(--ink); background: var(--surface); }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--surface); }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+main { max-width: 76rem; margin: auto; padding: 1rem; }
+a { color: var(--accent); overflow-wrap: anywhere; }
+button, input, select, textarea, summary { font: inherit; min-height: 2rem; }
+button, summary { cursor: pointer; }
+button, input, select, textarea { color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: .25rem; padding: .4rem; max-width: 100%; }
+button { margin: .25rem; }
+button:disabled { opacity: .65; cursor: not-allowed; }
+a, button { min-width: 24px; min-height: 24px; }
+form { display: grid; gap: .4rem; max-width: 36rem; padding-block: 1rem; }
+textarea { min-height: 6rem; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.skip-link { position: absolute; top: -5rem; left: .5rem; background: var(--surface); padding: .5rem; z-index: 5; }
+.skip-link:focus { top: .5rem; }
+.icon { display: inline-block; vertical-align: middle; width: 1.25rem; height: 1.25rem; margin-right: .4rem; background-color: currentColor; }
+.board { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .75rem; }
+article, aside, [role="alert"] { border: 2px solid var(--line); border-radius: .25rem; padding: .75rem; margin-block: .5rem; overflow-wrap: anywhere; }
+dialog { color: var(--ink); background: var(--surface); border: 2px solid var(--line); max-width: min(42rem, 95vw); max-height: 90vh; overflow: auto; }
+dialog::backdrop { background: rgb(0 0 0 / .6); }
+.table-scroll { max-width: 100%; overflow-x: auto; }
+table { border-collapse: collapse; } th, td { padding: .5rem; border: 1px solid var(--line); text-align: left; overflow-wrap: anywhere; }
+@media (forced-colors: active) { .icon { background: CanvasText; } }

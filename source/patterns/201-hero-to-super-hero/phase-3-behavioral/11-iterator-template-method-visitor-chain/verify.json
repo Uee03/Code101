@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- iterator ---\nforward: Intro, Verse, Chorus\nbackwards: Chorus, Verse, Intro\nfirst: Intro, Verse\nsecond: Intro\n--- template method ---\n[csv]\nname,qty\napple,3\npear,5\n[text]\n== Report ==\napple x3\npear x5\n== end ==\n--- visitor ---\nsquare 3 -> area 9\nrect 2x5 -> area 10\ntotal area: 19\n--- chain of responsibility ---\n50: approved by manager\n500: approved by director\n5000: approved by ceo\n50000: nobody can approve"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- iterator ---\nforward: Intro, Verse, Chorus\nbackwards: Chorus, Verse, Intro\nfirst: Intro, Verse\nsecond: Intro\n--- template method ---\n[csv]\nname,qty\napple,3\npear,5\n[text]\n== Report ==\napple x3\npear x5\n== end ==\n--- visitor ---\nsquare 3 -> area 9\nrect 2x5 -> area 10\ntotal area: 19\n--- chain of responsibility ---\n50: approved by manager\n500: approved by director\n5000: approved by ceo\n50000: nobody can approve"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "short: too short\nabcdefgh: needs a digit\nabcdefg1: ok"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "short: too short\nabcdefgh: needs a digit\nabcdefg1: ok"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "requires": [
+    "cmake",
+    "ctest",
+    "cpack",
+    "vcpkg",
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "configure with tests (first run installs every vcpkg dependency)",
+      "cwd": "code",
+      "cmd": "cmake --preset windows",
+      "timeout": 5400
+    },
+    {
+      "name": "build Debug",
+      "cwd": "code",
+      "cmd": "cmake --build --preset windows-debug",
+      "timeout": 1800
+    },
+    {
+      "name": "run the unit tests",
+      "cwd": "code",
+      "cmd": "ctest --preset windows",
+      "timeout": 600,
+      "expect_contains": [
+        "100% tests passed"
+      ]
+    },
+    {
+      "name": "configure the release package",
+      "cwd": "code",
+      "cmd": "cmake --preset ship-windows",
+      "timeout": 5400
+    },
+    {
+      "name": "build Release",
+      "cwd": "code",
+      "cmd": "cmake --build --preset ship-windows",
+      "timeout": 1800
+    },
+    {
+      "name": "make the ZIP",
+      "cwd": "code",
+      "cmd": "cpack --preset ship-windows",
+      "timeout": 600
+    },
+    {
+      "name": "the ZIP exists",
+      "cwd": "code",
+      "cmd": "{python} -c \"import pathlib, sys; sys.exit(0 if list(pathlib.Path('build/ship-windows').glob('tasks-desktop-*.zip')) else 1)\""
+    },
+    {
+      "name": "overlay the exercise solution on a clean copy of src and tests",
+      "cwd": ".",
+      "cmd": "cmake -E copy_directory exercise/solution code"
+    },
+    {
+      "name": "rebuild and rerun the tests with the solution",
+      "cwd": "code",
+      "cmd": "cmake --build --preset windows-debug",
+      "timeout": 1800
+    },
+    {
+      "name": "run the unit tests with the solution",
+      "cwd": "code",
+      "cmd": "ctest --preset windows",
+      "timeout": 600,
+      "expect_contains": [
+        "100% tests passed"
+      ]
+    }
+  ],
+  "skip_lesson_check": []
+}

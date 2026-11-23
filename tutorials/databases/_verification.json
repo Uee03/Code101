@@ -1,0 +1,98 @@
+[
+  {
+    "lesson": "01-what-a-database-is",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-1-first-queries\\01-what-a-database-is",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-1-first-queries/01-what-a-database-is",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/01-what-a-database-is\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "02-connect-with-a-tool",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-1-first-queries\\02-connect-with-a-tool",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-1-first-queries/02-connect-with-a-tool",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/02-connect-with-a-tool\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "03-tables-and-data-types",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-1-first-queries\\03-tables-and-data-types",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-1-first-queries/03-tables-and-data-types",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/03-tables-and-data-types\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "04-reading-data",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-1-first-queries\\04-reading-data",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-1-first-queries/04-reading-data",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-1-first-queries/04-reading-data\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "05-changing-data",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-2-shaping-data\\05-changing-data",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-2-shaping-data/05-changing-data",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/05-changing-data\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "06-keys-and-relationships",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-2-shaping-data\\06-keys-and-relationships",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-2-shaping-data/06-keys-and-relationships",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/06-keys-and-relationships\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "07-joining-tables",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-2-shaping-data\\07-joining-tables",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-2-shaping-data/07-joining-tables",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/07-joining-tables\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "08-summaries",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-2-shaping-data\\08-summaries",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-2-shaping-data/08-summaries",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-2-shaping-data/08-summaries\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "09-good-design",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-3-designing\\09-good-design",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-3-designing/09-good-design",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/09-good-design\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "10-transactions",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-3-designing\\10-transactions",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-3-designing/10-transactions",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/10-transactions\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "11-indexes-and-explain",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-3-designing\\11-indexes-and-explain",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-3-designing/11-indexes-and-explain",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/11-indexes-and-explain\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  },
+  {
+    "lesson": "12-library-project",
+    "folder": "source\\databases\\101-zero-to-hero\\phase-3-designing\\12-library-project",
+    "command": "python scripts/verify_labs.py source/databases/101-zero-to-hero/phase-3-designing/12-library-project",
+    "exit": 0,
+    "stdout": "[PASS      ] source/databases/101-zero-to-hero/phase-3-designing/12-library-project\n\n1 passed, 0 failed, 0 unverified (missing tools)\n",
+    "stderr": ""
+  }
+]

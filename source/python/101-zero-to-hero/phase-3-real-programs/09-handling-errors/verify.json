@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: safe_input.py",
+      "cwd": "code",
+      "cmd": "{python} safe_input.py",
+      "expect_stdout": "Age: Use whole digits, for example 30.\nAge: Age cannot be negative.\nAge: Bill amount: Use a number like 80.50, without a currency sign.\nBill amount: Bill must be a finite number of zero or more.\nBill amount: Age accepted: 30\nBill accepted: 80.50",
+      "stdin": "ten\n-1\n30\n$80\n-5\n80.50\n"
+    },
+    {
+      "name": "solution: split_bill.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} split_bill.py",
+      "expect_stdout": "Number of people: Use a whole number.\nNumber of people: At least one person is needed.\nNumber of people: Each person pays 22.50",
+      "stdin": "four\n0\n4\n"
+    }
+  ]
+}

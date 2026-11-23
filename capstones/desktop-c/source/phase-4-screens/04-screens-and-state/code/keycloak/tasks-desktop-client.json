@@ -1,0 +1,20 @@
+{
+  "clientId": "tasks-desktop",
+  "name": "Tasks desktop client (C17, SDL3)",
+  "description": "Public client for the native desktop capstone: code flow with PKCE and a loopback redirect (RFC 8252).",
+  "enabled": true,
+  "protocol": "openid-connect",
+  "publicClient": true,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": false,
+  "fullScopeAllowed": true,
+  "redirectUris": ["http://127.0.0.1/*"],
+  "webOrigins": [],
+  "attributes": {
+    "pkce.code.challenge.method": "S256"
+  },
+  "defaultClientScopes": ["basic", "profile", "email", "roles", "tasks:read", "tasks:write", "tasks-api-audience"],
+  "optionalClientScopes": ["tasks:admin", "offline_access"]
+}

@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/tracker",
+      "cwd": "code",
+      "stdin": "add 12.50 lunch\nadd 3.20 tea with milk\nlist\ntotal\nquit\n",
+      "expect_stdout": "Expense tracker. Type help for commands.\n> Added 12.50 for lunch\n> Added 3.20 for tea with milk\n> 1. 12.50  lunch\n2. 3.20  tea with milk\n> Total: 15.70\n> Saved 2 expense(s) to expenses.txt"
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/tracker",
+      "cwd": "exercise/solution",
+      "stdin": "add 5 coffee\ncount\nquit\n",
+      "expect_stdout": "Expense tracker. Type help for commands.\n> Added 5.00 for coffee\n> Count: 1\n> Saved 1 expense(s) to expenses.txt"
+    }
+  ],
+  "skip_lesson_check": []
+}

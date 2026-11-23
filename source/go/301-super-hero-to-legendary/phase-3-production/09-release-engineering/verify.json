@@ -1,0 +1,32 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "version default",
+      "cmd": "go run ./cmd/app -version",
+      "cwd": "code",
+      "expect_stdout": "app dev (commit none)"
+    },
+    {
+      "name": "version stamped",
+      "cmd": "go run -ldflags \"-X example.com/code101/go301/l09/internal/version.Version=1.2.3 -X example.com/code101/go301/l09/internal/version.Commit=abc1234\" ./cmd/app -version",
+      "cwd": "code",
+      "expect_stdout": "app 1.2.3 (commit abc1234)"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution builds",
+      "cmd": "go vet ./...",
+      "cwd": "exercise/solution/service"
+    }
+  ]
+}

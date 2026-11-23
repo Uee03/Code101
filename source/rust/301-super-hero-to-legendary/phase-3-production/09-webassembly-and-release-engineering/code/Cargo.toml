@@ -1,0 +1,23 @@
+[package]
+name = "slug_wasm"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+license = "MIT"
+publish = false
+description = "Turns titles into URL slugs; runs natively and in WebAssembly."
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "slug-cli"
+path = "src/main.rs"
+
+[dependencies]
+wasm-bindgen = "=0.2.130"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1

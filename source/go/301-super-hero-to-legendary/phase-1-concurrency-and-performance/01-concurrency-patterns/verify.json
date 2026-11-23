@@ -1,0 +1,43 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "tidy",
+      "cmd": "go mod tidy",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "expect_contains": [
+        "worker pool: [1 4 9 16 25 36 49 64 81 100]",
+        "pipeline sum of squares 1..10: 385",
+        "errgroup failure: fetch 3: not found",
+        "leak demo, unbuffered channel: 1 leaked goroutine(s)",
+        "leak demo, buffered channel: 0 leaked goroutine(s)"
+      ]
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution tidy",
+      "cmd": "go mod tidy",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "[GO RUST ZIG] <nil>\nprocess \"boom\": rejected"
+    }
+  ]
+}

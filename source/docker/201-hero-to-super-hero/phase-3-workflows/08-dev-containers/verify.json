@@ -1,0 +1,15 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "build dev image", "cwd": "code", "cmd": "docker build -f .devcontainer/Dockerfile -t code101-devcontainer:201 .", "timeout": 900 },
+    { "name": "pytest version", "cwd": "code", "cmd": "docker run --rm code101-devcontainer:201 pytest --version", "expect_contains": ["pytest 8.3.4"] },
+    { "name": "up", "cwd": "code", "cmd": "docker compose up -d --build --wait", "timeout": 600 },
+    { "name": "probe", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"message\": \"Hello, dev loop!\"}", "retries": 20, "retry_delay": 1 }
+  ],
+  "cleanup": [
+    { "name": "down", "cwd": "code", "cmd": "docker compose down -v --remove-orphans" },
+    { "name": "remove images", "cmd": "docker image rm code101-devcontainer:201 code101-devloop-web:201" }
+  ],
+  "skip_lesson_check": []
+}

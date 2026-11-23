@@ -1,0 +1,11 @@
+services:
+  web:
+    environment:
+      APP_ENV: development
+    volumes:
+      - ./app.py:/app/app.py:ro
+
+  debugbox:
+    image: alpine:3.22
+    profiles: ["debug"]
+    command: ["sleep", "infinity"]

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+// Stock levels for the items of a warehouse.
+service Inventory {
+  // Returns the stock level of one item. Fails with NOT_FOUND for an unknown item
+  // and with INVALID_ARGUMENT for an empty or too long item id.
+  rpc GetStock(GetStockRequest) returns (StockLevel);
+
+  // Streams the stock level of every known item, ordered by item id.
+  rpc ListItems(ListItemsRequest) returns (stream StockLevel);
+}
+
+message GetStockRequest {
+  string item_id = 1;
+}
+
+message ListItemsRequest {}
+
+message StockLevel {
+  string item_id = 1;
+  uint32 quantity = 2;
+
+  // Field 3 once existed and was removed, so the new field takes number 4.
+  reserved 3;
+  reserved "reorder_point";
+
+  // True when quantity is below the low-stock threshold chosen by the server.
+  bool low_stock = 4;
+}

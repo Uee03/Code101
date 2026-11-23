@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant B as Broker
+    participant N as Notifier
+    participant R as Reports
+    C->>A: POST complete task
+    A->>A: change the task and save an outbox record in one transaction
+    A-->>C: 200 OK with the updated task
+    A->>B: publish TaskCompleted with an event id
+    B-->>A: acknowledged
+    B->>N: deliver TaskCompleted
+    B->>R: deliver TaskCompleted
+    N-->>B: acknowledged after it handled the event
+    R-->>B: acknowledged after it handled the event
+    Note over A,R: Proposal for discussion. The platform has no broker today.

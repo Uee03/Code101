@@ -1,0 +1,23 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "take the practice token apart",
+      "cwd": "code",
+      "cmd": "{python} decode_token.py",
+      "expect_stdout": "parts: 3 (header, payload, signature)\nheader: {'alg': 'RS256', 'typ': 'JWT', 'kid': 'practice-key'}\nuser: bob b0b00000-0000-4000-8000-000000000002\nroles: member\nscopes: openid tasks:read tasks:write\nlifetime: 300 seconds\nchecks: all passed\nexpired token: ['token expired']\nother audience: ['wrong audience']\nsignature: not checked here, a real backend verifies it with Keycloak's public key"
+    },
+    {
+      "name": "PKCE challenge from the RFC 7636 example verifier",
+      "cwd": "code",
+      "cmd": "{python} pkce_challenge.py",
+      "expect_stdout": "code_verifier : dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk\ncode_challenge: E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} can_call.py",
+      "expect_stdout": "alice with tasks:admin: allowed (204)\nalice without tasks:admin: refused (403)\nbob with tasks:admin: refused (403)\nbob: refused (403)\nno token: refused (401)"
+    }
+  ]
+}

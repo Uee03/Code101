@@ -1,0 +1,21 @@
+{
+  "requires": ["dart"],
+  "steps": [
+    {
+      "name": "run: main.dart",
+      "cwd": "code",
+      "cmd": "dart run main.dart",
+      "timeout": 120,
+      "expect_stdout": "First: Buy milk, count: 4\n[Buy milk, Write notes, Call Sam, Plan trip]\nAna has 3\nBen has 5\nCy has 2\nDistinct tags: 2\n[x] Buy milk (normal)\n[ ] Write notes (high)\n[ ] Call Sam (normal)\nOpen tasks: 2\n[BUY MILK, WRITE NOTES, CALL SAM]\nMost urgent: [ ] Write notes (high)\nLoading...\nTask #7\nFailed: Invalid argument(s): id must be positive\n[Task #1, Task #2]\nDone"
+    },
+    {
+      "name": "solution: main.dart",
+      "cwd": "exercise/solution",
+      "cmd": "dart run main.dart",
+      "timeout": 120,
+      "expect_stdout": "Pen: 1.50\nBook: 12.00\nBag: 30.00\nCheap products: 2\nTotal: 43.50\nDiscounted total: 39.15"
+    }
+  ],
+  "cleanup": [],
+  "skip_lesson_check": []
+}

@@ -1,0 +1,7 @@
+
+> tasks-web-react@1.0.0 smoke
+> tsx scripts/smoke.ts
+
+health: ok
+me: alice (admin)
+without token: 401

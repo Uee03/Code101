@@ -1,0 +1,33 @@
+{
+  "requires": [
+    "go",
+    "buf",
+    "protoc-gen-go",
+    "protoc-gen-go-grpc"
+  ],
+  "steps": [
+    {
+      "name": "lint",
+      "cmd": "buf lint",
+      "cwd": "code"
+    },
+    {
+      "name": "generate",
+      "cmd": "buf generate",
+      "cwd": "code"
+    },
+    {
+      "name": "tidy",
+      "cmd": "go mod tidy",
+      "cwd": "code"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    }
+  ]
+}

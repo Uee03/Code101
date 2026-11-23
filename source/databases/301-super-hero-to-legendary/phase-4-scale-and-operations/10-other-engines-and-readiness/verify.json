@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "equals|like_match|ilike_match\nf|f|t\nlimit_offset|fetch_next\n2,3|2,3\ntext_into_integer\nerr:22P02\ncheck_name|object\nfk_without_index|app.orders.fk_orders_customer\nno_primary_key|app.audit_events\ntimestamp_without_tz|app.audit_events.occurred_at\ntimestamp_without_tz|app.orders.created_at\nname|setting|target|meets\narchive_mode|off|on|f\ndata_checksums|off|on|f\nfsync|on|on|t\nfull_page_writes|on|on|t\nidle_in_transaction_session_timeout|0|60000|f\npassword_encryption|scram-sha-256|scram-sha-256|t\nssl|off|on|f\nstatement_timeout|0|30000|f"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "check_name|object\nfloat_money|app.orders.total"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

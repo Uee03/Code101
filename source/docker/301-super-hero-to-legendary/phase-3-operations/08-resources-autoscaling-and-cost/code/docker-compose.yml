@@ -1,0 +1,32 @@
+name: code101-resources
+services:
+  memhog:
+    image: python:3.13-slim
+    profiles: ["memory"]
+    command: ["python", "/app/memhog.py"]
+    volumes:
+      - ./memhog.py:/app/memhog.py:ro
+    user: "10001:10001"
+    mem_limit: 64m
+    memswap_limit: 64m
+    restart: "no"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+  cpuburn:
+    image: python:3.13-slim
+    profiles: ["cpu"]
+    command: ["python", "/app/cpuburn.py"]
+    volumes:
+      - ./cpuburn.py:/app/cpuburn.py:ro
+    user: "10001:10001"
+    cpus: 0.5
+    mem_limit: 64m
+    restart: "no"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

@@ -1,0 +1,108 @@
+{
+  "requires": [
+    "python",
+    "java"
+  ],
+  "steps": [
+    {
+      "name": "local Android SDK environment",
+      "cwd": "code",
+      "cmd": "{python} tools/prepare_sdk.py",
+      "expect_contains": [
+        "Android SDK configured; local.properties is not shipped."
+      ]
+    },
+    {
+      "name": "compile exercise solution as a resource overlay",
+      "cwd": "code",
+      "cmd": "{python} tools/apply_exercise.py",
+      "expect_contains": [
+        "Exercise solution installed as English UK resources; both variants build in one APK."
+      ]
+    },
+    {
+      "name": "regenerate client from contract",
+      "cwd": "code",
+      "cmd": "gradlew.bat openApiGenerate --console=plain",
+      "timeout": 1800,
+      "expect_contains": [
+        "BUILD SUCCESSFUL"
+      ]
+    },
+    {
+      "name": "assemble debug once",
+      "cwd": "code",
+      "cmd": "gradlew.bat assembleDebug --console=plain",
+      "timeout": 1800,
+      "expect_contains": [
+        "BUILD SUCCESSFUL"
+      ]
+    },
+    {
+      "name": "inspect APK without device",
+      "cwd": "code",
+      "cmd": "{python} tools/inspect_debug.py",
+      "expect_contains": [
+        "Debug APK exists; application id, redirect scheme, network config and 10 icons checked."
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "stop wrapper Gradle daemons",
+      "cwd": "code",
+      "cmd": "gradlew.bat --stop",
+      "timeout": 180
+    }
+  ],
+  "skip_lesson_check": [
+    "code/app/src/main/kotlin-generated/.openapi-generator/FILES",
+    "code/app/src/main/kotlin-generated/.openapi-generator/VERSION",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/AuditApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/CommentsApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/MembersApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/PlatformApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/ProjectsApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/TasksApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/api/TeamsApi.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/AuditEntityType.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/AuditEntry.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/AuditPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Comment.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/CommentCreate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/CommentPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Health.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Me.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/MeTeamsInner.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Member.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/MemberPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/MemberPut.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/PageInfo.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Problem.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Project.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ProjectCreate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ProjectPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ProjectUpdate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ReassignRequest.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Role.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Task.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TaskCreate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TaskPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TaskPriority.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TaskStatus.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TaskUpdate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/Team.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TeamCreate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TeamPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TeamRole.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/TeamUpdate.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/UserPage.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/UserSummary.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ValidationProblem.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/com/code101/tasks/generated/model/ValidationProblemAllOfErrors.kt",
+    "code/app/src/main/kotlin-generated/src/main/kotlin/org/openapitools/client/infrastructure/CollectionFormats.kt",
+    "code/gradle/wrapper/gradle-wrapper.jar",
+    "code/gradlew",
+    "code/gradlew.bat"
+  ]
+}

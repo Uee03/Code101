@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "task 1 completed by alice\nrejected: bob may not complete task 2\ntask 2 completed by carol\nrejected: task 1 is already done\nrejected: task 4 is cancelled\nnotify lead carol: task 1 completed by alice (event 1)\nnotify lead carol: task 2 completed by carol (event 2)\nrelay published 2 events, then 0 on the second run\noverdue as of 2026-03-25: [3]\naudit: alice complete_task 1 ok\naudit: bob complete_task 2 rejected\naudit: carol complete_task 2 ok\naudit: alice complete_task 1 rejected\naudit: bob complete_task 4 rejected\ntypes in this design: 8"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "task 1 completed by alice\nrejected: bob may not complete task 2\ntask 2 completed by carol\nrejected: task 1 is already done\nrejected: task 4 is cancelled\nnotify lead carol: task 1 completed by alice (event 1)\nnotify lead carol: task 2 completed by carol (event 2)\nrelay published 2 events, then 0 on the second run\noverdue as of 2026-03-25: [3]\naudit: alice complete_task 1 ok\naudit: bob complete_task 2 rejected\naudit: carol complete_task 2 ok\naudit: alice complete_task 1 rejected\naudit: bob complete_task 4 rejected\ntypes in this design: 8"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "task 1 now belongs to bob\nrejected: alice is not the lead\nrejected: task 1 already belongs to bob"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "task 1 now belongs to bob\nrejected: alice is not the lead\nrejected: task 1 already belongs to bob"
+    }
+  ]
+}

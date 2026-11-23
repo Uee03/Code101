@@ -1,0 +1,11 @@
+time="2026-11-23T12:45:04+02:00" level=warning msg="Found orphan containers (code101-react-author-5-api-1, code101-react-author-5-db-1, code101-react-author-5-keycloak-1) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Network code101-react-author-5_default Creating 
+ Network code101-react-author-5_default Creating 
+ Network code101-react-author-5_default Created 
+ Network code101-react-author-5_default Created 
+ Container code101-react-author-5-web-1 Creating 
+ Container code101-react-author-5-web-1 Created 
+ Container code101-react-author-5-web-1 Starting 
+ Container code101-react-author-5-web-1 Started 
+ Container code101-react-author-5-web-1 Waiting 
+ Container code101-react-author-5-web-1 Healthy 

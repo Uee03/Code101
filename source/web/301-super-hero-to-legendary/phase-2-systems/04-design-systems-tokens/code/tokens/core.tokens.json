@@ -1,0 +1,41 @@
+{
+  "palette": {
+    "$type": "color",
+    "gray": {
+      "50": { "$value": "#f9fafb" },
+      "300": { "$value": "#d1d5db" },
+      "500": { "$value": "#6b7280" },
+      "700": { "$value": "#374151" },
+      "900": { "$value": "#111827" }
+    },
+    "blue": {
+      "300": { "$value": "#93c5fd" },
+      "600": { "$value": "#2563eb" }
+    },
+    "white": { "$value": "#ffffff" }
+  },
+  "space": {
+    "$type": "dimension",
+    "1": { "$value": "0.25rem" },
+    "2": { "$value": "0.5rem" },
+    "4": { "$value": "1rem" },
+    "6": { "$value": "1.5rem" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "sm": { "$value": "0.25rem" },
+    "md": { "$value": "0.5rem" }
+  },
+  "font": {
+    "size": {
+      "$type": "dimension",
+      "sm": { "$value": "0.875rem" },
+      "md": { "$value": "1rem" },
+      "lg": { "$value": "1.25rem" }
+    },
+    "family": {
+      "$type": "fontFamily",
+      "body": { "$value": "system-ui, sans-serif" }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+error[E0382]: borrow of moved value: `book`
+ --> src\main.rs:4:16
+  |
+2 |     let book = String::from("Rust stories");
+  |         ---- move occurs because `book` has type `String`, which does not implement the `Copy` trait
+3 |     let reader = book;
+  |                  ---- value moved here
+4 |     println!("{book}");
+  |                ^^^^ value borrowed here after move
+  |
+help: consider cloning the value if the performance cost is acceptable
+  |
+3 |     let reader = book.clone();
+  |                      ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `ownership_and_borrowing` (bin "ownership_and_borrowing") due to 1 previous error

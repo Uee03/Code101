@@ -1,0 +1,2 @@
+REPOSITORY           TAG       SIZE
+tasksteams-api-api   latest    304MB

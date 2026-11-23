@@ -1,0 +1,60 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "seed row counts",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -U tasks_admin -d tasksteams -c \"SELECT (SELECT count(*) FROM users) AS users, (SELECT count(*) FROM teams) AS teams, (SELECT count(*) FROM projects) AS projects, (SELECT count(*) FROM tasks) AS tasks, (SELECT count(*) FROM comments) AS comments\"",
+      "expect_stdout": " users | teams | projects | tasks | comments\n-------+-------+----------+-------+----------\n     3 |     2 |        3 |     8 |        3\n(1 row)"
+    },
+    {
+      "name": "stored functions once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -U tasks_admin -d tasksteams -f /scripts/try_procedures.sql",
+      "expect_stdout": " assigned_to_carol | version\n-------------------+---------\n t                 |       2\n(1 row)\n\n status | has_completed_at | version\n--------+------------------+---------\n done   | t                |       3\n(1 row)\n\n     step      |                   result\n---------------+--------------------------------------------\n stale version | rejected: task changed (current version 1)\n(1 row)\n\n action | entity_type | new_status |             new_assignee\n--------+-------------+------------+--------------------------------------\n update | task        | done       |\n update | task        |            | ca401000-0000-4000-8000-000000000003\n(2 rows)"
+    },
+    {
+      "name": "app role cannot edit the audit log",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T -e PGPASSWORD=tasks_app_local_only db psql -X -h 127.0.0.1 -U tasks_app -d tasksteams -c \"DELETE FROM audit_log\" 2>&1",
+      "expect_exit": 1,
+      "expect_contains": [
+        "permission denied for table audit_log"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess; raise SystemExit(subprocess.call(['docker','compose','-p','{project}','exec','-T','db','psql','-X','-q','-U','tasks_admin','-d','tasksteams'], stdin=open('../exercise/solution/exercise.sql','rb')))\"",
+      "expect_stdout": " username | open_tasks\n----------+------------\n alice    |          0\n bob      |          2\n carol    |          3\n(3 rows)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/openapi.yaml",
+    "code/requirements.txt",
+    "code/scripts/check_openapi.py"
+  ],
+  "exclusive": "tasksteams"
+}

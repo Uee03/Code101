@@ -1,0 +1,8 @@
+HTTP/1.1 412 Precondition Failed
+date: Mon, 23 Nov 2026 08:33:43 GMT
+server: uvicorn
+content-length: 278
+content-type: application/problem+json
+x-trace-id: bc8ca91c5bff4cb396b77f67e2f0da76
+
+{"type":"https://code101.example/problems/precondition-failed","title":"Precondition failed","status":412,"detail":"The task changed since you read it (current version 1).","instance":"/v1/tasks/e8787266-112f-4a3c-a9b1-9e2bea4b62ec","traceId":"bc8ca91c5bff4cb396b77f67e2f0da76"}

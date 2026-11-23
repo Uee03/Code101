@@ -1,0 +1,17 @@
+flowchart LR
+    user(["Team member or admin"])
+    subgraph platform["Tasks and Teams platform"]
+        web["Web client<br/>Angular or React, single-page app"]
+        mob["Mobile client<br/>Flutter or Kotlin"]
+        api["Backend API<br/>Python, ASP.NET, Go or Rust, implements openapi.yaml"]
+        db[("Database<br/>PostgreSQL 17 with tables, triggers and stored functions")]
+    end
+    kc["Keycloak, external<br/>realm tasksteams"]
+    user -->|"uses"| web
+    user -->|"uses"| mob
+    web -->|"sign in, OIDC code flow with PKCE"| kc
+    mob -->|"sign in, OIDC code flow with PKCE"| kc
+    web -->|"calls, JSON over HTTP with bearer token"| api
+    mob -->|"calls, JSON over HTTP with bearer token"| api
+    api -->|"reads and writes, SQL as tasks_app"| db
+    api -->|"fetches signing keys, JWKS"| kc

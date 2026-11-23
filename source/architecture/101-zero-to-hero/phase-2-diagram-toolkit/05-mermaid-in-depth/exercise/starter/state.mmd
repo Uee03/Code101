@@ -1,0 +1,6 @@
+stateDiagram-v2
+  [*] --> todo
+  todo --> in_progress : start
+  in_progress --> blocked : TODO cause
+  blocked --> in_progress : TODO recovery
+  in_progress --> done : complete

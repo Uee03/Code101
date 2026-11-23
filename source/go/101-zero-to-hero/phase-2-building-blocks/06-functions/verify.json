@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "Area: 12 Perimeter: 14\nEach: 30.00; valid: true"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "Area: 12 Perimeter: 14\nEach: 32.00; valid: true"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}

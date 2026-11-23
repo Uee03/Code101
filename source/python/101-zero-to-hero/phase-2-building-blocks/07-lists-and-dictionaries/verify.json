@@ -1,0 +1,19 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: inventory.py",
+      "cwd": "code",
+      "cmd": "{python} inventory.py",
+      "expect_stdout": "First item: bread\nItems to buy: 3\nBuy: bread\nBuy: apples\nBuy: milk\nbread: 3 left\napples: 6 left\nmilk: 2 left\nRice is not stocked.\nRice count: 0"
+    },
+    {
+      "name": "solution: cart.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} cart.py",
+      "expect_stdout": "Cart total: 7"
+    }
+  ]
+}

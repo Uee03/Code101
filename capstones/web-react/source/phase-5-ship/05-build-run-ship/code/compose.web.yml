@@ -1,0 +1,13 @@
+services:
+  web:
+    image: ${COMPOSE_PROJECT_NAME}-web
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8201}:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

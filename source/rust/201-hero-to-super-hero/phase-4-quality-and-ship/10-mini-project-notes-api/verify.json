@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet -- --self-check",
+      "timeout": 300,
+      "expect_stdout": "create: 201; read: 200; delete: 204; missing: 404"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet -- --self-check",
+      "timeout": 300,
+      "expect_stdout": "create: 201; read: 200; delete: 204; missing: 404"
+    }
+  ]
+}

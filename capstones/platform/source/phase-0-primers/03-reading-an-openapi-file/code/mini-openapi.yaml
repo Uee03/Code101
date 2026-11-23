@@ -1,0 +1,160 @@
+openapi: 3.1.1
+info:
+  title: Tasks and Teams API
+  version: 1.0.0
+  summary: The shared contract every Code101 backend implements and every client consumes.
+servers:
+  - url: http://localhost:8000
+    description: Local backend (any of the four implementations, port 8000)
+security:
+  - oidc: [tasks:read]
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags: [Platform]
+      summary: Liveness and database check
+      security: []
+      x-access: public
+      responses:
+        '200':
+          description: The service and its database are reachable.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+        '503':
+          description: The database is not reachable.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Health' }
+  /v1/tasks/{taskId}:
+    parameters:
+      - { $ref: '#/components/parameters/TaskId' }
+    get:
+      operationId: getTask
+      tags: [Tasks]
+      summary: One task; send If-None-Match to get 304 when unchanged
+      x-access: team-member-or-admin
+      parameters:
+        - name: If-None-Match
+          in: header
+          schema: { type: string }
+      responses:
+        '200':
+          description: The task.
+          headers:
+            ETag: { $ref: '#/components/headers/ETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '304':
+          description: The ETag still matches; no body.
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      description: |
+        Keycloak realm `tasksteams`. Web and mobile clients use the authorization code flow with PKCE (S256).
+        The API only validates the bearer access token: issuer, audience `tasks-api`, expiry and signature.
+        Scopes limit what the client may do; the realm role (`admin`, `member`) limits what the user may do.
+      openIdConnectUrl: http://localhost:8180/realms/tasksteams/.well-known/openid-configuration
+  parameters:
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  headers:
+    ETag:
+      description: Strong validator, the quoted resource `version`, for example `"3"`.
+      schema: { type: string }
+    WWWAuthenticate:
+      description: The Bearer challenge, for example `Bearer realm="tasksteams"`.
+      schema: { type: string }
+  responses:
+    Unauthorized:
+      description: Missing, expired or invalid bearer token.
+      headers:
+        WWW-Authenticate: { $ref: '#/components/headers/WWWAuthenticate' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          examples:
+            noToken:
+              value:
+                type: https://code101.example/problems/unauthorized
+                title: Unauthorized
+                status: 401
+                detail: A bearer access token is required.
+                instance: /v1/me
+                traceId: 4bf92f3577b34da6a3ce929d0e0e4736
+    Forbidden:
+      description: The token is valid but the role, scope or team membership does not allow this.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          examples:
+            notAdmin:
+              value:
+                type: https://code101.example/problems/forbidden
+                title: Forbidden
+                status: 403
+                detail: The admin role is required.
+                instance: /v1/audit-log
+                traceId: 4bf92f3577b34da6a3ce929d0e0e4736
+    NotFound:
+      description: The resource does not exist, or the caller may not know that it exists.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Problem:
+      type: object
+      description: RFC 9457 problem details with two extension members, `traceId` and `code`.
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: Stable identifier of the problem type.
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        detail: { type: string }
+        instance: { type: string, description: The request path. }
+        traceId: { type: string, description: Correlates with the server log. }
+        code:
+          type: string
+          description: Optional machine-readable code, for example `last_lead`.
+    Health:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        version: { type: string, examples: ['1.0.0'] }
+        database: { type: string, enum: [up, down] }
+    TaskStatus:
+      type: string
+      enum: [todo, in_progress, blocked, done, cancelled]
+    TaskPriority:
+      type: string
+      enum: [low, medium, high, urgent]
+    Task:
+      type: object
+      required: [id, projectId, title, description, status, priority, assigneeId, dueDate, completedAt, createdBy, version, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        projectId: { type: string, format: uuid, readOnly: true }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 10000 }
+        status: { $ref: '#/components/schemas/TaskStatus' }
+        priority: { $ref: '#/components/schemas/TaskPriority' }
+        assigneeId: { type: [string, 'null'], format: uuid }
+        dueDate: { type: [string, 'null'], format: date }
+        completedAt: { type: [string, 'null'], format: date-time, readOnly: true }
+        createdBy: { type: string, format: uuid, readOnly: true }
+        version: { type: integer, minimum: 1, readOnly: true }
+        createdAt: { type: string, format: date-time, readOnly: true }
+        updatedAt: { type: string, format: date-time, readOnly: true }

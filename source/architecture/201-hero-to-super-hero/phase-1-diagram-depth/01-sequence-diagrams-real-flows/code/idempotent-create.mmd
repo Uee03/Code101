@@ -1,0 +1,20 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant D as Database
+    C->>A: POST create task with Idempotency-Key K1
+    A->>D: look up key K1 for this user
+    alt key not found
+        A->>D: record K1 as in progress with the request hash
+        A->>D: create the task
+        A->>D: save status and response body under K1
+        A-->>C: 201 Created
+    else key found, same request hash, response saved
+        A-->>C: saved response with header Idempotent-Replayed true
+    else key found, different request hash
+        A-->>C: 422 problem details
+    else key found, first request still running
+        A-->>C: 409 problem details
+    end
+    Note over C,A: Retrying with the same key and the same body is safe after a timeout

@@ -1,0 +1,127 @@
+{
+  "requires": [
+    "docker",
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres and Keycloak",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 420,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "the seed users are in the database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -U tasks_admin -d tasksteams -tA -c \"SELECT username FROM users ORDER BY username\"",
+      "expect_stdout": "alice\nbob\ncarol"
+    },
+    {
+      "name": "build the project",
+      "cwd": "code",
+      "cmd": "dotnet build --nologo",
+      "timeout": 300,
+      "expect_contains": [
+        "Build succeeded.",
+        "0 Error(s)"
+      ]
+    },
+    {
+      "name": "start the API",
+      "cwd": "code/src/TasksApi",
+      "cmd": "dotnet run --no-build",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\",\"database\":\"up\"}"
+    },
+    {
+      "name": "conformance: 15 of 18 checks pass (no sign-in and no rate-limit headers yet)",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "timeout": 420,
+      "retries": 3,
+      "retry_delay": 5,
+      "expect_exit": 1,
+      "expect_contains": [
+        "PASS  health (200, status ok, no token needed)",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  stale If-Match gives 412 (stale If-Match gave 412, missing If-Match gave 428)",
+        "PASS  cursor pagination (2 + 1 tasks, no overlap, last page has nextCursor null)",
+        "FAIL  401 without token: expected HTTP 401, got 200",
+        "FAIL  403 for member on admin route: expected HTTP 403, got 200",
+        "PASS  audit log (task create and update are in the audit trail)",
+        "15 passed, 3 failed"
+      ]
+    },
+    {
+      "name": "the helper script prints a problem for an unknown team",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py GET /v1/teams/7ea00000-0000-4000-8000-0000000000ff",
+      "expect_exit": 1,
+      "expect_contains": [
+        "HTTP 404 Not Found",
+        "Team was not found."
+      ]
+    },
+    {
+      "name": "exercise solution: copy over the project",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', '_ex', ignore=shutil.ignore_patterns('bin', 'obj')); shutil.copytree('exercise/solution', '_ex', dirs_exist_ok=True)\"",
+      "timeout": 60
+    },
+    {
+      "name": "exercise solution builds",
+      "cwd": "_ex",
+      "cmd": "dotnet build --nologo",
+      "timeout": 300,
+      "expect_contains": [
+        "0 Error(s)"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary containers, network and volume",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans",
+      "timeout": 120
+    },
+    {
+      "name": "release the build output (the API process was just stopped)",
+      "cmd": "{python} -c \"import shutil, time; time.sleep(3); [shutil.rmtree(p, ignore_errors=True) for p in ('code/src/TasksApi/bin', 'code/src/TasksApi/obj', '_ex')]\"",
+      "timeout": 60
+    }
+  ],
+  "skip_lesson_check": [
+    "code/openapi.yaml",
+    "code/docker-compose.yml",
+    "code/.env.example",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/scripts/conformance.py",
+    "code/global.json",
+    "code/TasksApi.slnx",
+    "code/requests/empty-team.json",
+    "code/requests/new-team.json",
+    "code/src/TasksApi/Common/ProblemException.cs",
+    "code/src/TasksApi/Common/ProblemResponses.cs",
+    "code/src/TasksApi/Contracts/TeamDto.cs",
+    "code/src/TasksApi/Contracts/MeDto.cs"
+  ],
+  "exclusive": "tasksteams"
+}

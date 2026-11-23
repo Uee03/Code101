@@ -1,0 +1,6 @@
+flowchart LR
+  person["Person: library member"]
+  app["System: Community Library - track loans"]
+  identity["External system: identity provider"]
+  person -->|"Checks own loans"| app
+  app -->|"Uses sign in"| identity

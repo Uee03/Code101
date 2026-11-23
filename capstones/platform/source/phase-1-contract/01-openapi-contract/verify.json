@@ -1,0 +1,26 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "install the checker packages",
+      "cwd": "code",
+      "cmd": "{python} -m pip install --quiet --disable-pip-version-check --target .deps -r requirements.txt",
+      "timeout": 240,
+      "retries": 2,
+      "retry_delay": 3
+    },
+    {
+      "name": "validate the contract",
+      "cwd": "code",
+      "cmd": "{python} scripts/check_openapi.py",
+      "expect_stdout": "OpenAPI 3.1.1 valid: 27 operations, 33 schemas"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -c \"import runpy, sys; sys.path.insert(0, '../../code/.deps'); sys.argv = ['count_by_tag.py', '../../code/openapi.yaml']; runpy.run_path('count_by_tag.py', run_name='__main__')\"",
+      "expect_stdout": "Platform: 3\nTeams: 5\nMembers: 3\nProjects: 5\nTasks: 7\nComments: 3\nAudit: 1"
+    }
+  ],
+  "skip_lesson_check": ["code/openapi.yaml"]
+}

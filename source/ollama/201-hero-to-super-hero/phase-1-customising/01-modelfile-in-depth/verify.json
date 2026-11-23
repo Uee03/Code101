@@ -1,0 +1,6 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "notes": "Written, not run. Static text/source comparison only. No Ollama command, model download, API call or program was executed by the author. Empty steps are intentional. Offline checks a learner can run later: python -m unittest in the code folder, and python modelfile_lint.py Modelfile.reviewer."
+}

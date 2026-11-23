@@ -1,0 +1,1 @@
+{"requires":["python"],"steps":[{"name":"typed demo","cwd":"code","cmd":"{python} main.py","expect_stdout":"['READ DOCS']\nmissing"},{"name":"exercise solution","cwd":"exercise/solution","cmd":"{python} exercise.py","expect_stdout":"empty READ"}]}

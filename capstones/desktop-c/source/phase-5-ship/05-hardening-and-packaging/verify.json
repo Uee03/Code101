@@ -1,0 +1,40 @@
+{
+  "requires": ["cmake", "gcc"],
+  "steps": [
+    {
+      "name": "configure the debug build with vcpkg (needs VCPKG_ROOT)",
+      "cwd": "code",
+      "cmd": "cmake --preset default",
+      "timeout": 3600
+    },
+    {
+      "name": "build the debug app",
+      "cwd": "code",
+      "cmd": "cmake --build --preset default",
+      "timeout": 1800
+    },
+    {
+      "name": "configure the release build with hardening flags",
+      "cwd": "code",
+      "cmd": "cmake --preset release",
+      "timeout": 3600
+    },
+    {
+      "name": "build the release app",
+      "cwd": "code",
+      "cmd": "cmake --build --preset release",
+      "timeout": 1800
+    },
+    {
+      "name": "build the exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o exercise exercise.c"
+    },
+    {
+      "name": "run the exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('exercise')]))\"",
+      "expect_stdout": "name taken: alice\nnote replaced: second\nafter normal use, outstanding: 0\nentry_new with a failing allocation returned NULL\nafter failed entry_new, outstanding: 0"
+    }
+  ]
+}

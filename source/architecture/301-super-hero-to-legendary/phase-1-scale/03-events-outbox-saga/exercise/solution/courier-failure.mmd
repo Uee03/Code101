@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    participant O as Orders
+    participant I as Inventory
+    participant P as Payments
+    participant F as Fulfilment
+    P->>F: PaymentCaptured
+    F->>F: the courier fails after the allowed tries
+    F->>P: ShipmentFailed
+    P->>P: refund the payment once, using the order id as the key
+    P->>I: PaymentRefunded
+    I->>I: release the reserved stock
+    I->>O: StockReleased
+    Note over O: order cancelled

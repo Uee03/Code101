@@ -1,0 +1,29 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "dotnet build src/Inventory.Api -c Release --nologo -v quiet",
+      "timeout": 300
+    },
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --project src/Inventory.Api -c Release --no-build",
+      "bg": true,
+      "wait": 8
+    },
+    {
+      "name": "read-stock",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:5310/stock/1",
+      "retries": 10,
+      "retry_delay": 1,
+      "expect_stdout": "{\"id\":1,\"name\":\"Pen\",\"quantity\":120}"
+    }
+  ],
+  "skip_lesson_check": []
+}

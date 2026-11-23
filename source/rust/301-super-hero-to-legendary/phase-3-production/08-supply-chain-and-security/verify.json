@@ -1,0 +1,33 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 600,
+      "expect_stdout": "attempt 1: accepted\nattempt 2: rejected\nattempt 3: rejected"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "***********0001\n*****"
+    },
+    {
+      "name": "solution tests",
+      "cwd": "exercise/solution",
+      "cmd": "cargo test --quiet",
+      "timeout": 300
+    }
+  ]
+}

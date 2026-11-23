@@ -1,0 +1,19 @@
+{
+  "name": "ollama-lesson-05",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "selftest": "node dist/selftest.js"
+  },
+  "engines": {
+    "node": "26.13.1",
+    "npm": "11.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}

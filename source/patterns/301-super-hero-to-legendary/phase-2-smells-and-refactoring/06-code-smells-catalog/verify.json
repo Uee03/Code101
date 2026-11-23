@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Invoice for Ana <ana@example.com>\n1 Main St, 0150 Oslo\nTotal: 5606\n2 orders, total 350\nscanned 8 functions or methods\nmake_invoice: lines=22 params=9 nesting=3 -> long method, long parameter list, deep nesting\nclass OrderManager: methods=6 -> large class"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Invoice for Ana <ana@example.com>\n1 Main St, 0150 Oslo\nTotal: 5606\n2 orders, total 350\nscanned 8 functions or methods\nMakeInvoice: lines=44 params=9 nesting=3 -> long method, long parameter list, deep nesting\nclass OrderManager: methods=6 -> large class"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "price: branches=3 -> too many branches\ndouble: branches=0 -> ok"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Price: branches=3 -> too many branches\nDouble: branches=0 -> ok"
+    }
+  ]
+}

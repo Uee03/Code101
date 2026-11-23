@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example (starts a loopback-only server on a free port, then stops it)",
+      "cwd": "code",
+      "cmd": "cargo run --quiet",
+      "timeout": 900,
+      "expect_stdout": "get_stock widget: 12\nget_stock \"missing\": NotFound: unknown item missing\nget_stock \"\": InvalidArgument: item_id must be 1 to 64 characters\nlist_items: gadget=0 gizmo=3 widget=12\nserver stopped cleanly"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet",
+      "timeout": 900
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 900,
+      "expect_stdout": "low: gadget gizmo"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Findings you accept on purpose go here, one CVE id per line, each with a comment.
+# Format of a comment: why it is accepted, who decided, review-by date.
+# Example line (commented out, not a real exception):
+# CVE-0000-00000

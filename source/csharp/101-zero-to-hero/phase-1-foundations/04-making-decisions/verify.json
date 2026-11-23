@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "30\n",
+      "expect_stdout": "Age (whole number):\nAdult with ticket: True\nChild or has ticket: True\nNo ticket: False\nExactly 18: False; not 18: True\nAt most 65: True; over 65: False\nTicket: adult price, 10.00\nGo to the gate"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "90\n",
+      "expect_stdout": "Score (0-100):\nMerit"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

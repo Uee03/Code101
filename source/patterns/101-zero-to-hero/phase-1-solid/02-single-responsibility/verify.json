@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nInvoice 1\nNotebook x2\nPen x4\nTotal cents: 3000\nEmail to ana@example.com: invoice 1\nStored invoices: 1\n--- after ---\nInvoice 1\nNotebook x2\nPen x4\nTotal cents: 3000\nEmail to ana@example.com: invoice 1\nStored invoices: 1"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nInvoice 1\nNotebook x2\nPen x4\nTotal cents: 3000\nEmail to ana@example.com: invoice 1\nStored invoices: 1\n--- after ---\nInvoice 1\nNotebook x2\nPen x4\nTotal cents: 3000\nEmail to ana@example.com: invoice 1\nStored invoices: 1"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "SMS to Ben: Receipt for Ben: 875 cents"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "SMS to Ben: Receipt for Ben: 875 cents"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "requires": ["flutter", "dart", "python"],
+  "steps": [
+    {"name": "add the Android scaffold around the lesson files", "cwd": "code", "cmd": "flutter create --org com.code101 --project-name tasks --platforms=android --no-pub .", "timeout": 600},
+    {"name": "delete the generated test folder", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.rmtree('test', ignore_errors=True)\""},
+    {"name": "restore packages", "cwd": "code", "cmd": "flutter pub get", "timeout": 600, "expect_contains": ["Got dependencies!"]},
+    {"name": "generate the typed client", "cwd": "code", "cmd": "dart run swagger_parser", "timeout": 300},
+    {"name": "generate JSON serializers", "cwd": "code", "cmd": "dart run build_runner build", "timeout": 600},
+    {"name": "analyze once", "cwd": "code", "cmd": "flutter analyze --no-pub", "timeout": 300, "expect_contains": ["No issues found!"]},
+    {"name": "build a debug APK once", "cwd": "code", "cmd": "flutter build apk --debug --no-pub --dart-define-from-file=config/dev.json", "timeout": 1200, "expect_contains": ["app-debug.apk"]},
+    {"name": "solution: main.dart", "cwd": "exercise/solution", "cmd": "dart run main.dart", "timeout": 120, "expect_stdout": "[new-1, new-1, new-1]\nrefresh calls: 1\nnew-2\nrefresh calls: 2"}
+  ],
+  "cleanup": [],
+  "skip_lesson_check": ["code/contract/openapi.yaml", "code/swagger_parser.yaml", "code/android/app/src/main/AndroidManifest.xml", "code/android/app/src/debug/AndroidManifest.xml", "code/android/app/src/debug/res/xml/network_security_config.xml", "code/lib/main.dart", "code/lib/core/url_policy.dart", "code/lib/core/result.dart", "code/lib/core/api_problem.dart", "code/lib/core/problem_messages.dart", "code/lib/core/widgets/art_icon.dart", "code/lib/data/models/task.dart", "code/lib/data/services/api_service.dart", "code/lib/data/services/problem_interceptor.dart", "code/lib/data/repositories/task_repository.dart", "code/lib/app/app.dart", "code/lib/app/app_shell.dart", "code/lib/app/router.dart", "code/lib/features/login/view/session_check_screen.dart", "code/lib/features/settings/view_model/settings_view_model.dart", "code/lib/features/task_detail/view/task_detail_screen.dart", "code/lib/features/task_detail/view_model/task_detail_view_model.dart", "code/lib/features/tasks/view/task_composer.dart", "code/lib/features/tasks/view/tasks_screen.dart", "code/lib/features/tasks/view_model/tasks_view_model.dart", "code/assets/icons/list.svg", "code/assets/icons/settings.svg", "code/assets/LICENSE-ICONS-CC0.txt"]
+}

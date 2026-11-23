@@ -1,0 +1,11 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "run", "cmd": "go run .", "cwd": "code",
+     "expect_stdout": "hits: 1000\nslowCall: context deadline exceeded\ndeadline exceeded: true\ntick 1\ntick 2\ntick 3\nticker stopped"},
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution", "cmd": "go run .", "cwd": "exercise/solution",
+     "expect_stdout": "cache: hello true\ncache: \"\" false\nwaitAll fast: <nil>\nwaitAll slow: context deadline exceeded"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

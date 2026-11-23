@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# TODO 1: set the namespace to code101-staging.
+# TODO 2: include the base (two folders up).
+# TODO 3: use image tag 2.0.0 and 2 replicas.
+# TODO 4: merge the greeting "hello from staging" into api-config.

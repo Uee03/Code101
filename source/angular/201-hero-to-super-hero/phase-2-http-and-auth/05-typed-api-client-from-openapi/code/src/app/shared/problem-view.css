@@ -1,0 +1,16 @@
+.problem {
+  padding: 0.75rem 1rem;
+  border-left: 0.25rem solid #b42318;
+  background: #fdecea;
+  color: #1f2937;
+}
+
+h3 {
+  margin: 0 0 0.25rem;
+}
+
+.trace {
+  margin-bottom: 0;
+  color: #4b5563;
+  font-size: 0.875rem;
+}

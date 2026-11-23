@@ -1,0 +1,10 @@
+name: code101-hardening-exercise
+services:
+  app:
+    build: .
+    image: code101/hardening-demo:1.0.0
+    # TODO 1: make the root filesystem read-only.
+    # TODO 2: give the container an in-memory /tmp (16 MB is enough).
+    # TODO 3: drop all capabilities and set no-new-privileges.
+    ports:
+      - "127.0.0.1:8090:8080"

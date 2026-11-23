@@ -1,0 +1,15 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "check",
+      "cwd": "code",
+      "cmd": "dotnet run --project . -c Release --nologo -- --check",
+      "timeout": 300,
+      "expect_stdout": "Split: 60\nSpan: 60\nSame result: True"
+    }
+  ],
+  "skip_lesson_check": []
+}

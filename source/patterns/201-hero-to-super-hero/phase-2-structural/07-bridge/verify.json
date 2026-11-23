@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- bridge ---\nEmail: Meeting at 10\nEmail: URGENT: Server down\nSMS: Meeting at 10\nSMS: URGENT: Server down"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- bridge ---\nEmail: Meeting at 10\nEmail: URGENT: Server down\nSMS: Meeting at 10\nSMS: URGENT: Server down"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Email: Hello\nPush: Reminder: Pay rent\nEmail: Reminder: Pay rent"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Email: Hello\nPush: Reminder: Pay rent\nEmail: Reminder: Pay rent"
+    }
+  ]
+}

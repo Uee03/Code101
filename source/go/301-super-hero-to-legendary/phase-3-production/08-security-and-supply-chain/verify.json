@@ -1,0 +1,37 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "tidy",
+      "cmd": "go mod tidy",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "expect_stdout": "validate: valid request accepted: {Name:Ada Email:ada@example.com Role:member} (err=<nil>, problems=[])\nvalidate: unknown field rejected: decode: json: unknown field \"admin\"\nvalidate: oversized body rejected: request body too large\nvalidate: invalid values: name: must be 1 to 64 characters without control characters; email: not a valid address; role: must be one of member, admin\njwt: billing -> inventory accepted: subject=billing (err=<nil>)\njwt: same token presented to payments: rejected (wrong audience)\njwt: ten minutes later: rejected (expired)\njwt: forged with another key: rejected (bad signature)\njwt: alg none token: rejected=true\nmtls: with client certificate -> 200 hello billing-service\nmtls: without client certificate -> rejected"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution tidy",
+      "cmd": "go mod tidy",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "billing: accepted\nwrong audience: rejected\nexpired: rejected\nalg none: rejected\nno expiry: rejected"
+    }
+  ]
+}

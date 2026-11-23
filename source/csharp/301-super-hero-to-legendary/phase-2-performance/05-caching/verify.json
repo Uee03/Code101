@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run-memory-only",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "timeout": 240,
+      "expect_contains": [
+        "L2 cache: none (memory only)",
+        "IMemoryCache, 3 sequential calls: 1 load(s)",
+        "IMemoryCache, 5 parallel callers: ",
+        "HybridCache, 5 parallel callers: 1 load(s)",
+        "HybridCache, 2 sequential calls: 1 load(s)",
+        "Price in the database: 1200, price served from cache: 1000",
+        "After RemoveByTagAsync: price 1200, 2 load(s)",
+        "After RemoveAsync: 3 load(s)"
+      ]
+    }
+  ],
+  "skip_lesson_check": []
+}

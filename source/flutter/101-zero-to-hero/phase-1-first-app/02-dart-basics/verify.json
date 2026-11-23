@@ -1,0 +1,21 @@
+{
+  "requires": ["dart"],
+  "steps": [
+    {
+      "name": "run: main.dart",
+      "cwd": "code",
+      "cmd": "dart run main.dart",
+      "timeout": 120,
+      "expect_stdout": "Shop: Bean There in Lisbon\nMotto: Fresh every hour (16 characters)\nOpen now: true\nSubtotal: 7.50\nWith tax: 8.25\nWith 20% tax: 9.00\n2 full boxes, 2 cups left over\nno cups\none cup\n3 cups\nBig order, shop is open\nCup 1 of 3\nCup 2 of 3\nCup 3 of 3\nCups left: 0\nno note\nnull\nNote has 10 characters\nHello, Maria!\nHello, Mia!"
+    },
+    {
+      "name": "solution: main.dart",
+      "cwd": "exercise/solution",
+      "cmd": "dart run main.dart",
+      "timeout": 120,
+      "expect_stdout": "Tip (10%): 8.00\nTip (15%): 12.00\nTable for guest\nTotal with 15% tip: 92.00\nPer person (4): 23.00"
+    }
+  ],
+  "cleanup": [],
+  "skip_lesson_check": []
+}

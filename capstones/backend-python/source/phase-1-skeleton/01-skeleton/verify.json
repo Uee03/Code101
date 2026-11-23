@@ -1,0 +1,62 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "install the four packages into a throwaway folder",
+      "cwd": "code",
+      "cmd": "{python} -m pip install -q --disable-pip-version-check --target .deps -r requirements.txt",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "{python} -c \"import sys; sys.path.insert(0, '.deps'); import uvicorn; uvicorn.run('app.main:app', port=8000)\"",
+      "bg": true,
+      "wait": 3
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 15,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\"}"
+    },
+    {
+      "name": "invalid team gives a 422 problem",
+      "cwd": "code",
+      "cmd": "curl -s -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: application/json\" --data-binary @requests/team-invalid.json",
+      "expect_contains": [
+        "\"status\":422",
+        "\"pointer\":\"/name\"",
+        "\"pointer\":\"/colour\""
+      ]
+    },
+    {
+      "name": "valid team gives 201 with Location and ETag",
+      "cwd": "code",
+      "cmd": "curl -s -i -X POST http://127.0.0.1:8000/v1/teams -H \"Content-Type: application/json\" --data-binary @requests/team-valid.json",
+      "expect_contains": [
+        "201 Created",
+        "\"memberCount\":1"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} problem.py",
+      "expect_stdout": "{\"type\": \"https://code101.example/problems/precondition-failed\", \"title\": \"Precondition failed\", \"status\": 412, \"detail\": \"The task changed since you read it.\", \"instance\": \"/v1/tasks/1\"}\n{\"type\": \"https://code101.example/problems/precondition-required\", \"title\": \"Precondition required\", \"status\": 428, \"detail\": \"The If-Match header is required.\", \"instance\": \"/v1/tasks/1\"}"
+    },
+    {
+      "name": "exercise starter compiles",
+      "cwd": "exercise/starter",
+      "cmd": "{python} -m py_compile problem.py"
+    }
+  ],
+  "skip_lesson_check": [],
+  "exclusive": "tasksteams"
+}

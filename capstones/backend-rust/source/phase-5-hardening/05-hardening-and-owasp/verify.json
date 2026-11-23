@@ -1,0 +1,116 @@
+{
+  "requires": [
+    "docker",
+    "cargo"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "build the image and start Postgres, Keycloak and the API (cold Rust builds are slow)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --build --wait",
+      "timeout": 900
+    },
+    {
+      "name": "security headers and RateLimit headers are on every answer",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py GET /v1/me",
+      "retries": 20,
+      "retry_delay": 1,
+      "expect_exit": 1,
+      "expect_contains": [
+        "HTTP 401",
+        "ratelimit-limit: 30",
+        "x-content-type-options: nosniff",
+        "cache-control: no-store",
+        "content-security-policy: default-src 'none'; frame-ancestors 'none'"
+      ]
+    },
+    {
+      "name": "the CORS preflight allows the Angular origin only",
+      "cwd": "code",
+      "cmd": "{python} scripts/api.py OPTIONS /v1/me -H \"Origin: http://localhost:4200\" -H \"Access-Control-Request-Method: GET\"",
+      "expect_contains": [
+        "HTTP 200",
+        "access-control-allow-origin: http://localhost:4200"
+      ]
+    },
+    {
+      "name": "conformance script: all 18 checks",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_contains": [
+        "PASS  me (alice is admin, RateLimit headers present)",
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  cleanup (team deleted, then 404)",
+        "18 passed, 0 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "expect_stdout": "t= 0 allowed=true remaining=2\nt= 1 allowed=true remaining=1\nt= 2 allowed=true remaining=0\nt= 3 allowed=false remaining=0\nt=59 allowed=false remaining=0\nt=60 allowed=true remaining=2\nt=61 allowed=true remaining=1\nother key: (true, 2)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    },
+    {
+      "name": "remove the image built for this check",
+      "cwd": "code",
+      "cmd": "docker image rm code101/tasks-api-rust:local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/Cargo.lock",
+    "code/.gitignore",
+    "code/.dockerignore",
+    "code/Dockerfile",
+    "code/rustfmt.toml",
+    "code/docker-compose.yml",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/scripts/api.py",
+    "code/scripts/conformance.py",
+    "code/src/error.rs",
+    "code/src/extract.rs",
+    "code/src/http.rs",
+    "code/src/jwks.rs",
+    "code/src/models.rs",
+    "code/src/validation.rs",
+    "code/src/handlers/audit.rs",
+    "code/src/handlers/comments.rs",
+    "code/src/handlers/health.rs",
+    "code/src/handlers/me.rs",
+    "code/src/handlers/members.rs",
+    "code/src/handlers/mod.rs",
+    "code/src/handlers/projects.rs",
+    "code/src/handlers/tasks.rs",
+    "code/src/handlers/teams.rs",
+    "code/src/handlers/users.rs",
+    "code/src/store/audit.rs",
+    "code/src/store/comments.rs",
+    "code/src/store/idempotency.rs",
+    "code/src/store/mod.rs",
+    "code/src/store/page.rs",
+    "code/src/store/projects.rs",
+    "code/src/store/tasks.rs",
+    "code/src/store/teams.rs",
+    "code/src/store/users.rs"
+  ]
+}

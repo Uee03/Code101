@@ -1,0 +1,9 @@
+erDiagram
+  MEMBER ||--o{ LOAN : borrows
+  BOOK ||--o{ LOAN : appears_in
+  LOAN {
+    int id PK
+    int member_id FK
+    int book_id FK
+    string TODO_field
+  }

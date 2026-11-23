@@ -1,0 +1,59 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+#query {
+  font: inherit;
+  padding: 0.4rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+}
+
+.list {
+  max-height: 24rem;
+  overflow: auto;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem 0.5rem 2rem;
+  border: 1px solid #6b7785;
+  border-radius: 0.5rem;
+}
+
+.report {
+  border: 1px solid #6b7785;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #6b7785;
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+}
+
+:focus-visible {
+  outline: 3px solid #0759aa;
+  outline-offset: 2px;
+}

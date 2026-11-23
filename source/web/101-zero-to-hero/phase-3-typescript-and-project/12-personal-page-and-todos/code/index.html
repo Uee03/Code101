@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ada landing page</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="dist/app.js"></script>
+</head>
+<body>
+  <header><h1>Ada's little corner</h1><p>Learner, cook and walker.</p></header>
+  <main>
+    <section aria-labelledby="about-title">
+      <h2 id="about-title">About me</h2>
+      <p>I practise one small skill each day.</p>
+      <a href="https://developer.mozilla.org/">My learning guide</a>
+    </section>
+    <section aria-labelledby="todo-title">
+      <h2 id="todo-title">My tasks</h2>
+      <form id="todo-form">
+        <label for="task">New task</label>
+        <input id="task" name="task" type="text" maxlength="80" required>
+        <button type="submit">Add task</button>
+      </form>
+      <p id="status" role="status">0 tasks</p>
+      <ul id="tasks"></ul>
+    </section>
+  </main>
+  <footer><p>Made while learning Web Foundations.</p></footer>
+</body>
+</html>

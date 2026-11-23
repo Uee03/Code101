@@ -1,0 +1,22 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "skip_lesson_check": [
+    "code/ollama_http.py",
+    "code/textutil.py",
+    "code/db.py",
+    "code/semsearch.py",
+    "code/rag_core.py",
+    "code/rag_pipeline.py",
+    "code/validate.py",
+    "code/guards.py",
+    "code/metrics.py",
+    "code/evaluate.py",
+    "code/requirements.txt",
+    "code/docker-compose.yml",
+    "code/.gitignore",
+    "code/initdb/01-schema.sql"
+  ],
+  "notes": "Written, not run. Static text/source comparison only. No Docker, Postgres, Ollama, pip, HTTP server or program was executed by the author. The skipped files are byte-identical to files in earlier lessons (201.01, 201.03, 201.07, 201.08, 201.09, 301.01, 301.02, 301.03, 301.05). Offline check for a learner: python -m unittest in the code folder (starts a loopback test server on a random port; needs no database or model). The corpus is not shipped: it is the learner's own checkout of capstones/platform."
+}

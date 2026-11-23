@@ -1,0 +1,45 @@
+h1 {
+  color: var(--color-brand);
+}
+
+.status {
+  font-weight: 600;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.filters button {
+  text-transform: capitalize;
+}
+
+.problem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 0.25rem solid var(--color-danger);
+  background: #fdecea;
+}
+
+.problem p {
+  margin: 0;
+}
+
+.problem .icon {
+  color: var(--color-danger);
+}
+
+.tasks {
+  list-style: none;
+  padding: 0;
+}
+
+.empty {
+  color: var(--color-muted);
+}

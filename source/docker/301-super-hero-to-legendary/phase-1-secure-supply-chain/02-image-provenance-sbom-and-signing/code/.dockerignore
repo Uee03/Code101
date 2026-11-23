@@ -1,0 +1,4 @@
+.git
+out
+*.md
+__pycache__

@@ -1,0 +1,23 @@
+{
+  "color": {
+    "$type": "color",
+    "surface": { "$value": "{palette.white}", "$description": "Page background" },
+    "surface-subtle": { "$value": "{palette.gray.50}", "$description": "Cards and panels" },
+    "text": {
+      "default": { "$value": "{palette.gray.900}", "$description": "Body text" },
+      "muted": { "$value": "{palette.gray.700}", "$description": "Secondary text" }
+    },
+    "border": {
+      "default": { "$value": "{palette.gray.300}", "$description": "Dividers and outlines" }
+    },
+    "action": {
+      "background": { "$value": "{palette.blue.600}", "$description": "Primary button background" },
+      "text": { "$value": "{palette.white}", "$description": "Text on the primary button" }
+    },
+    "danger": {
+      "background": { "$value": "{palette.gray.300}", "$description": "Destructive button background (TODO: wrong on purpose)" },
+      "text": { "$value": "{palette.white}", "$description": "Text on the destructive button" }
+    },
+    "focus": { "$value": "{palette.blue.600}", "$description": "Keyboard focus ring" }
+  }
+}

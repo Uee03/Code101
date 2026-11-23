@@ -1,0 +1,42 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label for="task-title">Title</label>
+    <input
+      id="task-title"
+      type="text"
+      formControlName="title"
+      autocomplete="off"
+      [attr.aria-invalid]="title.invalid && title.touched"
+      aria-describedby="task-title-error">
+    @if (title.invalid && title.touched) {
+      <p id="task-title-error" class="error" role="alert">
+        @if (title.hasError('required')) {
+          Enter a title.
+        } @else if (title.hasError('minlength')) {
+          Use at least 3 characters.
+        } @else if (title.hasError('maxlength')) {
+          Use at most 80 characters.
+        }
+      </p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="task-priority">Priority</label>
+    <select id="task-priority" formControlName="priority">
+      @for (option of priorities; track option) {
+        <option [value]="option">{{ option | titlecase }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="task-due">Due date (optional)</label>
+    <input id="task-due" type="date" formControlName="due">
+  </div>
+
+  <button type="submit">
+    <span class="icon icon-plus" aria-hidden="true"></span>
+    Add task
+  </button>
+</form>

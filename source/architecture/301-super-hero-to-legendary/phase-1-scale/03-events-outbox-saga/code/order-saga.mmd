@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    participant O as Orders
+    participant I as Inventory
+    participant P as Payments
+    participant F as Fulfilment
+    O->>I: OrderPlaced
+    alt stock is available
+        I->>P: StockReserved
+        alt payment is captured
+            P->>F: PaymentCaptured
+            F->>O: ShipmentCreated
+            Note over O: order confirmed
+        else payment fails
+            P->>I: PaymentFailed
+            I->>I: release the reserved stock as compensation
+            I->>O: StockReleased
+            Note over O: order cancelled
+        end
+    else stock is not available
+        I->>O: OutOfStock
+        Note over O: order cancelled
+    end

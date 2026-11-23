@@ -1,0 +1,15 @@
+name: code101-hardening-exercise
+services:
+  app:
+    build: .
+    image: code101/hardening-demo:1.0.0
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+      - /var/tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:8090:8080"

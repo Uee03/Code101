@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:43 GMT
+server: uvicorn
+etag: "2"
+content-length: 395
+content-type: application/json
+x-trace-id: 1bd6ed1e0b764c70b5ff646e0187240a
+
+{"id":"e8787266-112f-4a3c-a9b1-9e2bea4b62ec","projectId":"9a000000-0000-4000-8000-000000000001","title":"Review the OpenAPI file","description":"","status":"in_progress","priority":"high","assigneeId":null,"dueDate":"2027-03-15","completedAt":null,"createdBy":"b0b00000-0000-4000-8000-000000000002","version":2,"createdAt":"2026-11-23T08:33:42.843808Z","updatedAt":"2026-11-23T08:33:44.251622Z"}

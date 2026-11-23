@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tasks from a server</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <main class="shell">
+    <h1>Tasks from a server</h1>
+
+    <div class="controls">
+      <label for="scenario">Scenario</label>
+      <select id="scenario">
+        <option value="normal">Normal</option>
+        <option value="slow">Slow (2.5 seconds)</option>
+        <option value="server-error">Server error (500)</option>
+        <option value="offline">Network error</option>
+        <option value="bad-data">Bad data</option>
+        <option value="stalled">Stalled (times out after 8 seconds)</option>
+      </select>
+      <button id="load" class="button" type="button">Load tasks</button>
+      <button id="cancel" class="button button--ghost" type="button" hidden>Cancel</button>
+    </div>
+
+    <p id="status" role="status">Nothing loaded yet.</p>
+
+    <div id="error" class="panel" role="alert" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <p id="error-text"></p>
+      <button id="retry" class="button" type="button">Try again</button>
+    </div>
+
+    <ul id="tasks" class="tasks"></ul>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

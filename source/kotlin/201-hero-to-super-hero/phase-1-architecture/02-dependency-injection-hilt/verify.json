@@ -1,0 +1,47 @@
+{
+  "requires": [
+    "java"
+  ],
+  "note": "Android Studio creates gradlew, gradlew.bat and gradle-wrapper.jar for learners. Before a maintainer run, copy those three files from capstones/mobile-kotlin/source/phase-1-setup/01-setup/code into code/ and make sure ANDROID_HOME points to an SDK with the platform used by compileSdk. Nothing in this pack has been run yet.",
+  "steps": [
+    {
+      "name": "overlay exercise solution",
+      "cwd": "code",
+      "cmd": "xcopy ..\\exercise\\solution\\app app /E /I /Y"
+    },
+    {
+      "name": "assemble debug",
+      "cwd": "code",
+      "cmd": "gradlew.bat assembleDebug --console=plain",
+      "timeout": 1800,
+      "expect_contains": [
+        "BUILD SUCCESSFUL"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "stop wrapper Gradle daemons",
+      "cwd": "code",
+      "cmd": "gradlew.bat --stop",
+      "timeout": 180
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore",
+    "code/gradle.properties",
+    "code/settings.gradle.kts",
+    "code/gradle/wrapper/gradle-wrapper.properties",
+    "code/app/src/main/AndroidManifest.xml",
+    "code/app/src/main/res/values/strings.xml",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/theme/Theme.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/domain/model/Models.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/domain/repository/TasksRepository.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/common/UiState.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/components/Components.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/navigation/Routes.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/teams/TeamsScreen.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/projects/ProjectsScreen.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/tasks/TasksScreen.kt"
+  ]
+}

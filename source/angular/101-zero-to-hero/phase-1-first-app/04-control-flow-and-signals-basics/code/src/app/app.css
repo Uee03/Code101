@@ -1,0 +1,42 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #1d6fb8;
+}
+
+.status {
+  font-weight: 600;
+}
+
+button {
+  margin-right: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  text-transform: capitalize;
+}
+
+button.active {
+  background: #1d6fb8;
+  color: #ffffff;
+}
+
+.tasks {
+  list-style: none;
+  padding: 0;
+}
+
+.tasks li {
+  padding: 0.5rem 0;
+}
+
+.tasks li.done {
+  color: #4b5563;
+  text-decoration: line-through;
+}
+
+.empty,
+.hint {
+  color: #4b5563;
+}

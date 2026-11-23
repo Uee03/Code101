@@ -1,0 +1,14 @@
+<div class="problem" role="alert">
+  <h3>{{ problem().title }} ({{ problem().status }})</h3>
+  <p>{{ problem().detail }}</p>
+  @if (problem().errors; as errors) {
+    <ul>
+      @for (error of errors; track error.pointer) {
+        <li>Field <strong>{{ field(error.pointer) }}</strong>: {{ error.detail }}</li>
+      }
+    </ul>
+  }
+  @if (problem().traceId; as trace) {
+    <p class="trace">Support code: {{ trace }}</p>
+  }
+</div>

@@ -1,0 +1,15 @@
+sequenceDiagram
+    autonumber
+    participant A as Backend API
+    participant K as Cache
+    participant D as Database
+    A->>K: get team T1
+    alt cache hit
+        K-->>A: stored copy
+    else cache miss
+        K-->>A: nothing found
+        A->>D: read team T1
+        D-->>A: current row
+        A->>K: store a copy with a time to live
+    end
+    Note over A,D: On a write the API changes the database first, then removes the cached copy

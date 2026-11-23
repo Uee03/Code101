@@ -1,0 +1,1 @@
+{"requires":["python"],"steps":[{"name":"async demo","cwd":"code","cmd":"{python} main.py","expect_stdout":"['note-2', 'note-1', 'note-3']"},{"name":"exercise solution","cwd":"exercise/solution","cmd":"{python} exercise.py","expect_stdout":"[6, 2]"}]}

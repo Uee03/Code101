@@ -1,0 +1,69 @@
+{
+  "requires": [
+    "dotnet",
+    "curl"
+  ],
+  "steps": [
+    {
+      "name": "start-api",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --urls http://localhost:5061",
+      "bg": true,
+      "wait": 10
+    },
+    {
+      "name": "create-ok",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Content-Type: application/json\" -d @good.json http://localhost:5061/notes",
+      "retries": 30,
+      "retry_delay": 1,
+      "expect_stdout": "{\"id\":1,\"title\":\"Buy milk\",\"body\":\"2 litres\"}"
+    },
+    {
+      "name": "create-duplicate",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Content-Type: application/json\" -d @good.json http://localhost:5061/notes",
+      "expect_contains": [
+        "\"code\":\"note.duplicate_title\"",
+        "\"status\":409"
+      ]
+    },
+    {
+      "name": "create-invalid",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Content-Type: application/json\" -d @bad.json http://localhost:5061/notes",
+      "expect_contains": [
+        "\"errors\":{\"Title\":[\"Title is required.\"]}",
+        "\"status\":400"
+      ]
+    },
+    {
+      "name": "get-missing",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5061/notes/42",
+      "expect_contains": [
+        "\"code\":\"note.not_found\"",
+        "\"status\":404"
+      ]
+    },
+    {
+      "name": "boom",
+      "cwd": "code",
+      "cmd": "curl -s http://localhost:5061/boom",
+      "expect_contains": [
+        "\"title\":\"An unexpected error occurred.\"",
+        "\"status\":500"
+      ]
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Value is 40\nnumber.missing"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json"
+  ]
+}

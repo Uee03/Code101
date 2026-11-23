@@ -1,0 +1,52 @@
+{
+  "requires": [
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile code",
+      "cwd": "code",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "Created \"Write lesson\" (#1)\nCreated \"Review lesson\" (#2)\nMoved #1 to doing\nMoved #2 to done\nDeleted #2\nTo do: 0\nIn progress: 1\nDone: 0\n[{\"id\":1,\"title\":\"Write lesson\"}]\nIn progress Unknown\nWrite lesson 04 | draft\nno note\na; b\nNot a task status: blocked"
+    },
+    {
+      "name": "overlay solution",
+      "cmd": "{python} -c \"import shutil; ig=shutil.ignore_patterns('node_modules','dist'); shutil.copytree('code','sol',ignore=ig); shutil.copytree('exercise/solution','sol',dirs_exist_ok=True)\"",
+      "expect_stdout": ""
+    },
+    {
+      "name": "install solution",
+      "cwd": "sol",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile solution",
+      "cwd": "sol",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run solution",
+      "cwd": "sol",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "{\"todo\":[],\"doing\":[\"Write lesson\"],\"done\":[\"Review lesson\"]}\nMoved events: 3"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore"
+  ]
+}

@@ -1,0 +1,22 @@
+
+> tasks-web-react@1.0.0 smoke
+> tsx scripts/smoke.ts
+
+foreign host: no bearer header (local transport stand-in)
+health: ok
+me: alice (admin)
+without token: 401
+teams: 2
+tasks: 5; nextCursor: null
+Idempotent-Replayed: true
+412 precondition-failed
+The task changed since you read it (current version 2).
+404 not-found
+The task was not found.
+422 validation-error; pointer: /title
+One or more fields are invalid.
+canned 429 Retry-After: 1
+304 kept cached task
+complete: done; completedAt: present
+PKCE: S256; login page: 200; user store: memory
+expiry event: fired without automaticSilentRenew

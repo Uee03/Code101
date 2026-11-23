@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layout lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-header__title">Layout lab: components that adapt to their space</h1>
+  </header>
+
+  <div class="page">
+    <div class="layout">
+      <main>
+        <h2>Featured</h2>
+        <div class="slot">
+          <article class="product">
+            <div class="product__media" aria-hidden="true"></div>
+            <div class="product__body">
+              <h3>Trail lamp</h3>
+              <p>The same component in a wide container: the picture sits beside the text.</p>
+              <p class="product__meta"><span>Price: 29</span> <span>In stock</span></p>
+            </div>
+          </article>
+        </div>
+      </main>
+
+      <aside>
+        <h2>Also popular</h2>
+        <div class="slot">
+          <article class="product">
+            <div class="product__media" aria-hidden="true"></div>
+            <div class="product__body">
+              <h3>Camp stove</h3>
+              <p>The same markup in a narrow container: the picture stacks above the text.</p>
+              <p class="product__meta"><span>Price: 45</span> <span>Low stock</span></p>
+            </div>
+          </article>
+        </div>
+      </aside>
+    </div>
+
+    <section>
+      <h2>Logical properties</h2>
+      <div class="note-grid">
+        <div class="note" dir="ltr">
+          <span class="note__tag">ltr</span>
+          <p class="note__title">Left to right</p>
+          <p>The accent bar is on the start edge and the tag is on the end edge.</p>
+        </div>
+        <div class="note" dir="rtl" lang="ar">
+          <span class="note__tag">rtl</span>
+          <p class="note__title">بطاقة المنتج</p>
+          <p>هذا مثال على تخطيط من اليمين إلى اليسار.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

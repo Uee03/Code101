@@ -1,0 +1,27 @@
+<section aria-labelledby="explorer-heading">
+  <h1 id="explorer-heading">Call the API with generated functions</h1>
+  <p>Start the mock API in a second terminal (<code>npm run mock</code>), then press a button.</p>
+
+  <ul class="probes">
+    @for (probe of probes; track probe.label) {
+      <li><button type="button" (click)="run(probe)">{{ probe.label }}</button></li>
+    }
+  </ul>
+
+  <div role="status">
+    @switch (outcome().kind) {
+      @case ('loading') {
+        <p>Waiting for the answer...</p>
+      }
+    }
+  </div>
+
+  @let current = outcome();
+  @if (current.kind === 'ok') {
+    <p>{{ current.label }}:</p>
+    <pre>{{ current.data }}</pre>
+  } @else if (current.kind === 'problem') {
+    <p>{{ current.label }}:</p>
+    <app-problem-view [problem]="current.problem" />
+  }
+</section>

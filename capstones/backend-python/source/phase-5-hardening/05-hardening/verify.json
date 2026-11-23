@@ -1,0 +1,231 @@
+{
+  "requires": [
+    "python",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env, build the image and start Postgres, Keycloak and the hardened API",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--build','--wait']))\"",
+      "timeout": 900,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "wait until the API answers",
+      "cwd": "code",
+      "cmd": "curl -s -f http://127.0.0.1:8000/health",
+      "retries": 20,
+      "retry_delay": 1
+    },
+    {
+      "name": "conformance: all 18 checks",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "retries": 2,
+      "retry_delay": 5,
+      "expect_contains": [
+        "PASS  me (alice is admin, RateLimit headers present)",
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  403 for member on admin route (bob (member) gets 403 on the audit log and on creating a team)",
+        "PASS  audit log (task create and update are in the audit trail)",
+        "18 passed, 0 failed"
+      ]
+    },
+    {
+      "name": "rate-limit and security headers",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py GET /v1/me --user alice",
+      "expect_contains": [
+        "ratelimit-limit: 100",
+        "x-content-type-options: nosniff",
+        "cache-control: no-store",
+        "content-security-policy: default-src 'none'; frame-ancestors 'none'"
+      ]
+    },
+    {
+      "name": "the interactive docs are off",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py GET /docs",
+      "expect_contains": [
+        "\"detail\":\"No such route.\""
+      ]
+    },
+    {
+      "name": "CORS preflight for the Angular origin",
+      "cwd": "code",
+      "cmd": "curl -s -i -X OPTIONS http://127.0.0.1:8000/v1/teams -H \"Origin: http://localhost:4200\" -H \"Access-Control-Request-Method: POST\" -H \"Access-Control-Request-Headers: authorization,content-type\"",
+      "expect_contains": [
+        "access-control-allow-origin: http://localhost:4200"
+      ]
+    },
+    {
+      "name": "latency of 25 reads",
+      "cwd": "code",
+      "cmd": "{python} scripts/measure.py /v1/projects/9a000000-0000-4000-8000-000000000001/tasks --user bob --count 25",
+      "expect_contains": [
+        "25 requests to /v1/projects/9a000000-0000-4000-8000-000000000001/tasks as bob: median"
+      ]
+    },
+    {
+      "name": "make a 1.2 MB file",
+      "cwd": "code",
+      "cmd": "{python} -c \"open('big.json', 'w').write('x' * 1200000)\""
+    },
+    {
+      "name": "a body above the limit is refused with 413",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py POST /v1/teams --user alice --body big.json",
+      "expect_contains": [
+        "\"title\":\"Payload too large\"",
+        "The request body may not be larger than 1048576 bytes."
+      ]
+    },
+    {
+      "name": "35 anonymous requests end in 429",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys; lines = [subprocess.run([sys.executable, 'scripts/call.py', 'GET', '/v1/me'], capture_output=True, text=True).stdout.splitlines()[0] for _ in range(35)]; print(lines[0]); print(lines[-1])\"",
+      "expect_contains": [
+        "HTTP/1.1 401 Unauthorized",
+        "HTTP/1.1 429 Too Many Requests"
+      ]
+    },
+    {
+      "name": "the root file system is read-only",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T api sh -c \"touch /srv/test.txt 2>&1\"",
+      "expect_exit": 1,
+      "expect_contains": [
+        "touch: cannot touch '/srv/test.txt': Read-only file system"
+      ]
+    },
+    {
+      "name": "container restrictions",
+      "cwd": "code",
+      "cmd": "docker inspect {project}-api-1 --format \"read-only: {{.HostConfig.ReadonlyRootfs}}, cap-drop: {{.HostConfig.CapDrop}}, security-opt: {{.HostConfig.SecurityOpt}}, memory: {{.HostConfig.Memory}}, pids: {{.HostConfig.PidsLimit}}\"",
+      "expect_stdout": "read-only: true, cap-drop: [ALL], security-opt: [no-new-privileges:true], memory: 268435456, pids: 200"
+    },
+    {
+      "name": "refusals are logged as security events",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} logs api --no-log-prefix --no-color",
+      "expect_contains": [
+        "\"logger\": \"tasksteams.security\", \"message\": \"request refused\""
+      ]
+    },
+    {
+      "name": "backup inside the database container",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db pg_dump -U tasks_admin --no-owner -f /tmp/backup.sql tasksteams"
+    },
+    {
+      "name": "copy the backup out",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} cp db:/tmp/backup.sql backup.sql"
+    },
+    {
+      "name": "restore into a new database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db createdb -U tasks_admin restore_check"
+    },
+    {
+      "name": "load the dump",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -U tasks_admin -d restore_check -v ON_ERROR_STOP=1 -q -o /dev/null -f /tmp/backup.sql"
+    },
+    {
+      "name": "the restored data is there",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -U tasks_admin -d restore_check -tAc \"SELECT (SELECT count(*) FROM users) || ' users, ' || (SELECT count(*) FROM tasks) || ' tasks'\"",
+      "expect_stdout": "3 users, 8 tasks"
+    },
+    {
+      "name": "remove the practice database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db dropdb -U tasks_admin restore_check"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} window.py",
+      "expect_stdout": "first request:   allowed=True remaining=99 reset=60\nlast allowed:    allowed=True remaining=0 reset=30\nover the limit:  allowed=False remaining=0 reset=30\nnew window:      allowed=True remaining=99 reset=60"
+    },
+    {
+      "name": "exercise starter compiles",
+      "cwd": "exercise/starter",
+      "cmd": "{python} -m py_compile window.py"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    },
+    {
+      "name": "remove the image if it is still there",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess; subprocess.call(['docker', 'image', 'rm', '-f', '{project}-api'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\""
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.dockerignore",
+    "code/.gitignore",
+    "code/Dockerfile",
+    "code/app/__init__.py",
+    "code/app/access.py",
+    "code/app/db.py",
+    "code/app/db_errors.py",
+    "code/app/http.py",
+    "code/app/idempotency.py",
+    "code/app/logging_config.py",
+    "code/app/pagination.py",
+    "code/app/repositories/__init__.py",
+    "code/app/repositories/audit.py",
+    "code/app/repositories/comments.py",
+    "code/app/repositories/members.py",
+    "code/app/repositories/projects.py",
+    "code/app/repositories/sql.py",
+    "code/app/repositories/tasks.py",
+    "code/app/repositories/teams.py",
+    "code/app/repositories/users.py",
+    "code/app/routers/__init__.py",
+    "code/app/routers/audit.py",
+    "code/app/routers/comments.py",
+    "code/app/routers/health.py",
+    "code/app/routers/me.py",
+    "code/app/routers/members.py",
+    "code/app/routers/projects.py",
+    "code/app/routers/tasks.py",
+    "code/app/routers/teams.py",
+    "code/app/routers/users.py",
+    "code/app/schemas.py",
+    "code/app/tokens.py",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/docker-compose.yml",
+    "code/keycloak/realm-tasksteams.json",
+    "code/pyproject.toml",
+    "code/requests/reassign-outsider.json",
+    "code/requests/task-cancel.json",
+    "code/requests/task-create-other.json",
+    "code/requests/task-create.json",
+    "code/requests/task-patch.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-patch.json",
+    "code/requests/team-secret.json",
+    "code/requests/team-valid.json",
+    "code/requirements.txt",
+    "code/scripts/call.py",
+    "code/scripts/conformance.py",
+    "code/scripts/forge_token.py",
+    "code/scripts/token_rules.py"
+  ],
+  "exclusive": "tasksteams"
+}

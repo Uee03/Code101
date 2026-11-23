@@ -1,0 +1,27 @@
+DROP SCHEMA IF EXISTS app CASCADE;
+CREATE SCHEMA app;
+CREATE ROLE db201_writers NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;
+CREATE ROLE db201_ava NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;
+CREATE ROLE db201_ben NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;
+GRANT db201_writers TO db201_ava, db201_ben;
+REVOKE ALL ON DATABASE code101 FROM PUBLIC;
+GRANT CONNECT ON DATABASE code101 TO db201_ava, db201_ben;
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA app FROM PUBLIC;
+CREATE TABLE app.tasks (
+    task_id bigint GENERATED ALWAYS AS IDENTITY,
+    owner_name text NOT NULL,
+    title text NOT NULL,
+    CONSTRAINT pk_tasks PRIMARY KEY (task_id)
+);
+INSERT INTO app.tasks (owner_name, title) VALUES
+    ('db201_ava', 'Pack'), ('db201_ava', 'Ship'), ('db201_ben', 'Restock');
+CREATE INDEX ix_tasks_owner_name ON app.tasks (owner_name);
+GRANT USAGE ON SCHEMA app TO db201_writers;
+GRANT SELECT, INSERT ON app.tasks TO db201_writers;
+GRANT UPDATE (title) ON app.tasks TO db201_writers;
+GRANT USAGE ON SEQUENCE app.tasks_task_id_seq TO db201_writers;
+ALTER TABLE app.tasks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tasks_own_rows ON app.tasks TO db201_writers
+    USING (owner_name = CURRENT_USER)
+    WITH CHECK (owner_name = CURRENT_USER);

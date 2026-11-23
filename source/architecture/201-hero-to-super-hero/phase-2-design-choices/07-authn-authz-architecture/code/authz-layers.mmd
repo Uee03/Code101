@@ -1,0 +1,19 @@
+flowchart TD
+    R["Request arrives"]
+    D1{"1 Is the token valid?"}
+    D2{"2 Does the token carry the scope the operation needs?"}
+    D3{"3 Does the caller hold the role the operation needs?"}
+    D4{"4 Is the caller a member of the team that owns the object?"}
+    OK["5 Run the operation as the limited database role"]
+    E401["401 Unauthorized"]
+    E403["403 Forbidden"]
+    E404["404 Not Found, the object stays hidden"]
+    R --> D1
+    D1 -->|"no"| E401
+    D1 -->|"yes"| D2
+    D2 -->|"no"| E403
+    D2 -->|"yes"| D3
+    D3 -->|"no"| E403
+    D3 -->|"yes"| D4
+    D4 -->|"no"| E404
+    D4 -->|"yes"| OK

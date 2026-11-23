@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "completed: Write ADR is done=True\narchitecture check: 5 files, 0 violations\nbad snippet: domain must not depend on adapters (line 1)"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "completed: Write ADR is done=True\narchitecture check: 5 files, 0 violations\nbad snippet: domain must not depend on adapters (line 1)"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "domain imports application: forbidden (application)\napplication imports domain: ok\napplication imports adapters: forbidden (adapters)\nadapters imports application, domain: ok"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "domain imports application: forbidden (application)\napplication imports domain: ok\napplication imports adapters: forbidden (adapters)\nadapters imports application, domain: ok"
+    }
+  ]
+}

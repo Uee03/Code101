@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c expense.c",
+      "cwd": "code"
+    },
+    {
+      "name": "first-run",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "stdin": "add food 12.50\nadd transport 3\nadd rent 800.1\nlist\ntotal\nquit\n",
+      "expect_stdout": "Expense tracker. 0 expense(s) loaded. Type help for commands.\n> Added food 12.50\n> Added transport 3.00\n> Added rent 800.10\n> 1. food 12.50\n2. transport 3.00\n3. rent 800.10\n> Total: 815.60\n> Saved 3 expense(s) to expenses.csv."
+    },
+    {
+      "name": "second-run-loads-saved-file",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "stdin": "list\nquit\n",
+      "expect_stdout": "Expense tracker. 3 expense(s) loaded. Type help for commands.\n> 1. food 12.50\n2. transport 3.00\n3. rent 800.10\n> Saved 3 expense(s) to expenses.csv."
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c expense.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "stdin": "add food 12.50\nadd rent 800.10\ncount\nquit\n",
+      "expect_stdout": "Expense tracker. 0 expense(s) loaded. Type help for commands.\n> Added food 12.50\n> Added rent 800.10\n> Expenses: 2\n> Saved 2 expense(s) to expenses.csv."
+    }
+  ]
+}

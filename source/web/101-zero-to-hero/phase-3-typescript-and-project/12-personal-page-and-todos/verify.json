@@ -1,0 +1,77 @@
+{
+  "requires": [
+    "python",
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile code",
+      "cwd": "code",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "0 tasks"
+    },
+    {
+      "name": "serve code",
+      "cwd": "code",
+      "cmd": "{python} -m http.server 18112 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe code",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18112/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>Ada landing page</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    },
+    {
+      "name": "install exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "0 tasks"
+    },
+    {
+      "name": "serve exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -m http.server 18212 --bind 127.0.0.1",
+      "bg": true,
+      "wait": 1
+    },
+    {
+      "name": "probe exercise/solution",
+      "cmd": "{python} -c \"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:18212/index.html'); s=r.read().decode(); assert r.status == 200 and '<title>Ada landing page</title>' in s\"",
+      "retries": 8,
+      "retry_delay": 1,
+      "expect_stdout": ""
+    }
+  ],
+  "skip_lesson_check": [
+    "code/package-lock.json",
+    "code/tsconfig.json"
+  ]
+}

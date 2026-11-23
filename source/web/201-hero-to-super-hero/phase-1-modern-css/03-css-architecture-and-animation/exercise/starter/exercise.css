@@ -1,0 +1,14 @@
+/* Exercise 03. Link this file after styles.css in index.html. */
+
+/* TODO 1 (guided): this rule is outside every layer, so it beats the whole stylesheet.
+   Wrap it in @layer components { ... } so it takes part in the layer order. */
+.btn--danger {
+  background: light-dark(#b91c1c, #fca5a5);
+  color: light-dark(#ffffff, #1a0505);
+  border-color: transparent;
+}
+
+/* TODO 2 (change): add a .toast--error modifier that sets --toast-color, inside the same layer. */
+
+/* TODO 3 (stretch): decide how a toast could animate out when dismissed, without ever
+   waiting for an animation that reduced-motion visitors do not get. Write your plan here. */

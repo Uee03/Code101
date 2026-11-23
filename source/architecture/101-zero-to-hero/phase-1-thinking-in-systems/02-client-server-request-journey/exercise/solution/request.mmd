@@ -1,0 +1,8 @@
+sequenceDiagram
+  actor Visitor
+  participant Browser
+  participant Server
+  Visitor->>Browser: Open opening hours
+  Browser->>Server: GET /hours
+  Server-->>Browser: 200 OK and hours page
+  Browser-->>Visitor: Show opening hours

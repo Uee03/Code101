@@ -1,0 +1,24 @@
+name: code101-hardening
+services:
+  app:
+    build: .
+    image: code101/hardening-demo:1.0.0
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 64
+    mem_limit: 128m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:8090:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

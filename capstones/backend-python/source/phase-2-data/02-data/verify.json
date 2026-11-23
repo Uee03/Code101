@@ -1,0 +1,108 @@
+{
+  "requires": [
+    "python",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env and start temporary Postgres and Keycloak",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 420,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "install the packages into a throwaway folder",
+      "cwd": "code",
+      "cmd": "{python} -m pip install -q --disable-pip-version-check --target .deps -r requirements.txt",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "start the API on the host",
+      "cwd": "code",
+      "cmd": "{python} -c \"import sys; sys.path.insert(0, '.deps'); import uvicorn; uvicorn.run('app.main:app', port=8000)\"",
+      "bg": true,
+      "wait": 4
+    },
+    {
+      "name": "health reports the database",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 20,
+      "retry_delay": 1,
+      "expect_stdout": "{\"status\":\"ok\",\"version\":\"1.0.0\",\"database\":\"up\"}"
+    },
+    {
+      "name": "me as bob",
+      "cwd": "code",
+      "cmd": "{python} scripts/call.py GET /v1/me --user bob",
+      "retries": 3,
+      "retry_delay": 3,
+      "expect_contains": [
+        "HTTP/1.1 200 OK",
+        "\"username\":\"bob\"",
+        "\"roles\":[\"member\"]"
+      ]
+    },
+    {
+      "name": "conformance: 17 pass, only the RateLimit headers of chapter 05 are missing",
+      "cwd": "code",
+      "cmd": "{python} scripts/conformance.py",
+      "expect_exit": 1,
+      "retries": 2,
+      "retry_delay": 5,
+      "expect_contains": [
+        "PASS  health (200, status ok, no token needed)",
+        "FAIL  me: header RateLimit-Limit missing or not a number",
+        "PASS  create task with Idempotency-Key (created once, replay returned the same task, other body gave 422)",
+        "PASS  stale If-Match gives 412 (stale If-Match gave 412, missing If-Match gave 428)",
+        "PASS  cursor pagination (2 + 1 tasks, no overlap, last page has nextCursor null)",
+        "PASS  403 for member on admin route (bob (member) gets 403 on the audit log and on creating a team)",
+        "PASS  audit log (task create and update are in the audit trail)",
+        "17 passed, 1 failed"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} cursor.py",
+      "expect_stdout": "cursor: WyIyMDI2LTExLTIzVDA4OjAwOjAwKzAwOjAwIiwiYTExY2UwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAxIl0\nround trip: ['2026-11-23T08:00:00+00:00', 'a11ce000-0000-4000-8000-000000000001']\nrejected: abc\nrejected: e30"
+    },
+    {
+      "name": "exercise starter compiles",
+      "cwd": "exercise/starter",
+      "cmd": "{python} -m py_compile cursor.py"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore",
+    "code/app/__init__.py",
+    "code/app/errors.py",
+    "code/app/logging_config.py",
+    "code/app/middleware.py",
+    "code/app/routers/__init__.py",
+    "code/app/schemas.py",
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-valid.json",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

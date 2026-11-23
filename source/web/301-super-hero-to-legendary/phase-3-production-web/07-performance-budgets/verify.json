@@ -1,0 +1,16 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "typecheck code", "cwd": "code", "cmd": "npx tsc --noEmit", "expect_stdout": "" },
+    { "name": "build code", "cwd": "code", "cmd": "npx vite build", "timeout": 300 },
+    { "name": "budget code", "cwd": "code", "cmd": "node scripts/check-budget.mjs", "expect_contains": ["Budget OK"] },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "typecheck solution", "cwd": "work", "cmd": "npx tsc --noEmit", "expect_stdout": "" },
+    { "name": "build solution", "cwd": "work", "cmd": "npx vite build", "timeout": 300 }
+  ]
+}

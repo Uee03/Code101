@@ -1,0 +1,29 @@
+<h1>Tasks</h1>
+
+<app-new-task-reactive (added)="store.add($event)" />
+
+@if (store.remaining() === 0) {
+  <p class="status">All tasks are done.</p>
+} @else if (store.remaining() === 1) {
+  <p class="status">One task left.</p>
+} @else {
+  <p class="status">{{ store.remaining() }} tasks left.</p>
+}
+
+<div role="group" aria-label="Filter tasks">
+  @for (option of filters; track option) {
+    <button type="button" [class.active]="filter() === option" [attr.aria-pressed]="filter() === option" (click)="setFilter(option)">
+      {{ option }}
+    </button>
+  }
+</div>
+
+<ul class="tasks">
+  @for (task of visibleTasks(); track task.id; let i = $index) {
+    <li app-task-item [task]="task" [position]="i + 1" (toggled)="store.toggle($event)" (removed)="store.remove($event)"></li>
+  } @empty {
+    <li class="empty">No tasks in this view.</li>
+  }
+</ul>
+
+<p class="hint">This list is shared through the task store, so it survives navigation.</p>

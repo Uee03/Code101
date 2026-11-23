@@ -1,0 +1,36 @@
+name: contract
+
+on:
+  pull_request:
+    paths:
+      - 'openapi/**'
+      - 'src/api/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  generated-types-are-current:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26.13.1'
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: Regenerate the types from the contract
+        run: npm run generate
+
+      - name: Fail if the committed types are out of date
+        run: git diff --exit-code -- src/api/schema.d.ts
+
+      - name: Type-check the hand-written schemas against the generated types
+        run: npx tsc --noEmit

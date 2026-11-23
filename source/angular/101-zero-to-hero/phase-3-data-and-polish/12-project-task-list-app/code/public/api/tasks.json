@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Install Node", "done": true, "priority": "normal" },
+  { "id": 2, "title": "Create the app", "done": true, "priority": "normal" },
+  { "id": 3, "title": "Learn control flow", "done": false, "priority": "high", "due": "2026-12-01" },
+  { "id": 4, "title": "Build the task list project", "done": false, "priority": "normal", "due": "2026-12-15" }
+]

@@ -1,0 +1,99 @@
+<h1 i18n="@@new.heading">New task</h1>
+
+@if (issues().length > 0) {
+  <div #summary class="summary" role="group" tabindex="-1" aria-labelledby="summary-heading">
+    <h2 id="summary-heading" i18n="@@new.summary.heading">Please fix these problems</h2>
+    <ul>
+      @for (issue of issues(); track issue.field) {
+        <li>
+          <button type="button" class="link" (click)="focusField(issue.field)">{{ issue.label }}: {{ issue.text }}</button>
+        </li>
+      }
+    </ul>
+  </div>
+}
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate [attr.aria-busy]="status() === 'PENDING'">
+  <div class="field">
+    <label for="title" i18n="@@new.title.label">Title</label>
+    <input
+      id="title"
+      type="text"
+      formControlName="title"
+      autocomplete="off"
+      aria-describedby="title-hint title-errors"
+      [attr.aria-invalid]="title.invalid && title.touched ? 'true' : null"
+    />
+    <p id="title-hint" class="hint" i18n="@@new.title.hint">Required. Up to 200 characters, without &lt; or &gt;.</p>
+    <div id="title-errors" class="errors">
+      @if ((title.touched || title.dirty) && message(title); as text) {
+        <p>{{ text }}</p>
+      }
+      @if (title.pending) {
+        <p role="status" class="hint" i18n="@@new.title.checking">Checking whether the title is free...</p>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="description" i18n="@@new.description.label">Description (optional)</label>
+    <textarea
+      id="description"
+      rows="3"
+      formControlName="description"
+      aria-describedby="description-errors"
+      [attr.aria-invalid]="description.invalid && description.touched ? 'true' : null"
+    ></textarea>
+    <div id="description-errors" class="errors">
+      @if (description.touched && message(description); as text) {
+        <p>{{ text }}</p>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="priority" i18n="@@new.priority.label">Priority</label>
+    <select id="priority" formControlName="priority">
+      @for (priority of priorities; track priority) {
+        <option [value]="priority">{{ priority }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="dueDate" i18n="@@new.due.label">Due date (optional)</label>
+    <input
+      id="dueDate"
+      type="date"
+      formControlName="dueDate"
+      aria-describedby="dueDate-errors"
+      [attr.aria-invalid]="dueDate.invalid && dueDate.touched ? 'true' : null"
+    />
+    <div id="dueDate-errors" class="errors">
+      @if (dueDate.touched && message(dueDate); as text) {
+        <p>{{ text }}</p>
+      }
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="saving()">
+    @if (saving()) {
+      <span i18n="@@new.saving">Saving...</span>
+    } @else {
+      <span i18n="@@new.submit">Create task</span>
+    }
+  </button>
+</form>
+
+@if (problem(); as current) {
+  <app-problem-view [problem]="current" />
+}
+
+@if (created().length > 0) {
+  <h2 i18n="@@new.created.heading">Created in this session</h2>
+  <ul>
+    @for (task of created(); track task.id) {
+      <li>{{ task.title }} ({{ task.priority }}, version {{ task.version }})</li>
+    }
+  </ul>
+}

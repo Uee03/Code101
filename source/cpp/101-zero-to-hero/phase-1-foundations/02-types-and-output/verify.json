@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/types",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "Item: Sourdough loaf\nQuantity: 10\nPrice: 4.5\nIn stock: 1\nIn stock (words): true\nGrade: A\nTotal value: 45.00"
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/types",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "Pizzas: 3\nSlices: 24\nCost: 28.50"
+    }
+  ],
+  "skip_lesson_check": []
+}

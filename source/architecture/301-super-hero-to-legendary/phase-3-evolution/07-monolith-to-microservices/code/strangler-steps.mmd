@@ -1,0 +1,19 @@
+flowchart TD
+    S1["1 Find a seam: a part with a clear interface and its own data"]
+    S2["2 Put a facade in front that can route by path"]
+    S3["3 Build the new part behind the facade and send it copies of traffic"]
+    S4["4 Compare the old and new answers and fix the differences"]
+    S5["5 Route a small share of real traffic to the new part"]
+    S6{"6 Healthy for the agreed observation period?"}
+    S7["7 Route all traffic to the new part and keep the old path ready to switch back"]
+    S8["8 Remove the old code and data after the agreed waiting period"]
+    S9["Switch the traffic back and fix the new part"]
+    S1 --> S2
+    S2 --> S3
+    S3 --> S4
+    S4 --> S5
+    S5 --> S6
+    S6 -->|"yes"| S7
+    S6 -->|"no"| S9
+    S9 --> S3
+    S7 --> S8

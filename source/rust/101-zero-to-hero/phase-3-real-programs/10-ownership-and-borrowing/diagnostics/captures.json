@@ -1,0 +1,32 @@
+{
+  "run": {
+    "stdout": "Reading: Rust stories\nReader: Rust stories [read]\nBackup: Rust stories\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Book: Garden guide [library]\nBackup: Garden guide\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Backup: Garden guide\n",
+    "stderr": "warning: variable does not need to be mutable\n  --> src\\main.rs:10:9\n   |\n10 |     let mut book = String::from(\"Garden guide\");\n   |         ----^^^^\n   |         |\n   |         help: remove this `mut`\n   |\n   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default\n\nwarning: function `stamp` is never used\n --> src\\main.rs:1:4\n  |\n1 | fn stamp(book: &mut String) {\n  |    ^^^^^\n  |\n  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: function `show` is never used\n --> src\\main.rs:5:4\n  |\n5 | fn show(book: &str) {\n  |    ^^^^\n\n",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0382]: borrow of moved value: `book`\n --> src\\main.rs:4:16\n  |\n2 |     let book = String::from(\"Rust stories\");\n  |         ---- move occurs because `book` has type `String`, which does not implement the `Copy` trait\n3 |     let reader = book;\n  |                  ---- value moved here\n4 |     println!(\"{book}\");\n  |                ^^^^ value borrowed here after move\n  |\nhelp: consider cloning the value if the performance cost is acceptable\n  |\n3 |     let reader = book.clone();\n  |                      ++++++++\n\nFor more information about this error, try `rustc --explain E0382`.\nerror: could not compile `ownership_and_borrowing` (bin \"ownership_and_borrowing\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "overlap": {
+    "stdout": "",
+    "stderr": "error[E0502]: cannot borrow `reader` as mutable because it is also borrowed as immutable\n  --> src\\main.rs:15:14\n   |\n14 |     let shared = &reader;\n   |                  ------- immutable borrow occurs here\n15 |     add_note(&mut reader);\n   |              ^^^^^^^^^^^ mutable borrow occurs here\n16 |     println!(\"{shared}\");\n   |                ------ immutable borrow later used here\n\nFor more information about this error, try `rustc --explain E0502`.\nerror: could not compile `ownership_and_borrowing` (bin \"ownership_and_borrowing\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "not-mut": {
+    "stdout": "",
+    "stderr": "error[E0596]: cannot borrow `reader` as mutable, as it is not declared as mutable\n  --> src\\main.rs:14:14\n   |\n14 |     add_note(&mut reader);\n   |              ^^^^^^^^^^^ cannot borrow as mutable\n   |\nhelp: consider changing this to be mutable\n   |\n11 |     let mut reader = book;\n   |         +++\n\nFor more information about this error, try `rustc --explain E0596`.\nerror: could not compile `ownership_and_borrowing` (bin \"ownership_and_borrowing\") due to 1 previous error\n",
+    "exit": 101
+  }
+}

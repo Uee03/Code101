@@ -1,0 +1,51 @@
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#ffffff, #0b1220);
+  --text: light-dark(#0f172a, #e2e8f0);
+  --muted: light-dark(#475569, #a7b3c7);
+  --accent: light-dark(#1d4ed8, #7cb0ff);
+  --on-accent: light-dark(#ffffff, #0b1220);
+  --border: light-dark(#cbd5e1, #334155);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.shell {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  padding: 1.5rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.notes {
+  padding-inline-start: 1.25rem;
+}
+
+.notes li {
+  margin-block-end: 0.5rem;
+}
+
+.button {
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}

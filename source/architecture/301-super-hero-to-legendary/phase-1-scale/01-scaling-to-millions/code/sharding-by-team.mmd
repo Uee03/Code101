@@ -1,0 +1,10 @@
+flowchart LR
+    api["Backend API with a shard map"]
+    s1[("Shard 1: some teams")]
+    s2[("Shard 2: other teams")]
+    s3[("Shard 3: other teams")]
+    adm["Admin audit query across all teams"]
+    api -->|"team id picks the shard"| s1
+    api -->|"team id picks the shard"| s2
+    api -->|"team id picks the shard"| s3
+    adm -.->|"must ask every shard and merge the answers"| api

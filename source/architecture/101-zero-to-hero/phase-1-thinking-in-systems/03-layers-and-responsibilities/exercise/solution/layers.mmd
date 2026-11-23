@@ -1,0 +1,6 @@
+flowchart TD
+  presentation["Presentation: display loan confirmation"]
+  application["Application: decide borrowing eligibility"]
+  data["Data: save the loan record"]
+  presentation -->|"Ask to borrow"| application
+  application -->|"Load and save loan"| data

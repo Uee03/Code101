@@ -1,0 +1,5 @@
+<section aria-labelledby="clock-heading">
+  <h2 id="clock-heading">Two clocks</h2>
+  <p>Manual (starts in ngOnInit, stops in ngOnDestroy): {{ manual() | date: 'mediumTime' }}</p>
+  <p>Automatic (the async pipe subscribes and unsubscribes): {{ automatic | async | date: 'mediumTime' }}</p>
+</section>

@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- welcome coupon ---\nsubtotal: 1800\ndiscount: 180\nshipping: 500\ntax: 324\ntotal: 2444\nemail to ana@example.com: order total 2444\nlog: order placed\nsame as before: True\n--- capped coupon ---\nsubtotal: 400\ndiscount: 400\nshipping: 0\ntax: 0\ntotal: 0\nemail to bo@example.com: order total 0\nlog: order placed\nsame as before: True\n--- no coupon ---\nsubtotal: 5000\ndiscount: 0\nshipping: 1500\ntax: 1000\ntotal: 7500\nemail to cy@example.com: order total 7500\nlog: order placed\nsame as before: True\n--- empty cart ---\nerror: cart is empty\nsame as before: True\n--- unknown shipping ---\nerror: unknown shipping drone\nsame as before: True"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- welcome coupon ---\nsubtotal: 1800\ndiscount: 180\nshipping: 500\ntax: 324\ntotal: 2444\nemail to ana@example.com: order total 2444\nlog: order placed\nsame as before: True\n--- capped coupon ---\nsubtotal: 400\ndiscount: 400\nshipping: 0\ntax: 0\ntotal: 0\nemail to bo@example.com: order total 0\nlog: order placed\nsame as before: True\n--- no coupon ---\nsubtotal: 5000\ndiscount: 0\nshipping: 1500\ntax: 1000\ntotal: 7500\nemail to cy@example.com: order total 7500\nlog: order placed\nsame as before: True\n--- empty cart ---\nerror: cart is empty\nsame as before: True\n--- unknown shipping ---\nerror: unknown shipping drone\nsame as before: True"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "regular: 1000\nchild: 500\nsenior: 700\nstudent: 750\nCheck passed: new pricing equals old pricing"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "regular: 1000\nchild: 500\nsenior: 700\nstudent: 750\nCheck passed: new pricing equals old pricing"
+    }
+  ]
+}

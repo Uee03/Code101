@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:42 GMT
+server: uvicorn
+content-length: 1004
+content-type: application/json
+x-trace-id: 19d8f571833444d7a9c94816cc8ef8a1
+
+{"items":[{"id":"7a500000-0000-4000-8000-000000000003","projectId":"9a000000-0000-4000-8000-000000000001","title":"Configure Keycloak","description":"Realm, clients, roles and users.","status":"in_progress","priority":"urgent","assigneeId":"ca401000-0000-4000-8000-000000000003","dueDate":"2027-02-05","completedAt":null,"createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"},{"id":"7a500000-0000-4000-8000-000000000004","projectId":"9a000000-0000-4000-8000-000000000001","title":"Run the conformance script","description":"All checks green on every backend.","status":"todo","priority":"medium","assigneeId":null,"dueDate":"2027-02-19","completedAt":null,"createdBy":"b0b00000-0000-4000-8000-000000000002","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"}],"page":{"limit":2,"nextCursor":"WyIyMDI3LTAyLTE5IiwiN2E1MDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDA0Il0"}}

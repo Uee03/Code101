@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    participant O as Orders
+    participant I as Inventory
+    participant P as Payments
+    participant F as Fulfilment
+    P->>F: PaymentCaptured
+    F->>F: the courier fails after the allowed tries
+    F->>P: TODO which event?
+    P->>P: TODO which compensation?
+    P->>I: TODO which event?
+    I->>I: TODO which compensation?
+    I->>O: StockReleased
+    Note over O: TODO final state

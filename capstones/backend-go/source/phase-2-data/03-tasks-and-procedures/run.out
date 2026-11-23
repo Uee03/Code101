@@ -1,0 +1,7 @@
+time=2026-11-23T10:49:27.977+02:00 level=WARN msg="DEVELOPMENT AUTHENTICATION: the X-Dev-User header is trusted. Never run this build on a shared machine."
+time=2026-11-23T10:49:27.978+02:00 level=INFO msg=listening addr=127.0.0.1:8000
+time=2026-11-23T10:49:28.489+02:00 level=WARN msg=request method=GET path=/v1/me status=401 bytes=203 duration_ms=0 trace_id=e64186b743907cd77f1493ff8a5fc270
+time=2026-11-23T10:49:28.490+02:00 level=WARN msg=request method=POST path=/v1/teams status=401 bytes=206 duration_ms=0 trace_id=4bfcd2d54314b0a709f8d68a282674d6
+time=2026-11-23T10:49:28.503+02:00 level=WARN msg=request method=GET path=/v1/me status=401 bytes=203 duration_ms=0 trace_id=125cb4d37e842d479f5d59dcae435301
+time=2026-11-23T10:49:28.503+02:00 level=WARN msg=request method=GET path=/v1/audit-log status=401 bytes=210 duration_ms=0 trace_id=4dc285e28aafb2a0081396fa88a1aab3
+time=2026-11-23T10:49:28.504+02:00 level=WARN msg=request method=POST path=/v1/teams status=401 bytes=206 duration_ms=0 trace_id=59a250cbf93273f7ee23d8615f600e5b

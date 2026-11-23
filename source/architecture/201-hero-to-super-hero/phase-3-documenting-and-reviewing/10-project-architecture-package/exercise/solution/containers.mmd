@@ -1,0 +1,14 @@
+flowchart LR
+    member(["Member"])
+    staff(["Librarian"])
+    subgraph lib["Community Library system"]
+        web["Web app<br/>member and staff screens"]
+        api["Library API<br/>catalogue and loan rules"]
+        db[("Library database<br/>books, copies, members, loans")]
+    end
+    mail["E-mail service, external"]
+    member -->|"uses"| web
+    staff -->|"uses"| web
+    web -->|"JSON over HTTPS"| api
+    api -->|"SQL"| db
+    api -->|"sends reminder requests"| mail

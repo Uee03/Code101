@@ -1,0 +1,32 @@
+{
+  "run": {
+    "stdout": "First: Tea\nItems: 3\nBuy: Tea\nBuy: Rice\nBuy: Apples\nTea quantity: 4\nRice quantity: 3\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "solution": {
+    "stdout": "Number of prices: 3\nTotal: 10\nTea: 2\nRice: 3\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "starter": {
+    "stdout": "Number of prices: 3\nTotal: 0\nTea: 2\n",
+    "stderr": "warning: variable does not need to be mutable\n --> src\\main.rs:5:9\n  |\n5 |     let mut total = 0;\n  |         ----^^^^^\n  |         |\n  |         help: remove this `mut`\n  |\n  = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default\n\n",
+    "exit": 0
+  },
+  "compiler": {
+    "stdout": "",
+    "stderr": "error[E0382]: borrow of moved value: `items`\n   --> src\\main.rs:6:20\n    |\n  2 |     let items = vec![\"Tea\", \"Rice\"];\n    |         ----- move occurs because `items` has type `Vec<&str>`, which does not implement the `Copy` trait\n  3 |     for item in items {\n    |                 ----- `items` moved due to this implicit call to `.into_iter()`\n...\n  6 |     println!(\"{}\", items.len());\n    |                    ^^^^^ value borrowed here after move\n    |\nnote: the `for` loop is desugared into a call to `std::iter::IntoIterator::into_iter`, which takes ownership of the receiver `self`, which moves `items`\n[optional standard-library source location omitted]\nhelp: consider iterating over a slice of the `Vec<&str>`'s content to avoid moving into the `for` loop\n    |\n  3 |     for item in &items {\n    |                 +\n\nFor more information about this error, try `rustc --explain E0382`.\nerror: could not compile `vectors_and_hashmaps` (bin \"vectors_and_hashmaps\") due to 1 previous error\n",
+    "exit": 101
+  },
+  "bad-index": {
+    "stdout": "",
+    "stderr": "\nthread 'main' (4644) panicked at src\\main.rs:6:32:\nindex out of bounds: the len is 3 but the index is 3\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  },
+  "bad-key": {
+    "stdout": "First: Tea\nItems: 3\nBuy: Tea\nBuy: Rice\nBuy: Apples\n",
+    "stderr": "\nthread 'main' (26544) panicked at src\\main.rs:15:44:\nno entry found for key\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "exit": 101
+  }
+}

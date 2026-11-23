@@ -1,0 +1,77 @@
+{
+  "requires": [
+    "java"
+  ],
+  "note": "Copy gradlew, gradlew.bat and gradle-wrapper.jar from capstones/mobile-kotlin/source/phase-1-setup/01-setup/code into code/ before a maintainer run, and make sure ANDROID_HOME points to an SDK with the compileSdk platform. Nothing in this pack has been run yet. Compare MIGRATION_1_2 with the exported app/schemas/.../2.json after the first build. Files unchanged since lesson 07 are skipped by the static check.",
+  "steps": [
+    {
+      "name": "overlay exercise solution",
+      "cwd": "code",
+      "cmd": "xcopy ..\\exercise\\solution\\app app /E /I /Y"
+    },
+    {
+      "name": "assemble debug",
+      "cwd": "code",
+      "cmd": "gradlew.bat assembleDebug --console=plain",
+      "timeout": 1800,
+      "expect_contains": [
+        "BUILD SUCCESSFUL"
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "stop wrapper Gradle daemons",
+      "cwd": "code",
+      "cmd": "gradlew.bat --stop",
+      "timeout": 180
+    }
+  ],
+  "skip_lesson_check": [
+    "code/.gitignore",
+    "code/build.gradle.kts",
+    "code/gradle.properties",
+    "code/settings.gradle.kts",
+    "code/gradle/libs.versions.toml",
+    "code/gradle/wrapper/gradle-wrapper.properties",
+    "code/contract/openapi.yaml",
+    "code/openapi/generator-config.json",
+    "code/openapi/.openapi-generator-ignore",
+    "code/app/build.gradle.kts",
+    "code/app/src/main/res/values/strings.xml",
+    "code/app/src/main/res/xml/data_extraction_rules.xml",
+    "code/app/src/debug/AndroidManifest.xml",
+    "code/app/src/debug/res/xml/network_security_config.xml",
+    "code/app/src/main/kotlin-generated",
+    "code/app/src/main/kotlin/com/code101/tasks/MainActivity.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/theme/Theme.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/domain/model/Models.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/domain/model/ApiProblem.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/domain/repository/Session.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/di/DispatchersModule.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/di/NetworkModule.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/di/AuthModule.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/di/RepositoryModule.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/auth/AuthConfig.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/auth/AuthStateManager.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/auth/TokenVault.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/AuthInterceptor.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/WireJson.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/HttpUrlPolicy.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/QueryEnums.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/ProblemParser.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/data/remote/RemoteDataSource.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/common/UiState.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/common/ProblemMessages.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/components/Components.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/navigation/Routes.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/navigation/AppRoot.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/login/LoginScreen.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/login/SessionViewModel.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/teams/TeamsScreen.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/teams/TeamsViewModel.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/teams/ConnectionViewModel.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/projects/ProjectsScreen.kt",
+    "code/app/src/main/kotlin/com/code101/tasks/ui/projects/ProjectsViewModel.kt"
+  ]
+}

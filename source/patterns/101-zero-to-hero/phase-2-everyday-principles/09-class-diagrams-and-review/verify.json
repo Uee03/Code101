@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- before ---\nEmail to ana@example.com: order total 2400\nSaved order for ana@example.com\nSMS to +100: order total 2700\nSaved order for +100\nEmail to bo@example.com: order total 3000\nSaved order for bo@example.com\n--- after ---\nEmail to ana@example.com: order total 2400\nSaved order for ana@example.com\nSMS to +100: order total 2700\nSaved order for +100\nEmail to bo@example.com: order total 3000\nSaved order for bo@example.com\nStored orders: 3"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- before ---\nEmail to ana@example.com: order total 2400\nSaved order for ana@example.com\nSMS to +100: order total 2700\nSaved order for +100\nEmail to bo@example.com: order total 3000\nSaved order for bo@example.com\n--- after ---\nEmail to ana@example.com: order total 2400\nSaved order for ana@example.com\nSMS to +100: order total 2700\nSaved order for +100\nEmail to bo@example.com: order total 3000\nSaved order for bo@example.com\nStored orders: 3"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Email to ana@example.com: booking for 2 seat(s), total 2000\nBooking saved for ana@example.com\nSMS to +100: booking for 3 seat(s), total 1500\nBooking saved for +100"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Email to ana@example.com: booking for 2 seat(s), total 2000\nBooking saved for ana@example.com\nSMS to +100: booking for 3 seat(s), total 1500\nBooking saved for +100"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+sequenceDiagram
+  actor Member
+  participant Web
+  participant API
+  participant Database
+  Member->>Web: TODO user action
+  Web->>API: Read own loans with access token
+  API->>API: Validate token and identify member
+  API->>Database: TODO authorised read
+  Database-->>API: Matching loan rows
+  API-->>Web: Loan data
+  Web-->>Member: Show own loans

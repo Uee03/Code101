@@ -1,0 +1,37 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "run SQL once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": " sale_rows | items_sold | average_price \n-----------+------------+---------------\n         5 |          7 |          9.00\n(1 row)\n\n  category  | sale_rows | items_sold | revenue \n------------+-----------+------------+---------\n books      |         2 |          3 |   35.00\n stationery |         2 |          3 |   11.00\n(2 rows)"
+    },
+    {
+      "name": "exercise solution once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": " category | revenue \n----------+---------\n books    |   35.00\n games    |   12.00\n(2 rows)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

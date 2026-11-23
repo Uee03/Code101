@@ -1,0 +1,7 @@
+[STATIC    ] capstones/mobile-kotlin/source/phase-1-setup/01-setup
+[STATIC    ] capstones/mobile-kotlin/source/phase-2-auth/02-auth
+[STATIC    ] capstones/mobile-kotlin/source/phase-3-screens/03-screens
+[STATIC    ] capstones/mobile-kotlin/source/phase-4-offline/04-offline
+[STATIC    ] capstones/mobile-kotlin/source/phase-5-ship/05-build-run-ship
+
+0 passed, 5 static-checked (not run), 0 failed, 0 unverified (missing tools)

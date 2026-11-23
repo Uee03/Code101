@@ -1,0 +1,19 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: main.py",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Bread: 5.00\nFruit: 3.60\nOrder: 8.60"
+    },
+    {
+      "name": "solution: discount.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} discount.py",
+      "expect_stdout": "Sale price: 60.00"
+    }
+  ]
+}

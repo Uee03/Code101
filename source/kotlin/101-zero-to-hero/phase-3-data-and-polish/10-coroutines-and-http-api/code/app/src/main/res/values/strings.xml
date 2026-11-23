@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Tasks Start</string>
+    <string name="new_task_label">New task</string>
+    <string name="add">Add</string>
+    <string name="open_count">%1$d open</string>
+    <string name="toggle_task">Mark %1$s as done or open</string>
+    <string name="open_details">Open details</string>
+    <string name="status_done">Done</string>
+    <string name="status_open">Open</string>
+    <string name="details">Task details</string>
+    <string name="back">Back</string>
+    <string name="delete_task">Delete task</string>
+    <string name="task_not_found">This task no longer exists.</string>
+    <string name="empty_list">No tasks yet. Add one above.</string>
+    <string name="load_samples">Load sample tasks</string>
+    <string name="loading_samples">Loading sample tasks...</string>
+    <string name="samples_done">Added %1$d sample tasks.</string>
+    <string name="samples_failed">Could not load the sample tasks. Check your connection and try again.</string>
+</resources>

@@ -1,0 +1,58 @@
+{
+  "requires": ["docker", "python"],
+  "steps": [
+    {
+      "name": "engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "up and wait for healthy",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 300
+    },
+    {
+      "name": "backup",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db sh /scripts/backup.sh",
+      "expect_contains": ["backup written: /backups/orders-"]
+    },
+    {
+      "name": "restore drill",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db sh /scripts/restore-drill.sh",
+      "expect_contains": ["source rows: 5, restored rows: 5", "drill passed"]
+    },
+    {
+      "name": "insert after backup",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -U app -d orders -c \"INSERT INTO orders VALUES (6, 'Zoe', 777)\"",
+      "expect_contains": ["INSERT 0 1"]
+    },
+    {
+      "name": "operator error: drop table",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -U app -d orders -c \"DROP TABLE orders\"",
+      "expect_contains": ["DROP TABLE"]
+    },
+    {
+      "name": "recover latest backup",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db sh /scripts/recover-latest.sh",
+      "expect_contains": ["recovering from /backups/orders-"]
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

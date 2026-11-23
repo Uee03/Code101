@@ -1,0 +1,23 @@
+@if (store.status() === 'loading') {
+  <p role="status">Loading the task...</p>
+} @else {
+  @if (task(); as found) {
+    <h1>{{ found.title }}</h1>
+    <dl>
+      <dt>Status</dt>
+      <dd>{{ found.done ? 'Done' : 'To do' }}</dd>
+      <dt>Priority</dt>
+      <dd>{{ found.priority | titlecase }}</dd>
+      <dt>Due</dt>
+      <dd>{{ found.due ? (found.due | date: 'fullDate') : 'No due date' }}</dd>
+    </dl>
+    <p>
+      <button type="button" (click)="store.toggle(found.id)">{{ found.done ? 'Mark as to do' : 'Mark as done' }}</button>
+      <button type="button" (click)="remove(found)">Delete task</button>
+    </p>
+  } @else {
+    <h1>Task not found</h1>
+    <p>There is no task with the number "{{ id() }}".</p>
+  }
+}
+<p><a routerLink="/">Back to the list</a></p>

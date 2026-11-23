@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "offline example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet -- --describe",
+      "timeout": 300,
+      "expect_stdout": "runtime SQL: SELECT id, title FROM notes WHERE id = $1\nno database connection opened"
+    },
+    {
+      "name": "offline solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet -- --describe",
+      "timeout": 300,
+      "expect_stdout": "runtime SQL: SELECT id, title FROM notes WHERE id = $1\nno database connection opened"
+    }
+  ]
+}

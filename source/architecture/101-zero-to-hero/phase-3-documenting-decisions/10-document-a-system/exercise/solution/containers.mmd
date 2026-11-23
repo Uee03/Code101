@@ -1,0 +1,13 @@
+flowchart LR
+  person["Person: library member"]
+  identity["External system: identity provider"]
+  subgraph library["Community Library boundary"]
+    web["Web client: display loans"]
+    api["Library API: enforce member access"]
+    db["Database: PostgreSQL - store loans"]
+  end
+  person -->|"Uses"| web
+  web -->|"Sign in over HTTPS"| identity
+  web -->|"Read own loans over HTTPS"| api
+  api -->|"Read loan records using SQL"| db
+  api -->|"Fetch public signing keys over HTTPS"| identity

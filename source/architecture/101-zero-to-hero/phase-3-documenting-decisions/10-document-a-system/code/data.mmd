@@ -1,0 +1,18 @@
+erDiagram
+  TEAMS ||--o{ PROJECTS : owns
+  PROJECTS ||--o{ TASKS : contains
+  TEAMS {
+    uuid id PK
+    string name
+  }
+  PROJECTS {
+    uuid id PK
+    uuid team_id FK
+    string name
+  }
+  TASKS {
+    uuid id PK
+    uuid project_id FK
+    string title
+    string status
+  }

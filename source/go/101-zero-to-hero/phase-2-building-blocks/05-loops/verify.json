@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "Day: 1\nDay: 2\nDay: 3\nTotal: 6\nRemaining: 2\nRemaining: 1\nTurn: 1\nTurn: 3"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "3\n2\n1\nGo!"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}

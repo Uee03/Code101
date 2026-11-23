@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:41 GMT
+server: uvicorn
+content-length: 1073
+content-type: application/json
+x-trace-id: 7eba664db0e94efeae6a5933ef949300
+
+{"items":[{"id":"7a500000-0000-4000-8000-000000000001","projectId":"9a000000-0000-4000-8000-000000000001","title":"Write the OpenAPI contract","description":"Every endpoint and schema.","status":"done","priority":"high","assigneeId":"a11ce000-0000-4000-8000-000000000001","dueDate":"2027-01-15","completedAt":"2026-11-23T08:32:45.480400Z","createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"},{"id":"7a500000-0000-4000-8000-000000000002","projectId":"9a000000-0000-4000-8000-000000000001","title":"Design the database","description":"Tables, indexes, stored procedures.","status":"done","priority":"high","assigneeId":"b0b00000-0000-4000-8000-000000000002","dueDate":"2027-01-22","completedAt":"2026-11-23T08:32:45.480400Z","createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.480400Z","updatedAt":"2026-11-23T08:32:45.480400Z"}],"page":{"limit":2,"nextCursor":"WyIyMDI3LTAxLTIyIiwiN2E1MDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAyIl0"}}

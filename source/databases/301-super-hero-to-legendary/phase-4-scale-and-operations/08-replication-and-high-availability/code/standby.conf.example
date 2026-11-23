@@ -1,0 +1,8 @@
+# Example settings for a streaming standby. NOT applied by this lesson.
+# A standby also needs an empty file named standby.signal in its data directory.
+hot_standby = on
+primary_conninfo = 'host=10.0.0.11 port=5432 user=replicator application_name=standby1 sslmode=verify-full passfile=/var/lib/postgresql/.pgpass'
+primary_slot_name = 'standby1_slot'
+restore_command = 'cp /mnt/wal_archive/%f %p'
+hot_standby_feedback = off
+max_standby_streaming_delay = 30s

@@ -1,0 +1,48 @@
+{
+  "requires": [
+    "python",
+    "node",
+    "npm"
+  ],
+  "steps": [
+    {
+      "name": "install code",
+      "cwd": "code",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile code",
+      "cwd": "code",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "Ada studies 3 times a week."
+    },
+    {
+      "name": "install exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "npm install --no-audit --no-fund",
+      "timeout": 240
+    },
+    {
+      "name": "compile exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "npx tsc",
+      "expect_stdout": ""
+    },
+    {
+      "name": "run exercise/solution",
+      "cwd": "exercise/solution",
+      "cmd": "node dist/app.js",
+      "expect_stdout": "Ada is taking a break."
+    }
+  ],
+  "skip_lesson_check": [
+    "code/package-lock.json"
+  ]
+}

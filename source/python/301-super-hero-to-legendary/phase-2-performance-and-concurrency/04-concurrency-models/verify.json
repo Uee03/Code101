@@ -1,0 +1,41 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "which build is this",
+      "cwd": "code",
+      "cmd": "{python} gil_check.py",
+      "expect_contains": ["free-threaded build: False", "GIL enabled now: True"]
+    },
+    {
+      "name": "the lock makes the counter exact",
+      "cwd": "code",
+      "cmd": "{python} race.py",
+      "expect_stdout": "expected: 400000\nwith lock: 400000\nwithout lock never above expected: True"
+    },
+    {
+      "name": "blocking in a coroutine stalls the loop",
+      "cwd": "code",
+      "cmd": "{python} loop_lag.py",
+      "expect_contains": ["blocking call in a coroutine: loop stalled for more than 0.2 s: True"]
+    },
+    {
+      "name": "all models return the same results (timings differ per machine)",
+      "cwd": "code",
+      "cmd": "{python} bench.py io",
+      "expect_contains": ["same results: True"]
+    },
+    {
+      "name": "unit tests",
+      "cwd": "code",
+      "cmd": "{python} -m unittest",
+      "timeout": 120
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "cpu [1, 4, 9]\nio ['A', 'B']\nunknown kind: gpu"
+    }
+  ]
+}

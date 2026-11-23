@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance lab</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <main>
+    <h1>Performance lab</h1>
+    <p>Type in the box while a job runs. Notice whether the characters appear at once.</p>
+    <label for="typing">Type here</label>
+    <input id="typing" type="text" autocomplete="off">
+    <p>
+      <button id="run-blocking" type="button">Run 20,000 rows (blocking)</button>
+      <button id="run-yielding" type="button">Run 20,000 rows (yielding)</button>
+      <button id="run-timed" type="button">Run 20,000 rows (time-sliced)</button>
+    </p>
+    <p id="status" role="status">Idle</p>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "create a virtual environment",
+      "cwd": "code",
+      "cmd": "{python} -m venv .venv"
+    },
+    {
+      "name": "editable install with the development tools (needs network)",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'pip', 'install', '-e', '.[dev]']))\"",
+      "timeout": 900
+    },
+    {
+      "name": "readiness check of this project",
+      "cwd": "code",
+      "cmd": "{python} readiness_check.py .",
+      "expect_stdout": "PASS  version is MAJOR.MINOR.PATCH\nPASS  CHANGELOG has an entry for this version\nPASS  requirements are pinned with ==\nPASS  base image is pinned\nPASS  runs as a non-root user\nPASS  has a HEALTHCHECK\nPASS  .dockerignore keeps .env out of the image\nPASS  no .env file in the project\nPASS  CI workflow exists\n9 passed, 0 failed"
+    },
+    {
+      "name": "tests",
+      "cwd": "code",
+      "cmd": "{python} -c \"import subprocess, sys, pathlib; exe = pathlib.Path('.venv') / ('Scripts' if sys.platform == 'win32' else 'bin') / 'python'; sys.exit(subprocess.call([str(exe), '-m', 'unittest', 'discover', '-s', 'tests']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "the flawed candidate fails as expected",
+      "cwd": "exercise/starter",
+      "cmd": "{python} ../../code/readiness_check.py candidate",
+      "expect_exit": 1,
+      "expect_contains": ["1 passed, 8 failed"]
+    },
+    {
+      "name": "the fixed candidate passes",
+      "cwd": "exercise/solution",
+      "cmd": "{python} ../../code/readiness_check.py candidate",
+      "expect_stdout": "PASS  version is MAJOR.MINOR.PATCH\nPASS  CHANGELOG has an entry for this version\nPASS  requirements are pinned with ==\nPASS  base image is pinned\nPASS  runs as a non-root user\nPASS  has a HEALTHCHECK\nPASS  .dockerignore keeps .env out of the image\nPASS  no .env file in the project\nPASS  CI workflow exists\n9 passed, 0 failed"
+    }
+  ],
+  "skip_lesson_check": ["code/.dockerignore"]
+}

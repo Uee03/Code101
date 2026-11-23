@@ -1,0 +1,25 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #1d6fb8;
+}
+
+section {
+  margin-top: 1.5rem;
+}
+
+.task {
+  font-weight: 600;
+}
+
+.task.done {
+  text-decoration: line-through;
+  color: #4b5563;
+}
+
+input {
+  margin-left: 0.5rem;
+}

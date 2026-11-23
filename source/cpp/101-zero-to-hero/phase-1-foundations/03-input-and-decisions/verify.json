@@ -1,0 +1,42 @@
+{
+  "requires": [
+    "cmake"
+  ],
+  "steps": [
+    {
+      "name": "configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "code"
+    },
+    {
+      "name": "build",
+      "cmd": "cmake --build build",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "cmake -E env build/out/ticket",
+      "cwd": "code",
+      "stdin": "Ada\n30\n",
+      "expect_stdout": "Your name: Your age in years: Hello, Ada. Your ticket costs 12."
+    },
+    {
+      "name": "solution configure",
+      "cmd": "cmake -S . -B build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution build",
+      "cmd": "cmake --build build",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "cmake -E env build/out/ticket",
+      "cwd": "exercise/solution",
+      "stdin": "82\n",
+      "expect_stdout": "Enter a score from 0 to 100: Grade: B"
+    }
+  ],
+  "skip_lesson_check": []
+}

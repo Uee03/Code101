@@ -1,0 +1,5 @@
+.venv/
+.uv-tool/
+__pycache__/
+dist/
+*.egg-info/

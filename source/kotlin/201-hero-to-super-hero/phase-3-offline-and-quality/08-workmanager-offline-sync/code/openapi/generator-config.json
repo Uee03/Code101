@@ -1,0 +1,16 @@
+{
+  "library": "jvm-retrofit2",
+  "apiPackage": "com.code101.tasks.generated.api",
+  "modelPackage": "com.code101.tasks.generated.model",
+  "serializationLibrary": "kotlinx_serialization",
+  "useCoroutines": true,
+  "dateLibrary": "java8",
+  "enumPropertyNaming": "original",
+  "omitGradleWrapper": true,
+  "typeMappings": {
+    "AnyType": "JsonElement"
+  },
+  "importMappings": {
+    "JsonElement": "kotlinx.serialization.json.JsonElement"
+  }
+}

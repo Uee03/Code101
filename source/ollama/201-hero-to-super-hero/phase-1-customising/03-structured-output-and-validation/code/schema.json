@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": ["billing", "bug", "feature_request", "other"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 120
+    },
+    "needs_human": {
+      "type": "boolean"
+    }
+  },
+  "required": ["category", "priority", "summary", "needs_human"],
+  "additionalProperties": false
+}

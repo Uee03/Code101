@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "query A sql: SELECT id, title, status, assignee, due FROM tasks WHERE (((status = ? OR status = ?) AND assignee = ?) AND due < ?) ORDER BY due LIMIT ?\nquery A params: ['todo', 'in_progress', 'alice', '2026-03-10', 10]\nquery A result: [2, 1]\nquery B sql: SELECT id, title, status, assignee, due FROM tasks WHERE lower(title) LIKE ? ORDER BY due LIMIT ?\nquery B params: ['%x; drop table tasks; --%', 10]\nquery B result: []\noverdue sql: (due < ? AND NOT (status = ?))\noverdue result: [2, 4]\nlong titles in memory: [3, 4, 5]\nlong titles to sql: Predicate cannot be turned into SQL\nbad sort: cannot sort by due; DROP TABLE tasks"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "query A sql: SELECT id, title, status, assignee, due FROM tasks WHERE (((status = ? OR status = ?) AND assignee = ?) AND due < ?) ORDER BY due LIMIT ?\nquery A params: ['todo', 'in_progress', 'alice', '2026-03-10', 10]\nquery A result: [2, 1]\nquery B sql: SELECT id, title, status, assignee, due FROM tasks WHERE lower(title) LIKE ? ORDER BY due LIMIT ?\nquery B params: ['%x; drop table tasks; --%', 10]\nquery B result: []\noverdue sql: (due < ? AND NOT (status = ?))\noverdue result: [2, 4]\nlong titles in memory: [3, 4, 5]\nlong titles to sql: Predicate cannot be turned into SQL\nbad sort: cannot sort by due; DROP TABLE tasks"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "alice open: [1, 4]\nnot alice: [3]"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "alice open: [1, 4]\nnot alice: [3]"
+    }
+  ]
+}

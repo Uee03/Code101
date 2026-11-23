@@ -1,0 +1,35 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "expect_stdout": "the 4\ndid 2\ndog 2\nfox 2\nbrown 1"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "a,b,c\na,b,c"
+    },
+    {
+      "name": "solution test",
+      "cmd": "go test ./...",
+      "cwd": "exercise/solution",
+      "expect_contains": [
+        "ok"
+      ]
+    }
+  ]
+}

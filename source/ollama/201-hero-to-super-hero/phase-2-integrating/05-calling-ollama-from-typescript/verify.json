@@ -1,0 +1,6 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "notes": "Written, not run. Static text/source comparison only. No npm, node, tsc or Ollama command and no program was executed by the author. package-lock.json is not included: npm install creates it. Offline check for a learner: npm install, npm run build, npm run selftest in the code folder."
+}

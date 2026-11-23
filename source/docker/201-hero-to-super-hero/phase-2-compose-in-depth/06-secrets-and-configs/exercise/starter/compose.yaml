@@ -1,0 +1,50 @@
+name: code101-secrets
+
+services:
+  web:
+    build:
+      context: .
+      secrets:
+        - build_token
+    image: code101-secrets-web:201
+    ports:
+      - "127.0.0.1:8080:8000"
+    environment:
+      GREETING: ${GREETING}
+      APP_CONFIG_FILE: /etc/app/config.json
+      # TODO 1: add DB_PASSWORD_FILE with the value /run/secrets/db_password
+    # TODO 2: under web, add a secrets list that grants only db_password
+    configs:
+      - source: app_config
+        target: /etc/app/config.json
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: local-demo-only-change-me
+      # TODO 3: delete the POSTGRES_PASSWORD line above and use POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    # TODO 4: under db, add a secrets list that grants db_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+secrets:
+  build_token:
+    file: ./secrets/build_token.txt
+  # TODO 5: declare db_password at top level, with the file ./secrets/db_password.txt
+
+configs:
+  app_config:
+    file: ./app-config.json
+
+volumes:
+  db_data:

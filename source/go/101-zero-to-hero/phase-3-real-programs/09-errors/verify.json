@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "tea\n0\n12\n",
+      "expect_stdout": "Amount in whole units:\nTry again: amount \"tea\": strconv.Atoi: parsing \"tea\": invalid syntax\nAmount in whole units:\nTry again: amount must be positive\nAmount in whole units:\nAccepted: 12"
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "5\n12\n",
+      "expect_stdout": "Amount in whole units:\nTry again: amount must be at least 10\nAmount in whole units:\nAccepted: 12"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}

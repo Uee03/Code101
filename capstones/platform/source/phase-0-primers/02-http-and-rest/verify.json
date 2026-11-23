@@ -1,0 +1,42 @@
+{
+  "requires": ["python", "curl"],
+  "steps": [
+    {
+      "name": "start the stand-in API",
+      "cwd": "code",
+      "cmd": "{python} mock_api.py",
+      "bg": true,
+      "wait": 2
+    },
+    {
+      "name": "health",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "expect_stdout": "{\"status\": \"ok\", \"version\": \"1.0.0\", \"database\": \"up\"}"
+    },
+    {
+      "name": "task without a token gives problem details",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000003",
+      "expect_contains": ["\"status\": 401"]
+    },
+    {
+      "name": "task with a token",
+      "cwd": "code",
+      "cmd": "curl -s -H \"Authorization: Bearer practice\" http://127.0.0.1:8000/v1/tasks/7a500000-0000-4000-8000-000000000003",
+      "expect_contains": ["\"title\": \"Configure Keycloak\""]
+    },
+    {
+      "name": "create a task",
+      "cwd": "code",
+      "cmd": "curl -s -X POST -H \"Authorization: Bearer practice\" -H \"Content-Type: application/json\" --data @new-task.json http://127.0.0.1:8000/v1/projects/9a000000-0000-4000-8000-000000000001/tasks",
+      "expect_contains": ["\"title\": \"Write the primer lessons\"", "\"status\": \"todo\""]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} get_task.py",
+      "expect_stdout": "200\nConfigure Keycloak\n404 Not Found\n201 http://localhost:8000/v1/tasks/7a500000-0000-4000-8000-0000000000aa"
+    }
+  ]
+}

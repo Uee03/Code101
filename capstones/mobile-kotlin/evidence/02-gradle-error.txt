@@ -1,0 +1,26 @@
+Starting a Gradle Daemon, 9 stopped Daemons could not be reused, use --status for details
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:extractDeepLinksDebug
+
+> Task :app:processDebugMainManifest FAILED
+F:\Projects\Uee03\Code101\capstones\mobile-kotlin\.author-cache\run-2\app\src\debug\AndroidManifest.xml Error:
+	Attribute data@scheme at AndroidManifest.xml requires a placeholder substitution but no value for <appAuthRedirectScheme> is provided.
+
+See https://developer.android.com/r/studio-ui/build/manifest-merger for more information about the manifest merger.
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:processDebugMainManifest' (registered by plugin 'com.android.internal.application').
+> Manifest merger failed : Attribute data@scheme at AndroidManifest.xml requires a placeholder substitution but no value for <appAuthRedirectScheme> is provided.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 18s
+2 actionable tasks: 2 executed

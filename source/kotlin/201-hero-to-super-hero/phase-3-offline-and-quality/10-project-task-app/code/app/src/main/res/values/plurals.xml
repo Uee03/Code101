@@ -1,0 +1,6 @@
+<resources>
+    <plurals name="pending_banner">
+        <item quantity="one">%1$d change is waiting to sync</item>
+        <item quantity="other">%1$d changes are waiting to sync</item>
+    </plurals>
+</resources>

@@ -1,0 +1,8 @@
+flowchart LR
+  app["Library service"]
+  db["Database: loan records"]
+  cache["Cache: temporary catalogue copies"]
+  files["Files: cover images"]
+  app -->|"Read and save truth"| db
+  app -->|"Reuse recent results"| cache
+  app -->|"Read cover image"| files

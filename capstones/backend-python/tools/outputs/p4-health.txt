@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:45:37 GMT
+content-length: 49
+content-type: application/json
+x-trace-id: 41c2523cbccc46d28d6ad6b0ff106a7a
+
+{"status":"ok","version":"1.0.0","database":"up"}

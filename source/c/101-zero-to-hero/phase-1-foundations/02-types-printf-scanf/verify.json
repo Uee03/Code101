@@ -1,0 +1,41 @@
+{
+  "requires": [
+    "gcc"
+  ],
+  "steps": [
+    {
+      "name": "build-types",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o types types.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run-types",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('types')]))\"",
+      "cwd": "code",
+      "expect_stdout": "Apples: 12\nPrice: 0.50\nGrade: A\nA dozen is 12\nValue: 6.00\nApples now: 15"
+    },
+    {
+      "name": "build-tip",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "code"
+    },
+    {
+      "name": "run-tip",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "code",
+      "stdin": "80\n15\n2\n",
+      "expect_stdout": "Bill amount (e.g. 80):\nTip percent (e.g. 15):\nNumber of people:\nTip: 12.00\nTotal: 92.00\nEach: 46.00\nWhole division: 3 Remainder: 1"
+    },
+    {
+      "name": "build-solution",
+      "cmd": "gcc -std=c17 -Wall -Wextra -o app main.c",
+      "cwd": "exercise/solution"
+    },
+    {
+      "name": "solution",
+      "cmd": "{python} -c \"import os,subprocess,sys;sys.exit(subprocess.call([os.path.abspath('app')]))\"",
+      "cwd": "exercise/solution",
+      "expect_stdout": "Shop opened with 24 bottles at 1.25 each\nBottles left: 19\nIncome: 6.25"
+    }
+  ]
+}

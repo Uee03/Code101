@@ -1,0 +1,32 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "tidy",
+      "cmd": "go mod tidy",
+      "cwd": "code"
+    },
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "expect_stdout": "retry: err=<nil> attempts=4 waits=[10ms 20ms 40ms]\nretry: 1 attempt: permanent error on attempt 1: 400 bad request\nretry: gave up after 5 attempts: 503 service unavailable (waits [10ms 20ms 40ms 80ms])\nbreaker: state after 3 failures: open\nbreaker: call while open: err=circuit breaker is open, operation ran=false\nbreaker: probe after 31s: err=<nil>, state=closed\nlimiter: client-a=[true true false] retry-after=1s; one second later=true; client-b=true\nidempotency: first=201 again=201 replayed=true handler runs=1 body={\"id\":1}\nidempotency: same key, different body: 422"
+    },
+    {
+      "name": "test",
+      "cmd": "go test ./...",
+      "cwd": "code",
+      "expect_contains": [
+        "ok"
+      ]
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "expect_stdout": "\"3\" -> 3s true\n\"Mon, 02 Jan 2006 15:04:10 GMT\" -> 5s true\n\"-4\" -> 0s false\n\"soon\" -> 0s false\n\"Mon, 02 Jan 2006 15:04:00 GMT\" -> 0s false"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+name: code101-hardened
+
+services:
+  web:
+    build: .
+    image: code101-hardened:201
+    ports:
+      - "127.0.0.1:8080:8000"
+    # TODO 1: make the root filesystem read-only
+    # TODO 2: give the container a writable in-memory /tmp
+    # TODO 3: drop every Linux capability
+    # TODO 4: forbid gaining new privileges
+    # TODO 5: mount the named volume app_data at /data so that /data stays writable
+
+volumes:
+  app_data:

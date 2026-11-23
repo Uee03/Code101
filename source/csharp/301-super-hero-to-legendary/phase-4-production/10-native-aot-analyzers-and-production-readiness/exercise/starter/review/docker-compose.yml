@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"

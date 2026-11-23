@@ -1,0 +1,29 @@
+{
+  "status": "historical before user stop; not final-file verification",
+  "capture": {
+    "pub": {
+      "cmd": "flutter pub get",
+      "exit": 0,
+      "stdout": "Resolving dependencies...\nDownloading packages...\n  built_collection 5.1.2 (6.0.0 available)\n  material_color_utilities 0.13.0 (0.13.1 available)\n  test_api 0.7.14 (0.7.15 available)\n  vector_math 2.4.3 (2.4.4 available)\n  xml 7.0.1 (7.1.0 available)\nGot dependencies!\n5 packages have newer versions incompatible with dependency constraints.\nTry `flutter pub outdated` for more information.\n",
+      "stderr": ""
+    },
+    "generate": {
+      "cmd": "dart run swagger_parser",
+      "exit": 0,
+      "stdout": "Generated 58 files in F:\\Projects\\Uee03\\Code101\\capstones\\mobile-flutter\\source\\phase-5-ship\\05-build-run-ship\\code\\lib\\data\\generated.\n",
+      "stderr": ""
+    },
+    "parts": {
+      "cmd": "dart run build_runner build",
+      "exit": 0,
+      "stdout": "  compiling builders/aot\n  69s compiling builders/aot\n  0s json_serializable on 108 inputs; lib/app/app.dart\n  26s json_serializable on 108 inputs: 1 no-op; spent 13s reading, 9s analyzing, 2s resolving, 2s sdk; lib/app/providers.dart\n  26s json_serializable on 108 inputs: 49 output, 59 no-op; spent 13s reading, 9s analyzing, 2s resolving, 2s sdk\n  0s drift_dev:preparing_builder on 1 input; lib/data/local/schema.drift\n  0s drift_dev:preparing_builder on 1 input: 1 output\n  0s drift_dev on 439 inputs; lib/app/app.dart\n  0s drift_dev on 439 inputs: 110 skipped, 216 output, 113 no-op\n  0s source_gen:combining_builder on 219 inputs; lib/app/app.dart\n  0s source_gen:combining_builder on 219 inputs: 110 skipped, 50 output, 59 no-op\n  Built with build_runner/aot in 100s; wrote 317 outputs.\n",
+      "stderr": ""
+    },
+    "analyze": {
+      "cmd": "flutter analyze --no-pub",
+      "exit": 0,
+      "stdout": "Analyzing code...                                               \nNo issues found! (ran in 20.9s)\n",
+      "stderr": ""
+    }
+  }
+}

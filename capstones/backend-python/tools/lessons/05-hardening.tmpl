@@ -1,0 +1,326 @@
+---
+track: capstone
+level: 201
+phase: 5
+phase_name: hardening
+lesson: 05
+title: "Hardening: limits, headers, logging, OWASP walk-through, backup"
+time: 75 min
+prerequisites: [capstone-backend-python-04]
+versions: { python_image: "python:3.14.10-slim-trixie", fastapi: "0.165.0", starlette: "1.10.0", postgres_image: "17-alpine" }
+verified: 2026-11-23 on Windows 11, Docker 29.9.3, Compose 5.7.0
+source: capstones/backend-python/source/phase-5-hardening/05-hardening/
+assets: []
+---
+
+# 05. Hardening: limits, headers, logging, OWASP walk-through, backup
+
+## Why it matters
+A bank vault has more than a thick door. It has a guard who counts how often you come in, cameras that record who asked for what, walls that do not let anyone climb out of their own room, and a copy of the ledger in another building. Chapters 01 to 04 built a correct service; this chapter makes it hard to abuse and easy to recover. It also turns the last conformance check green.
+
+## What you will build
+- A **rate limiter**: 100 requests per 60 seconds per user, 30 per client address when anonymous, with the `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers and a `429` problem with `Retry-After`.
+- **Security headers**, a **CORS** allow-list, a **1 MB request body limit** (413) and the interactive docs switched off in the container.
+- **Security logging**: every refusal (401, 403, 429) becomes a log event with the user id and the reason, never a token or a body.
+- A **hardened container**: read-only file system, no Linux capabilities, memory and process limits.
+- The **OWASP API Security Top 10** walked through against your own code, a production checklist, and a **backup and restore** that you actually run.
+
+Conformance state at the end of this chapter: **18 passed, 0 failed**.
+
+```mermaid
+flowchart LR
+    C["client"] --> RC["RequestContextMiddleware: trace id, access log, RateLimit headers, 500 safety net"]
+    RC --> SH["SecurityHeadersMiddleware"]
+    SH --> CO["CORSMiddleware: allow-list, preflight"]
+    CO --> BS["BodySizeLimitMiddleware: 413"]
+    BS --> APP["FastAPI: routing, validation, authenticate (429, 401, 403), handlers"]
+```
+
+## Before you start
+- Chapter 04 done, or unzip `backend-python-phase-5-hardening.zip` and open `05-hardening/code`. Files unchanged from earlier chapters (including the `Dockerfile` and `.dockerignore` of chapter 04) are not repeated.
+- Docker running; host ports 5432, 8180 and 8000 free.
+
+## Steps
+### Step 1. New settings
+Replace `app/config.py` (seven new settings and a helper that splits the origin list):
+
+@@FILE app/config.py
+
+Replace `.env.example` (a new block at the end). The container gets the same values from the override file below:
+
+@@FILE .env.example
+
+### Step 2. The rate limiter
+Create `app/ratelimit.py`:
+
+@@FILE app/ratelimit.py
+
+A **fixed window** counts requests per key between two moments in time: the first request opens a window of `window_seconds`, every request adds one, and when the window has passed the count starts again. `hit` returns a `Decision` with the numbers for the headers. The clock is a parameter, so the arithmetic can be tested without waiting (the exercise below does exactly that). The dictionary holds one entry per key and is cleaned when it grows past 10,000 entries, which bounds memory.
+
+Two limits you must know: the counters live **in this process**, so two replicas allow twice the traffic (use a shared store such as Redis when that matters), and a fixed window allows a burst of twice the limit around a window boundary (a sliding window or a token bucket smooths that, at the price of more state).
+
+### Step 3. Apply it where identity is decided
+Replace `app/dependencies.py` (adds the limiter):
+
+@@FILE app/dependencies.py
+
+Replace `app/auth.py`:
+
+@@FILE app/auth.py
+
+Look at `authenticate` from the top. Without a token, or with a bad one, the caller is counted by **client address** (limit 30): that stops password-guessing style floods before they cost anything, and it cannot be dodged by sending a made-up user id, because the id is only trusted after the signature is verified. With a valid token the user id is counted (limit 100). `enforce_limit` stores the numbers in the request state; the middleware turns them into headers on **every** response, success or failure. When the limit is exceeded it raises a 429 problem with `Retry-After`.
+
+### Step 4. Log refusals as security events
+Replace `app/errors.py`. The only change is in `handle_problem`: a 401, 403 or 429 is also written to the log as a warning with an `event`, the user id and the reason:
+
+@@FILE app/errors.py
+
+### Step 5. Headers, size limit and the rate-limit headers
+Replace `app/middleware.py`. It now holds three middlewares:
+
+@@FILE app/middleware.py
+
+- `RequestContextMiddleware` (known from chapter 01) now also copies `rate_headers` from the request state into the response.
+- `SecurityHeadersMiddleware` adds `X-Content-Type-Options: nosniff` (browsers must not guess content types), `Cache-Control: no-store` (answers contain personal data), `Referrer-Policy: no-referrer`, `Cross-Origin-Resource-Policy: same-site`, and a Content-Security-Policy that forbids loading or framing anything (`default-src 'none'; frame-ancestors 'none'`). An API returns JSON, never pages, so the strictest policy is free. `/docs` is exempt because Swagger UI loads scripts. `Strict-Transport-Security` is added only when `ENABLE_HSTS=true`, because browsers remember it for a year and it is only valid behind HTTPS.
+- `BodySizeLimitMiddleware` refuses a body larger than `MAX_BODY_BYTES`. It reads the `Content-Length` header first (cheap), and counts the bytes of chunked uploads that declare no length. Either way the answer is `413` and the excess is never parsed.
+
+### Step 6. Wire everything
+Replace `app/main.py`:
+
+@@FILE app/main.py
+
+The order is the order of layers. `add_middleware` wraps what was added before it, so the **last** one added is the **outermost**: `RequestContextMiddleware` sees every request and response, including the 413 and the CORS answers. The CORS middleware answers browser **preflight** requests (`OPTIONS`) itself, before authentication, which is why a web client on `localhost:4200` can call the API at all. Credentials are not allowed (`allow_credentials` stays off): the API uses bearer tokens, not cookies, so there is no ambient authority for another site to abuse.
+
+### Step 7. Harden the container
+Replace `docker-compose.override.yml` (new: the docs setting, the limits, and the last block of restrictions):
+
+@@FILE docker-compose.override.yml
+
+| New line | Effect |
+|----------|--------|
+| `ENABLE_DOCS: "false"` | `/docs` and `/openapi.json` do not exist in the container (OWASP API9: no undocumented surface) |
+| `RATE_LIMIT_*`, `MAX_BODY_BYTES`, `CORS_ORIGINS` | the limits are visible and changeable without a rebuild |
+| `read_only: true` | the root file system cannot be written; a compromised process cannot drop files |
+| `tmpfs: /tmp` | a small writable memory folder for libraries that need one |
+| `cap_drop: [ALL]` | removes every Linux capability; a web service needs none |
+| `security_opt: no-new-privileges:true` | a process can never gain more rights than it started with |
+| `pids_limit: 200`, `mem_limit: 256m`, `cpus: 1.0` | one runaway service cannot starve the machine |
+
+## Run it
+Rebuild and start the stack:
+
+```text
+tasksteams-api> docker compose up -d --build --wait
+```
+
+**1. Conformance: all 18**
+
+```text
+tasksteams-api> python scripts/conformance.py
+```
+
+@@OUT p5-conformance
+
+**2. Rate-limit and security headers on a normal answer**
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/me --user alice
+```
+
+@@OUT p5-me
+
+`ratelimit-remaining` is 79 here because the conformance script already used some of alice's 100 requests in this minute. `/health` is public and not counted:
+
+@@OUT p5-health
+
+**3. The docs are gone**
+
+```text
+tasksteams-api> python scripts/call.py GET /docs
+```
+
+@@OUT p5-docs
+
+**4. CORS.** The browser sends a preflight before a cross-origin call. The allowed web origin gets its permissions; an unknown origin is refused:
+
+```text
+tasksteams-api> curl -s -i -X OPTIONS http://127.0.0.1:8000/v1/teams -H "Origin: http://localhost:4200" -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: authorization,content-type"
+```
+
+@@OUT p5-cors-ok
+
+```text
+tasksteams-api> curl -s -i -X OPTIONS http://127.0.0.1:8000/v1/teams -H "Origin: http://evil.example" -H "Access-Control-Request-Method: POST"
+```
+
+@@OUT p5-cors-bad
+
+On Windows PowerShell write `curl.exe`.
+
+**5. Latency.** The platform wants a p95 under 200 ms for reads on the seed data. Create `scripts/measure.py`, which times sequential requests:
+
+@@FILE scripts/measure.py
+
+```text
+tasksteams-api> python scripts/measure.py /v1/projects/9a000000-0000-4000-8000-000000000001/tasks --user bob --count 25
+```
+
+@@OUT p5-latency
+
+(The numbers come from the author's Windows 11 machine with Docker Desktop; yours differ, the order of magnitude should not.)
+
+**6. The rate limit (429).** Send 35 requests without a token. The limit for anonymous callers is 30 per minute; the first status lines are 401, then the limiter takes over:
+
+```powershell
+# Windows PowerShell
+1..35 | ForEach-Object { (python scripts/call.py GET /v1/me)[0] }
+```
+
+```bash
+# macOS and Linux
+for i in $(seq 35); do python3 scripts/call.py GET /v1/me | head -1; done
+```
+
+@@OUT p5-429-lines
+
+The first 30 answers are 401 and the last 5 are 429 (if you ran the conformance script less than a minute earlier, its one anonymous request also counts and the 429s start one request earlier). The next answer shows everything the client needs to back off: `retry-after`, the three `ratelimit-*` headers and the problem body:
+
+```text
+tasksteams-api> python scripts/call.py GET /v1/me
+```
+
+@@OUT p5-429
+
+**7. The size limit (413).** Create a file of 1.2 MB and post it. The content does not matter; the body is refused before it is read as JSON:
+
+```text
+tasksteams-api> python -c "open('big.json', 'w').write('x' * 1200000)"
+tasksteams-api> python scripts/call.py POST /v1/teams --user alice --body big.json
+```
+
+@@OUT p5-413
+
+Delete `big.json` afterwards.
+
+**8. The container is locked down**
+
+```text
+tasksteams-api> docker compose exec -T api sh -c "touch /srv/test.txt"
+```
+
+@@OUT p5-touch-ro
+
+```text
+tasksteams-api> docker compose exec -T api sh -c "touch /tmp/test.txt && echo tmp-ok"
+```
+
+@@OUT p5-touch-tmp
+
+```text
+tasksteams-api> docker inspect tasksteams-api-api-1 --format "read-only: {{.HostConfig.ReadonlyRootfs}}, cap-drop: {{.HostConfig.CapDrop}}, security-opt: {{.HostConfig.SecurityOpt}}, memory: {{.HostConfig.Memory}}, pids: {{.HostConfig.PidsLimit}}"
+```
+
+@@OUT p5-inspect
+
+**9. Security events in the log.** The refusals of the conformance run and of the flood above (first three lines shown). Find them with `docker compose logs api --no-log-prefix | grep "request refused"` on macOS and Linux, or `docker compose logs api --no-log-prefix | Select-String "request refused"` in PowerShell:
+
+@@OUT p5-log-refused
+
+Each line has the `event`, the status, the path and the `userId` (`null` before authentication). No token, no body, no query string, no e-mail address.
+
+**10. Backup and restore.** A backup you never restored is a hope, not a backup. Dump the database **inside** the container to a file, then copy the file out (this avoids shell differences: Windows PowerShell 5.1 would write a redirected dump as UTF-16, which `psql` cannot read):
+
+```text
+tasksteams-api> docker compose exec -T db pg_dump -U tasks_admin --no-owner -f /tmp/backup.sql tasksteams
+tasksteams-api> docker compose cp db:/tmp/backup.sql backup.sql
+```
+
+Restore it into a **new, empty** database next to the original and compare:
+
+```text
+tasksteams-api> docker compose exec -T db createdb -U tasks_admin restore_check
+tasksteams-api> docker compose exec -T db psql -U tasks_admin -d restore_check -v ON_ERROR_STOP=1 -q -o /dev/null -f /tmp/backup.sql
+tasksteams-api> docker compose exec -T db psql -U tasks_admin -d restore_check -tAc "SELECT (SELECT count(*) FROM users) || ' users, ' || (SELECT count(*) FROM tasks) || ' tasks, ' || (SELECT count(*) FROM audit_log) || ' audit rows'"
+```
+
+@@OUT p5-restore-counts
+
+```text
+tasksteams-api> docker compose exec -T db psql -U tasks_admin -d tasksteams -tAc "SELECT (SELECT count(*) FROM users) || ' users, ' || (SELECT count(*) FROM tasks) || ' tasks, ' || (SELECT count(*) FROM audit_log) || ' audit rows'"
+```
+
+@@OUT p5-source-counts
+
+The numbers match. Remove the practice database and the dump (`docker compose exec -T db dropdb -U tasks_admin restore_check`, delete `backup.sql`; it holds all your data), then clean up the whole stack with `docker compose down -v --remove-orphans --rmi local`.
+
+## The OWASP API Security Top 10, walked through
+| Risk (2023) | Where this code answers it | How you saw it work |
+|-------------|----------------------------|---------------------|
+| API1 Broken object level authorization | `app/access.py`: every project, task and comment resolves to a team; `team_access` answers 404 for non-members | chapter 02, run 8: bob gets 404 for the secret team |
+| API2 Broken authentication | `app/tokens.py` (RS256 only, signature, `iss`, `aud`, `exp`, cached JWKS); `authenticate` counts failed attempts per client address | chapter 03: forged token gives 401; this chapter: anonymous flood gives 429 |
+| API3 Broken object property level authorization | `app/schemas.py` (`extra="forbid"`, `nullable` per PATCH field); `update_columns` in `repositories/sql.py` allow-lists columns; `id`, `version`, timestamps are never bound from input | chapter 01: `colour` is refused with a pointer |
+| API4 Unrestricted resource consumption | `limit` at most 100 (`pagination.py`), `MAX_BODY_BYTES` (413), rate limits (429), pool timeout of 5 s (`db.py`), container memory, pid and cpu limits | 429 and 413 above |
+| API5 Broken function level authorization | scope plus role per route (`Reader`, `Writer`, `AdminWriter`, `AdminOnly` in `auth.py`); `Access.require_manage` for lead actions | conformance check `403 for member on admin route` |
+| API6 Unrestricted access to sensitive business flows | admin-only team creation, `Idempotency-Key`, the last-lead rule (`routers/members.py`), per-user rate limit | chapter 02, runs 5 and 8 |
+| API7 Server-side request forgery | the only outgoing request is the JWKS fetch from the configured `JWKS_URL`; PyJWT accepts only `http` and `https` addresses and does not follow redirects; no request data becomes a URL | `app/tokens.py` has no URL from input |
+| API8 Security misconfiguration | security headers, CORS allow-list, docs off, no stack traces (500 and database errors use fixed sentences), non-root and read-only container, loopback ports, pinned image | steps 2 to 6 above |
+| API9 Improper inventory management | one contract, `/v1` prefix, `ENABLE_DOCS=false` in the container, no debug routes | `/docs` answers 404 |
+| API10 Unsafe consumption of APIs | the JWKS is parsed by PyJWT and token claims are type-checked in `principal_from_claims`; every SQL value is bound | `app/auth.py` |
+
+Production checklist (what this lab deliberately leaves out): terminate TLS in front of the API and set `ENABLE_HSTS=true`; take `DATABASE_URL` and the database password from a secret store, create the `tasks_app` role there and not in a file; run Keycloak in production mode behind HTTPS with a real database; keep the rate limiter in a shared store when you run more than one replica; pin the base image by digest and rebuild regularly; scan images and dependencies; install packages with `pip install --require-hashes`; ship the JSON logs to a collector and alert on `event: refused` spikes; schedule backups, keep them off the host, and test a restore every month.
+
+## How it works
+Where each protection sits: the **edge** (middlewares) handles what needs no knowledge of the user: trace id, headers, CORS, size. The **door** (`authenticate`) handles identity: token, limit, scopes. The **rooms** (`access.py` and the stored functions) handle what a user may do with one object. A request must pass all three, and the cheapest checks come first, so abusive traffic is refused before it costs a database query.
+
+New terms: **rate limit** (a cap on requests per time window); **fixed window** (the counter resets at fixed intervals); **CORS** (Cross-Origin Resource Sharing: the rules by which browsers let a page call another origin); **preflight** (the `OPTIONS` request a browser sends before a risky cross-origin call); **CSP** (Content-Security-Policy: what a page may load); **HSTS** (tell browsers to use HTTPS only); **capability** (a fine-grained Linux privilege); **security event** (a log line about a refused action).
+
+Why this, not that:
+
+| Choice | Alternative | Why we chose this |
+|--------|-------------|-------------------|
+| Limit in the application | Limit in a gateway or reverse proxy | The app knows the user id (a proxy only sees addresses) and the contract wants per-user limits. A gateway is still a good second layer, and the only place that can protect against floods before they reach Python |
+| Fixed window | Sliding window, token bucket | Simplest to read and to test; the burst at a window boundary is a known price |
+| `no-store` on every answer | Cache headers per route | Answers hold personal data; the ETag logic still works for conditional requests the client makes itself |
+| `read_only` plus `tmpfs` | A writable container | An attacker who gets code execution cannot persist files; Python needs no writable folder because we set `PYTHONDONTWRITEBYTECODE` |
+| Logs on stdout in JSON | Log files with rotation | The platform collects the stream; the app needs no write access |
+
+## Try it
+Exercise: **the arithmetic of the limiter.** Copy `exercise/starter/window.py` into a folder of your own and finish `decision`: when the window has passed start a new one, count this request, and return whether it is allowed, how many requests remain and how many seconds are left (rounded **up**, at least 1). Run `python window.py`; compare with the four lines below.
+
+@@FILE_STARTER window.py
+
+<details><summary>Solution</summary>
+
+@@FILE_EXERCISE window.py
+
+Output:
+
+@@OUT p5-ex-window
+
+Rounding the reset **up** means a client that waits exactly `Retry-After` seconds is never told to wait again by a fraction of a second.
+
+</details>
+
+## Check yourself
+1. Why is the anonymous limit keyed by client address and the authenticated one by user id? <details><summary>Answer</summary>Before the token is verified, a user id in it cannot be trusted (anyone can write one); the address is what the connection proves. After verification the user id is the fair unit, because many users may share one address.</details>
+2. Why does `BodySizeLimitMiddleware` count bytes as well as read `Content-Length`? <details><summary>Answer</summary>A client can send a chunked body with no length header, or lie about the length. Counting what actually arrives enforces the limit either way.</details>
+3. What does `read_only: true` protect against, and what must you then provide? <details><summary>Answer</summary>It stops an attacker or a bug from writing files into the image's file system. Anything that must be written (here only `/tmp`) needs an explicit `tmpfs` or volume.</details>
+4. Two API replicas each allow 100 requests per minute per user. What is the real limit and how do you fix it? <details><summary>Answer</summary>Up to 200 (the counters are per process). Use a shared store for the counters, or limit at a gateway that sees all traffic.</details>
+5. What is the value of restoring a backup into a second database before you ever need it? <details><summary>Answer</summary>It proves that the dump is complete and that your commands work, while nothing depends on it. Finding out during a disaster is too late.</details>
+
+## Common mistakes
+| Symptom or error text | Cause | Fix |
+|---|---|---|
+| `429` with `"detail":"Too many requests. Try again in 48 seconds."` while testing | You used up the window (30 anonymous or 100 per user per 60 seconds) | Wait for `Retry-After` seconds, or raise `RATE_LIMIT_USER` in `docker-compose.override.yml` for a load test |
+| `413` with `The request body may not be larger than 1048576 bytes.` | A body above `MAX_BODY_BYTES` | Send less data; raise the limit only if the contract needs it |
+| A browser says the request was blocked by CORS, the preflight answers `400 Disallowed CORS origin` | The page's origin is not in `CORS_ORIGINS` | Add the exact origin (scheme, host and port) to `CORS_ORIGINS` and restart the container |
+| `touch: cannot touch '/srv/test.txt': Read-only file system` | The container is read-only on purpose | Write only to `/tmp`, or mount a volume |
+| `/docs` answers `{"type":".../not-found",...,"detail":"No such route."}` | `ENABLE_DOCS` is `false` in the container | Run the API on your computer with `ENABLE_DOCS=true` when you need the interactive docs |
+| Restore with a PowerShell redirect fails with strange characters | Windows PowerShell 5.1 writes `>` output as UTF-16 | Use `pg_dump -f` inside the container and `docker compose cp`, as shown |
+| Two replicas let more requests through than the limit | The limiter counts per process | Use a shared limiter or a gateway |
+
+## Best practice
+Defend in layers (edge, door, rooms), log refusals without secrets, run with the fewest privileges you can, and test your restore. Source: OWASP API Security Top 10 2023 https://owasp.org/API-Security/editions/2023/en/0x11-t10/ and Docker documentation, Docker security https://docs.docker.com/engine/security/
+
+## Next lesson
+You have a reference backend that passes all 18 conformance checks. Next: the web clients (`web-angular`, `web-react`) and the mobile clients (`mobile-flutter`, `mobile-kotlin`) that run against it, and the other backends (`backend-dotnet`, `backend-go`, `backend-rust`) that must pass the same script. Compare how each language solves the problems of chapters 02 and 03.

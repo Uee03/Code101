@@ -1,0 +1,28 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "run both adapters through the same use case",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "memory: Write the report -> done at 2026-01-15T09:30:00+00:00\nmemory: notified [1]\nsqlite: Write the report -> done at 2026-01-15T09:30:00+00:00\nsqlite: notified [1]\npersisted: done"
+    },
+    {
+      "name": "dependency rule check",
+      "cwd": "code",
+      "cmd": "{python} check_dependency_rule.py",
+      "expect_stdout": "dependency rule holds"
+    },
+    {
+      "name": "unit tests",
+      "cwd": "code",
+      "cmd": "{python} -m unittest"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} exercise.py",
+      "expect_stdout": "Task(id=1, title='Write the report', done=False)\ntask 2 is not done\ntask 9 was not found"
+    }
+  ]
+}

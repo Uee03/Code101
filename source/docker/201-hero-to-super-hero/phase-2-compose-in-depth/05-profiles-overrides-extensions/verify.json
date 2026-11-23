@@ -1,0 +1,22 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "create .env", "cwd": "code", "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\"" },
+    { "name": "profiles", "cwd": "code", "cmd": "docker compose config --profiles", "expect_contains": ["debug", "tools"] },
+    { "name": "up dev", "cwd": "code", "cmd": "docker compose up -d --build --wait", "timeout": 600 },
+    { "name": "probe dev", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"environment\": \"development\", \"message\": \"Hello from profiles\"}", "retries": 20, "retry_delay": 1 },
+    { "name": "psql profile", "cwd": "code", "cmd": "docker compose --profile tools run --rm psql -tAc \"SELECT current_database()\"", "expect_stdout": "workshop" },
+    { "name": "down dev", "cwd": "code", "cmd": "docker compose down --remove-orphans" },
+    { "name": "up prod", "cwd": "code", "cmd": "docker compose -f compose.yaml -f compose.prod.yaml up -d --build --wait", "timeout": 600 },
+    { "name": "probe prod", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8080/", "expect_stdout": "{\"environment\": \"production\", \"message\": \"Hello from profiles\"}", "retries": 20, "retry_delay": 1 },
+    { "name": "down prod", "cwd": "code", "cmd": "docker compose -f compose.yaml -f compose.prod.yaml down --remove-orphans" },
+    { "name": "up staging", "cwd": "code", "cmd": "docker compose -f compose.yaml -f ../exercise/solution/compose.staging.yaml up -d --build --wait", "timeout": 600 },
+    { "name": "probe staging", "cwd": "code", "cmd": "curl -fsS http://127.0.0.1:8081/", "expect_stdout": "{\"environment\": \"staging\", \"message\": \"Hello from profiles\"}", "retries": 20, "retry_delay": 1 }
+  ],
+  "cleanup": [
+    { "name": "down all", "cwd": "code", "cmd": "docker compose -f compose.yaml -f ../exercise/solution/compose.staging.yaml down -v --remove-orphans" },
+    { "name": "remove image", "cmd": "docker image rm code101-profiles-web:201" }
+  ],
+  "skip_lesson_check": []
+}

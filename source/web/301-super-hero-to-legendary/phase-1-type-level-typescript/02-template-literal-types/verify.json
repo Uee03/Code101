@@ -1,0 +1,21 @@
+{
+  "requires": ["node", "npm", "python"],
+  "steps": [
+    { "name": "install code", "cwd": "code", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "typecheck code", "cwd": "code", "cmd": "npx tsc --noEmit", "expect_stdout": "" },
+    { "name": "build code", "cwd": "code", "cmd": "npx tsc", "expect_stdout": "" },
+    {
+      "name": "run code",
+      "cwd": "code",
+      "cmd": "node dist/index.js",
+      "expect_stdout": "/\n/teams/t%201\n/teams/core/projects/p%2F9\n{\"name\":\"project\",\"params\":{\"teamId\":\"core\",\"projectId\":\"p/9\"}}\nundefined\nt1 is now Blocked\nUnknown (archived)\n{\"dueDate\":\"2026-12-01\",\"assignedToId\":null}"
+    },
+    {
+      "name": "overlay exercise solution on code",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('code', 'work', ignore=shutil.ignore_patterns('node_modules', 'dist')); shutil.copytree('exercise/solution', 'work', dirs_exist_ok=True)\""
+    },
+    { "name": "install solution", "cwd": "work", "cmd": "npm install --no-audit --no-fund", "timeout": 300 },
+    { "name": "build solution", "cwd": "work", "cmd": "npx tsc", "expect_stdout": "" },
+    { "name": "run solution exercise", "cwd": "work", "cmd": "node dist/exercise.js", "expect_stdout": "due_date assigned_to_id" }
+  ]
+}

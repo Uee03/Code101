@@ -1,0 +1,14 @@
+name: code101-registry
+services:
+  registry:
+    image: registry:3.1.2
+    ports:
+      - "127.0.0.1:5050:5000"
+    volumes:
+      - ./registry-config.yml:/etc/distribution/config.yml:ro
+      - registry-data:/var/lib/registry
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+volumes:
+  registry-data:

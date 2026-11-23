@@ -1,0 +1,11 @@
+name: candidate
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_PASSWORD: admin
+      DEBUG: "true"
+    restart: always

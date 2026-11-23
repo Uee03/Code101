@@ -1,0 +1,25 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "Call Ada tomorrow\nmissing\nId 1 already exists.\nLongest title: Call Ada tomorrow\nSum of ids: 3\ncat: 2\nsaw: 1\nthe: 2\nDuplicates: a,b\nDequeued: first, left: 1"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "dotnet run --project . --nologo",
+      "stdin": "",
+      "expect_stdout": "True\nTrue\nFalse\nCount: 2\nDequeued: a\nTrue\nCount: 2\nTrue\nFalse"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/Lesson.csproj"
+  ]
+}

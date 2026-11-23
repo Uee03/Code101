@@ -1,0 +1,44 @@
+<main class="page">
+  <h1>{{ title }}</h1>
+
+  @if (remaining() === 0) {
+    <p class="status">All tasks are done.</p>
+  } @else if (remaining() === 1) {
+    <p class="status">One task left.</p>
+  } @else {
+    <p class="status">{{ remaining() }} tasks left.</p>
+  }
+
+  <div role="group" aria-label="Filter tasks">
+    @for (option of filters; track option) {
+      <button type="button" [class.active]="filter() === option" [attr.aria-pressed]="filter() === option" (click)="setFilter(option)">
+        {{ option }}
+      </button>
+    }
+  </div>
+
+  <ul class="tasks">
+    @for (task of visibleTasks(); track task.id; let i = $index) {
+      <li [class.done]="task.done">
+        <label>
+          <input type="checkbox" [checked]="task.done" (change)="toggle(task.id)">
+          {{ i + 1 }}. {{ task.title }}
+        </label>
+      </li>
+    } @empty {
+      <li class="empty">No tasks in this view.</li>
+    }
+  </ul>
+
+  @switch (filter()) {
+    @case ('all') {
+      <p class="hint">Showing every task.</p>
+    }
+    @case ('todo') {
+      <p class="hint">Showing tasks that still need work.</p>
+    }
+    @case ('done') {
+      <p class="hint">Showing finished tasks.</p>
+    }
+  }
+</main>

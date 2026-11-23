@@ -1,0 +1,26 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "policy check on sample references (exit 1)",
+      "cwd": "code",
+      "cmd": "{python} check_base_image.py base-image-policy.json sample-references.txt",
+      "expect_exit": 1,
+      "expect_contains": ["FAIL python:3.13-slim", "PASS localhost:5050/team/base:1.2.0@sha256:", "repository ubuntu is not on the allow list"]
+    },
+    {
+      "name": "query the sample SBOM",
+      "cwd": "code",
+      "cmd": "{python} sbom_query.py sample-sbom.json ssl zlib",
+      "expect_stdout": "4 packages in sample-sbom.json\n  libssl3 0.0.1-sample\n  zlib1g 0.0.1-sample"
+    },
+    {
+      "name": "exercise solution policy",
+      "cwd": "exercise/solution",
+      "cmd": "{python} check_base_image.py policy.json references.txt",
+      "expect_exit": 1,
+      "expect_contains": ["tag prefix is forbidden"]
+    }
+  ],
+  "cleanup": []
+}

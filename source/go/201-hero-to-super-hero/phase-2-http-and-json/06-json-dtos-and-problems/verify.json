@@ -1,0 +1,14 @@
+{
+  "requires": ["go"],
+  "steps": [
+    {"name": "test", "cmd": "go test ./...", "cwd": "code", "expect_contains": ["ok"]},
+    {"name": "solution-test", "cmd": "go test ./...", "cwd": "exercise/solution", "expect_contains": ["ok"]},
+    {"name": "serve", "cmd": "go run .", "cwd": "code", "bg": true, "wait": 3},
+    {"name": "create", "cmd": "curl -s -w \"status %{http_code}\\nlocation %header{location}\\n\" -X POST -H \"Content-Type: application/json\" --data-binary \"@requests/valid.json\" http://127.0.0.1:8080/books", "cwd": "code",
+     "retries": 10, "retry_delay": 1,
+     "expect_stdout": "{\"id\":1,\"title\":\"Learning Go\",\"author\":\"Jon Bodner\",\"pages\":375}\nstatus 201\nlocation /books/1"},
+    {"name": "invalid", "cmd": "curl -s -w \"status %{http_code}\\n\" -X POST -H \"Content-Type: application/json\" --data-binary \"@requests/invalid.json\" http://127.0.0.1:8080/books", "cwd": "code",
+     "expect_stdout": "{\"type\":\"https://example.com/problems/validation-error\",\"title\":\"Validation failed\",\"status\":422,\"detail\":\"One or more fields are invalid.\",\"instance\":\"/books\",\"errors\":[{\"field\":\"title\",\"message\":\"is required\"},{\"field\":\"author\",\"message\":\"is required\"},{\"field\":\"pages\",\"message\":\"must be between 1 and 10000\"}]}\nstatus 422"}
+  ],
+  "skip_lesson_check": ["code/go.mod"]
+}

@@ -1,0 +1,17 @@
+HTTP/1.1 429 Too Many Requests
+date: Mon, 23 Nov 2026 09:12:28 GMT
+retry-after: 56
+ratelimit-limit: 30
+ratelimit-remaining: 0
+ratelimit-reset: 56
+content-length: 217
+content-type: application/problem+json
+vary: Origin
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+content-security-policy: default-src 'none'; frame-ancestors 'none'
+x-trace-id: 39dfe08d39904696bb27c254aeb2a48a
+
+{"type":"https://code101.example/problems/rate-limited","title":"Too many requests","status":429,"detail":"Too many requests. Try again in 56 seconds.","instance":"/v1/me","traceId":"39dfe08d39904696bb27c254aeb2a48a"}

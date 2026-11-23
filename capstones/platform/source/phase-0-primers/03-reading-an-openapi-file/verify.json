@@ -1,0 +1,25 @@
+{
+  "requires": ["python"],
+  "steps": [
+    {
+      "name": "install PyYAML",
+      "cwd": "code",
+      "cmd": "{python} -m pip install --quiet --disable-pip-version-check --target .deps -r requirements.txt",
+      "timeout": 240,
+      "retries": 2,
+      "retry_delay": 3
+    },
+    {
+      "name": "list the operations",
+      "cwd": "code",
+      "cmd": "{python} -c \"import runpy, sys; sys.path.insert(0, '.deps'); sys.argv = ['list_operations.py']; runpy.run_path('list_operations.py', run_name='__main__')\"",
+      "expect_stdout": "Tasks and Teams API 1.0.0 (OpenAPI 3.1.1)\nGET    /health  getHealth  [public]\nGET    /v1/tasks/{taskId}  getTask  [team-member-or-admin]"
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "{python} -c \"import runpy, sys; sys.path.insert(0, '../../code/.deps'); sys.argv = ['list_responses.py', '../../code/mini-openapi.yaml']; runpy.run_path('list_responses.py', run_name='__main__')\"",
+      "expect_stdout": "GET /health: 200, 503\n  security: no token needed\nGET /v1/tasks/{taskId}: 200, 304, 401, 403, 404\n  security: scope tasks:read"
+    }
+  ]
+}

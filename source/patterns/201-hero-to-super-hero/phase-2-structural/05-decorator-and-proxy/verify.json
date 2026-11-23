@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- decorator ---\n[app] HELLO\n[APP] HELLO\none\ntwo\nwrites counted: 2\n--- proxy ---\n(slow call for Oslo)\nforecast for Oslo\nforecast for Oslo\n(slow call for Rome)\nforecast for Rome\nreal calls: 2\nDenied: members only"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- decorator ---\n[app] HELLO\n[APP] HELLO\none\ntwo\nwrites counted: 2\n--- proxy ---\n(slow call for Oslo)\nforecast for Oslo\nforecast for Oslo\n(slow call for Rome)\nforecast for Rome\nreal calls: 2\nDenied: members only"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "base: 1000\ntaxed: 1200\nfee last: 1580\nfee first: 1680"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "base: 1000\ntaxed: 1200\nfee last: 1580\nfee first: 1680"
+    }
+  ]
+}

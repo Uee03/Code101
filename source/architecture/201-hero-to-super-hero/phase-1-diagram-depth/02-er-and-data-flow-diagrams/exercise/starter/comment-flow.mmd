@@ -1,0 +1,11 @@
+flowchart LR
+    U(["Team member"])
+    P1("1 Check token and team access")
+    P2("TODO name the process that saves the comment")
+    D1[("D1 tasks")]
+    D2[("TODO name the store for comments")]
+    U -->|"comment text, bearer token"| P1
+    D1 -->|"task and its team"| P1
+    P1 -->|"TODO what data passes?"| P2
+    P2 -->|"TODO what is written?"| D2
+    P2 -->|"created comment"| U

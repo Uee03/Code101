@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Tasks Start</string>
+    <string name="greeting">Hello, %1$s!</string>
+    <string name="subtitle">Your tasks, in one place.</string>
+</resources>

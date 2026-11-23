@@ -1,0 +1,27 @@
+name: supply-chain
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the audit tools
+        run: cargo install --locked cargo-audit cargo-deny
+      - name: Check that the committed lockfile is complete
+        run: cargo metadata --locked --format-version 1 > /dev/null
+      - name: Known vulnerabilities (RustSec advisory database)
+        run: cargo audit
+      - name: Policy (advisories, licenses, bans, sources)
+        run: cargo deny check
+      - name: Build exactly what the lockfile says
+        run: cargo build --release --locked

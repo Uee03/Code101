@@ -1,0 +1,35 @@
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1rem;
+}
+
+.column h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.column ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #4b5563;
+  border-radius: 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+.empty {
+  color: #4b5563;
+}

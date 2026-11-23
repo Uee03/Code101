@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Install Node", "done": true },
+  { "id": 2, "title": "Create the app", "done": true },
+  { "id": 3, "title": "Learn control flow", "done": false, "due": "2026-12-01" },
+  { "id": 4, "title": "Call an API and show the answer in the page", "done": false, "due": "2026-12-15" }
+]

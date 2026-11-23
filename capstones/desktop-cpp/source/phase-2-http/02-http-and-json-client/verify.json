@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "cmake",
+    "vcpkg",
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "configure with the Windows preset",
+      "cwd": "code",
+      "cmd": "cmake --preset windows",
+      "timeout": 5400
+    },
+    {
+      "name": "build Debug",
+      "cwd": "code",
+      "cmd": "cmake --build --preset windows-debug",
+      "timeout": 1800
+    },
+    {
+      "name": "executable exists",
+      "cwd": "code",
+      "cmd": "{python} -c \"import pathlib, sys; sys.exit(0 if pathlib.Path('build/windows/out/tasks_desktop.exe').is_file() else 1)\""
+    },
+    {
+      "name": "overlay the exercise solution on a clean copy of src",
+      "cwd": ".",
+      "cmd": "cmake -E copy_directory exercise/solution/src code/src"
+    },
+    {
+      "name": "rebuild with the solution",
+      "cwd": "code",
+      "cmd": "cmake --build --preset windows-debug",
+      "timeout": 1800
+    }
+  ],
+  "skip_lesson_check": []
+}

@@ -1,0 +1,18 @@
+label {
+  display: block;
+  font-weight: 600;
+}
+
+input {
+  min-height: 2rem;
+  min-width: 16rem;
+}
+
+.hint {
+  color: var(--muted);
+}
+
+.error {
+  color: #b42318;
+  font-weight: 600;
+}

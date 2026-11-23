@@ -1,0 +1,23 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 2rem;
+}
+
+main {
+  max-width: 40rem;
+}
+
+li {
+  margin-block: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+}
+
+output {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid;
+}

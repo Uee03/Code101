@@ -1,0 +1,14 @@
+{
+  "requires": [
+    "dotnet"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "Total: 40.00 EUR\nUSD line: rejected (Prices must be in EUR.)\nquantity 100: rejected (Quantity must be between 1 and 99.)\nStatus: Submitted\nadd after submit: rejected (A submitted order cannot change.)\nempty order: rejected (Cannot submit an empty order.)\nMoney equality: True\nevent OrderLineAdded: 2 x BOOK\nevent OrderLineAdded: 10 x PEN\nevent OrderSubmitted: total 40.00 EUR"
+    }
+  ],
+  "skip_lesson_check": []
+}

@@ -1,0 +1,1 @@
+contract: SHA-256 matches platform; 27 operations

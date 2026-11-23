@@ -1,0 +1,11 @@
+flowchart LR
+    subgraph QueueStyle["Queue: each message is handled by one consumer"]
+        P1["Producer"] --> Q1[("Queue")]
+        Q1 --> W1["Worker 1"]
+        Q1 --> W2["Worker 2"]
+    end
+    subgraph StreamStyle["Stream: every reader keeps its own position"]
+        P2["Producer"] --> L1[("Append-only log")]
+        L1 -->|"reads from its own offset"| R1["Reader A: notifications"]
+        L1 -->|"reads from its own offset"| R2["Reader B: reports, can replay from the start"]
+    end

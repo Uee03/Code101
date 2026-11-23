@@ -1,0 +1,22 @@
+/* Exercise 01 solution. Link this file after styles.css in index.html. */
+
+:root {
+  --success: light-dark(#166534, #86efac);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.125rem var(--space-1);
+  border: 1px solid var(--success);
+  border-radius: 999px;
+  color: var(--success);
+  font-size: 0.875rem;
+}
+
+.card--inverted {
+  --surface: light-dark(#172033, #f1f5f9);
+  --text: light-dark(#e2e8f0, #0f172a);
+  --muted: light-dark(#a7b3c7, #475569);
+  --border: light-dark(#334155, #cbd5e1);
+  color: var(--text);
+}

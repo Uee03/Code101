@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+date: Mon, 23 Nov 2026 08:33:41 GMT
+server: uvicorn
+content-length: 333
+content-type: application/json
+x-trace-id: c8253df7d75541ec879bd9b843ec6dc2
+
+{"items":[{"id":"7ea00000-0000-4000-8000-000000000001","name":"Platform Team","description":"Builds and runs the shared platform.","memberCount":3,"createdBy":"a11ce000-0000-4000-8000-000000000001","version":1,"createdAt":"2026-11-23T08:32:45.468375Z","updatedAt":"2026-11-23T08:32:45.468375Z"}],"page":{"limit":1,"nextCursor":null}}

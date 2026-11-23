@@ -1,0 +1,1 @@
+{"requires":["python"],"steps":[{"name":"wrapper demo","cwd":"code","cmd":"{python} main.py","expect_stdout":"HELLO, ADA\n['open', 'body', 'closed']"},{"name":"exercise solution","cwd":"exercise/solution","cmd":"{python} exercise.py","expect_stdout":"['start', 'finish']"}]}

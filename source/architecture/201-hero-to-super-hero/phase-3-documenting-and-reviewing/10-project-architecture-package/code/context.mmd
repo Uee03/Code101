@@ -1,0 +1,6 @@
+flowchart LR
+    user(["Team member or admin<br/>plans work in teams"])
+    sys["Tasks and Teams platform<br/>web and mobile clients, backend API, database"]
+    kc["Keycloak, external<br/>signs users in and issues tokens"]
+    user -->|"uses"| sys
+    sys -->|"redirects to sign in and validates tokens with its keys, OIDC"| kc

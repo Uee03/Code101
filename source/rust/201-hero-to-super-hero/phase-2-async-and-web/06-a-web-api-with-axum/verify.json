@@ -1,0 +1,21 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet -- --self-check",
+      "timeout": 300,
+      "expect_stdout": "GET seed: 200; POST blank: 422"
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet -- --self-check",
+      "timeout": 300,
+      "expect_stdout": "GET seed: 200; POST blank: 422"
+    }
+  ]
+}

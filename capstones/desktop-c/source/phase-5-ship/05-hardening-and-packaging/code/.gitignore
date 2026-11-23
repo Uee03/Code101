@@ -1,0 +1,10 @@
+build/
+vcpkg_installed/
+CMakeUserPresets.json
+dist/
+*.o
+*.obj
+*.exe
+*.pdb
+*.log
+.env

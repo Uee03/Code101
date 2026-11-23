@@ -1,0 +1,9 @@
+HTTP/1.1 503 Service Unavailable
+date: Mon, 23 Nov 2026 08:37:13 GMT
+server: uvicorn
+retry-after: 5
+content-length: 228
+content-type: application/problem+json
+x-trace-id: 20025d363e204109a0d161157097fd9f
+
+{"type":"https://code101.example/problems/service-unavailable","title":"Service unavailable","status":503,"detail":"The sign-in keys cannot be fetched right now.","instance":"/v1/me","traceId":"20025d363e204109a0d161157097fd9f"}

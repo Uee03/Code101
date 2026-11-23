@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- singleton ---\nsame instance: True\ntotal: 1200\ntotal after a change elsewhere: 1000\n--- injection ---\nshop total: 1200\ncheck total: 1000\nshop total again: 1200"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- singleton ---\nsame instance: True\ntotal: 1200\ntotal after a change elsewhere: 1000\n--- injection ---\nshop total: 1200\ncheck total: 1000\nshop total again: 1200"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "greeting Ana, greeting Bo\nother has 0 lines"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "greeting Ana, greeting Bo\nother has 0 lines"
+    }
+  ]
+}

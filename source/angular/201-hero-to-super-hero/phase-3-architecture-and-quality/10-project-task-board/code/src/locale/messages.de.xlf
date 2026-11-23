@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="de" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="skip.link" datatype="html">
+        <source>Skip to main content</source>
+        <target>Zum Hauptinhalt springen</target>
+      </trans-unit>
+      <trans-unit id="nav.label" datatype="html">
+        <source>Main</source>
+        <target>Hauptnavigation</target>
+      </trans-unit>
+      <trans-unit id="nav.tasks" datatype="html">
+        <source>Tasks</source>
+        <target>Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="nav.new" datatype="html">
+        <source>New task</source>
+        <target>Neue Aufgabe</target>
+      </trans-unit>
+      <trans-unit id="nav.explorer" datatype="html">
+        <source>API explorer</source>
+        <target>API-Explorer</target>
+      </trans-unit>
+      <trans-unit id="tasks.heading" datatype="html">
+        <source>Tasks</source>
+        <target>Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="tasks.count.one" datatype="html">
+        <source>One task</source>
+        <target>Eine Aufgabe</target>
+      </trans-unit>
+      <trans-unit id="tasks.count.other" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ items().length }}"/> tasks</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ items().length }}"/> Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="tasks.create" datatype="html">
+        <source>Create a task</source>
+        <target>Aufgabe anlegen</target>
+      </trans-unit>
+      <trans-unit id="tasks.empty" datatype="html">
+        <source>There are no tasks yet.</source>
+        <target>Es gibt noch keine Aufgaben.</target>
+      </trans-unit>
+      <trans-unit id="tasks.loading" datatype="html">
+        <source>Loading...</source>
+        <target>Wird geladen...</target>
+      </trans-unit>
+      <trans-unit id="tasks.more" datatype="html">
+        <source>Load more</source>
+        <target>Mehr laden</target>
+      </trans-unit>
+      <trans-unit id="tasks.all" datatype="html">
+        <source>That is every task.</source>
+        <target>Das sind alle Aufgaben.</target>
+      </trans-unit>
+      <trans-unit id="tasks.summary" datatype="html">
+        <source>Summary</source>
+        <target>Zusammenfassung</target>
+      </trans-unit>
+      <trans-unit id="new.heading" datatype="html">
+        <source>New task</source>
+        <target>Neue Aufgabe</target>
+      </trans-unit>
+      <trans-unit id="new.summary.heading" datatype="html">
+        <source>Please fix these problems</source>
+        <target>Bitte beheben Sie diese Probleme</target>
+      </trans-unit>
+      <trans-unit id="new.title.label" datatype="html">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="new.title.hint" datatype="html">
+        <source>Required. Up to 200 characters, without &lt; or &gt;.</source>
+        <target>Pflichtfeld. Höchstens 200 Zeichen, ohne &lt; oder &gt;.</target>
+      </trans-unit>
+      <trans-unit id="new.title.checking" datatype="html">
+        <source>Checking whether the title is free...</source>
+        <target>Es wird geprüft, ob der Titel noch frei ist...</target>
+      </trans-unit>
+      <trans-unit id="new.description.label" datatype="html">
+        <source>Description (optional)</source>
+        <target>Beschreibung (optional)</target>
+      </trans-unit>
+      <trans-unit id="new.priority.label" datatype="html">
+        <source>Priority</source>
+        <target>Priorität</target>
+      </trans-unit>
+      <trans-unit id="new.due.label" datatype="html">
+        <source>Due date (optional)</source>
+        <target>Fälligkeitsdatum (optional)</target>
+      </trans-unit>
+      <trans-unit id="new.saving" datatype="html">
+        <source>Saving...</source>
+        <target>Wird gespeichert...</target>
+      </trans-unit>
+      <trans-unit id="new.submit" datatype="html">
+        <source>Create task</source>
+        <target>Aufgabe anlegen</target>
+      </trans-unit>
+      <trans-unit id="new.created.heading" datatype="html">
+        <source>Created in this session</source>
+        <target>In dieser Sitzung angelegt</target>
+      </trans-unit>
+      <trans-unit id="title.tasks" datatype="html">
+        <source>Tasks</source>
+        <target>Aufgaben</target>
+      </trans-unit>
+      <trans-unit id="title.new" datatype="html">
+        <source>New task</source>
+        <target>Neue Aufgabe</target>
+      </trans-unit>
+      <trans-unit id="title.explorer" datatype="html">
+        <source>API explorer</source>
+        <target>API-Explorer</target>
+      </trans-unit>
+      <trans-unit id="announce.created" datatype="html">
+        <source>The task was created.</source>
+        <target>Die Aufgabe wurde angelegt.</target>
+      </trans-unit>
+      <trans-unit id="issue.required" datatype="html">
+        <source>Enter a title.</source>
+        <target>Geben Sie einen Titel ein.</target>
+      </trans-unit>
+      <trans-unit id="issue.tooLong" datatype="html">
+        <source>The text is too long.</source>
+        <target>Der Text ist zu lang.</target>
+      </trans-unit>
+      <trans-unit id="issue.brackets" datatype="html">
+        <source>Remove the characters &lt; and &gt;.</source>
+        <target>Entfernen Sie die Zeichen &lt; und &gt;.</target>
+      </trans-unit>
+      <trans-unit id="issue.taken" datatype="html">
+        <source>This title is already used.</source>
+        <target>Dieser Titel wird bereits verwendet.</target>
+      </trans-unit>
+      <trans-unit id="issue.past" datatype="html">
+        <source>Choose today or a later date.</source>
+        <target>Wählen Sie heute oder ein späteres Datum.</target>
+      </trans-unit>
+      <trans-unit id="nav.board" datatype="html">
+        <source>Board</source>
+        <target>Board</target>
+      </trans-unit>
+      <trans-unit id="nav.signin" datatype="html">
+        <source>Sign in</source>
+        <target>Anmelden</target>
+      </trans-unit>
+      <trans-unit id="nav.signout" datatype="html">
+        <source>Sign out</source>
+        <target>Abmelden</target>
+      </trans-unit>
+      <trans-unit id="title.board" datatype="html">
+        <source>Board</source>
+        <target>Board</target>
+      </trans-unit>
+      <trans-unit id="board.heading" datatype="html">
+        <source>Board</source>
+        <target>Board</target>
+      </trans-unit>
+      <trans-unit id="board.loading" datatype="html">
+        <source>Loading the board...</source>
+        <target>Das Board wird geladen...</target>
+      </trans-unit>
+      <trans-unit id="board.move" datatype="html">
+        <source>Move to</source>
+        <target>Verschieben nach</target>
+      </trans-unit>
+      <trans-unit id="board.empty" datatype="html">
+        <source>Nothing here.</source>
+        <target>Hier ist nichts.</target>
+      </trans-unit>
+      <trans-unit id="board.moved" datatype="html">
+        <source>The task was moved.</source>
+        <target>Die Aufgabe wurde verschoben.</target>
+      </trans-unit>
+      <trans-unit id="board.failed" datatype="html">
+        <source>The task could not be moved.</source>
+        <target>Die Aufgabe konnte nicht verschoben werden.</target>
+      </trans-unit>
+      <trans-unit id="col.todo" datatype="html">
+        <source>To do</source>
+        <target>Zu erledigen</target>
+      </trans-unit>
+      <trans-unit id="col.in_progress" datatype="html">
+        <source>In progress</source>
+        <target>In Arbeit</target>
+      </trans-unit>
+      <trans-unit id="col.blocked" datatype="html">
+        <source>Blocked</source>
+        <target>Blockiert</target>
+      </trans-unit>
+      <trans-unit id="col.done" datatype="html">
+        <source>Done</source>
+        <target>Erledigt</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

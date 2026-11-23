@@ -1,0 +1,7 @@
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; margin: 24px; color: #172554; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+article { padding: 16px; background: #eff6ff; border: 2px solid #2563eb; }
+@media (min-width: 700px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}

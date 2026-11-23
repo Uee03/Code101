@@ -1,0 +1,31 @@
+name: code101-api-compose
+services:
+  api:
+    build:
+      context: .
+      args:
+        APP_VERSION: 1.0.0
+    image: code101/api:1.0.0
+    environment:
+      GREETING: hello from compose
+      WARMUP_SECONDS: "5"
+      API_TOKEN_FILE: /run/secrets/api_token
+    secrets:
+      - api_token
+    ports:
+      - "127.0.0.1:8091:8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/readyz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+secrets:
+  api_token:
+    file: ./secrets/api_token.txt

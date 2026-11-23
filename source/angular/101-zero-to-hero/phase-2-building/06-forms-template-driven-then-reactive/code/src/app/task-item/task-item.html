@@ -1,0 +1,5 @@
+<label>
+  <input type="checkbox" [checked]="task().done" (change)="toggle()">
+  {{ position() }}. {{ task().title }}
+</label>
+<button type="button" class="remove" [attr.aria-label]="'Remove ' + task().title" (click)="remove()">Remove</button>

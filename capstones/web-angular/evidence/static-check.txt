@@ -1,0 +1,7 @@
+[STATIC    ] capstones/web-angular/source/phase-1-setup/01-create-app-generate-client
+[STATIC    ] capstones/web-angular/source/phase-2-auth/02-sign-in-keycloak
+[STATIC    ] capstones/web-angular/source/phase-3-screens/03-screens-stores-pagination
+[STATIC    ] capstones/web-angular/source/phase-4-errors/04-problem-details-conflicts-offline-wcag
+[STATIC    ] capstones/web-angular/source/phase-5-ship/05-build-run-ship
+
+0 passed, 5 static-checked (not run), 0 failed, 0 unverified (missing tools)

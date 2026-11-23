@@ -1,0 +1,31 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "cargo run --quiet",
+      "cwd": "code",
+      "stdin": "oops\n12\n",
+      "timeout": 300,
+      "expect_stdout": "Number:\nPlease use digits, for example 12.\nNumber:\nAccepted: 12.00"
+    },
+    {
+      "name": "solution",
+      "cmd": "cargo run --quiet",
+      "cwd": "exercise/solution",
+      "stdin": "-2\n100\n3\n",
+      "timeout": 300,
+      "expect_stdout": "Quantity (1-99):\nUse a quantity from 1 to 99.\nQuantity (1-99):\nUse a quantity from 1 to 99.\nQuantity (1-99):\nAccepted quantity: 3"
+    },
+    {
+      "name": "Option checkpoint",
+      "cmd": "cargo run --quiet",
+      "cwd": "stages/01-option",
+      "stdin": "",
+      "timeout": 300,
+      "expect_stdout": "No second item"
+    }
+  ]
+}

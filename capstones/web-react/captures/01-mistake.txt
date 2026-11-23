@@ -1,0 +1,17 @@
+F:\Projects\Uee03\Code101\capstones\web-react\source\phase-1-setup\01-create-app\exercise\starter\run.ts:2
+if (pageSize !== 25) throw new Error('Use the API default page size, 25.');
+                           ^
+
+Error: Use the API default page size, 25.
+    at <anonymous> (F:\Projects\Uee03\Code101\capstones\web-react\source\phase-1-setup\01-create-app\exercise\starter\run.ts:2:28)
+    at Object.<anonymous> (F:\Projects\Uee03\Code101\capstones\web-react\source\phase-1-setup\01-create-app\exercise\starter\run.ts:3:37)
+    at Module._compile (node:internal/modules/cjs/loader:1968:14)
+    at Object.transformer (F:\Projects\Uee03\Code101\capstones\web-react\source\phase-1-setup\01-create-app\code\node_modules\tsx\dist\register-B1c7OH6V.cjs:22:2188)
+    at Module.load (node:internal/modules/cjs/loader:1690:32)
+    at Module._load (node:internal/modules/cjs/loader:1480:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:377:15)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:249:9)
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+
+Node.js v26.13.1

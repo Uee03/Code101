@@ -1,0 +1,37 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "start temporary Postgres",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; import subprocess; Path('.env').write_bytes(Path('.env.example').read_bytes()); raise SystemExit(subprocess.call(['docker','compose','-p','{project}','up','-d','--wait']))\"",
+      "timeout": 180
+    },
+    {
+      "name": "run SQL once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/run.sql",
+      "expect_stdout": " name |    title    |   due_on   \n------+-------------+------------\n Ava  | Field Notes | 2026-12-01\n Ben  | City Maps   | 2026-12-05\n(2 rows)\n\n name | active_loans \n------+--------------\n Ava  |            1\n Ben  |            1\n Cora |            0\n(3 rows)\n\n loan_id | book_id \n---------+---------\n       1 |       1\n       2 |       2\n(2 rows)\n\n   reading_as   \n----------------\n library_reader\n(1 row)"
+    },
+    {
+      "name": "exercise solution once",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "    title     | times_borrowed \n--------------+----------------\n City Maps    |              1\n Field Notes  |              1\n Forest Walks |              0\n Quiet Rivers |              1\n(4 rows)"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove temporary resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+sequenceDiagram
+    autonumber
+    participant C as Client
+    participant A as Backend API
+    participant D as Database
+    C->>A: PATCH task with If-Match 3
+    A->>D: TODO what does the API ask the database?
+    D-->>A: current version number
+    A-->>C: TODO which status and problem type?

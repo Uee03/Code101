@@ -1,0 +1,201 @@
+{
+  "requires": [
+    "flutter",
+    "dart",
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "restore locked dependencies",
+      "cwd": "code",
+      "cmd": "flutter pub get",
+      "timeout": 600,
+      "expect_contains": [
+        "Got dependencies!"
+      ]
+    },
+    {
+      "name": "generate typed client",
+      "cwd": "code",
+      "cmd": "dart run swagger_parser",
+      "timeout": 300,
+      "expect_contains": [
+        "Generated 58 files"
+      ]
+    },
+    {
+      "name": "generate serializers and database",
+      "cwd": "code",
+      "cmd": "dart run build_runner build",
+      "timeout": 600,
+      "expect_contains": [
+        "Built with build_runner"
+      ]
+    },
+    {
+      "name": "analyze once",
+      "cwd": "code",
+      "cmd": "flutter analyze --no-pub",
+      "timeout": 300,
+      "expect_contains": [
+        "No issues found!"
+      ]
+    },
+    {
+      "name": "build debug APK once",
+      "cwd": "code",
+      "cmd": "flutter build apk --debug --no-pub --dart-define-from-file=config/dev.json",
+      "timeout": 1200,
+      "expect_contains": [
+        "app-debug.apk"
+      ]
+    },
+    {
+      "name": "build release AAB once",
+      "cwd": "code",
+      "cmd": "flutter build appbundle --release --no-pub --dart-define-from-file=config/release.example.json",
+      "timeout": 1200,
+      "expect_contains": [
+        "app-release.aab"
+      ]
+    },
+    {
+      "name": "inspect actual manifests",
+      "cwd": "code",
+      "cmd": "{python} tool/check_artifacts.py --release",
+      "expect_contains": [
+        "Debug APK: application id, redirect scheme and networkSecurityConfig present",
+        "Release AAB: present; debug networkSecurityConfig absent"
+      ]
+    },
+    {
+      "name": "run URL policy once",
+      "cwd": "code",
+      "cmd": "dart run tool/url_probe.dart",
+      "timeout": 120,
+      "expect_contains": [
+        "URL allowed: 10.0.2.2"
+      ]
+    },
+    {
+      "name": "run exercise solution once",
+      "cwd": "exercise/solution",
+      "cmd": "dart run main.dart",
+      "timeout": 120,
+      "expect_stdout": "Use config/release.example.json"
+    }
+  ],
+  "cleanup": [],
+  "skip_lesson_check": [
+    "code/lib/data/generated/.swagger_parser.lock",
+    "code/lib/data/generated/audit/audit_client.dart",
+    "code/lib/data/generated/audit/models/audit_entity_type.dart",
+    "code/lib/data/generated/audit/models/audit_entity_type.g.dart",
+    "code/lib/data/generated/audit/models/audit_entry.dart",
+    "code/lib/data/generated/audit/models/audit_entry.g.dart",
+    "code/lib/data/generated/audit/models/audit_entry_action.dart",
+    "code/lib/data/generated/audit/models/audit_entry_action.g.dart",
+    "code/lib/data/generated/audit/models/audit_page.dart",
+    "code/lib/data/generated/audit/models/audit_page.g.dart",
+    "code/lib/data/generated/comments/comments_client.dart",
+    "code/lib/data/generated/comments/models/comment_create.dart",
+    "code/lib/data/generated/comments/models/comment_create.g.dart",
+    "code/lib/data/generated/comments/models/comment_page_request.dart",
+    "code/lib/data/generated/comments/models/comment_page_request.g.dart",
+    "code/lib/data/generated/comments/models/comment_page_response.dart",
+    "code/lib/data/generated/comments/models/comment_page_response.g.dart",
+    "code/lib/data/generated/comments/models/comment_request.dart",
+    "code/lib/data/generated/comments/models/comment_request.g.dart",
+    "code/lib/data/generated/comments/models/comment_response.dart",
+    "code/lib/data/generated/comments/models/comment_response.g.dart",
+    "code/lib/data/generated/exports.dart",
+    "code/lib/data/generated/members/members_client.dart",
+    "code/lib/data/generated/members/models/member.dart",
+    "code/lib/data/generated/members/models/member.g.dart",
+    "code/lib/data/generated/members/models/member_page.dart",
+    "code/lib/data/generated/members/models/member_page.g.dart",
+    "code/lib/data/generated/members/models/member_put.dart",
+    "code/lib/data/generated/members/models/member_put.g.dart",
+    "code/lib/data/generated/models/create_team_response201_idempotent_replayed.dart",
+    "code/lib/data/generated/models/create_team_response201_idempotent_replayed.g.dart",
+    "code/lib/data/generated/platform/models/health.dart",
+    "code/lib/data/generated/platform/models/health.g.dart",
+    "code/lib/data/generated/platform/models/health_database.dart",
+    "code/lib/data/generated/platform/models/health_database.g.dart",
+    "code/lib/data/generated/platform/models/health_status.dart",
+    "code/lib/data/generated/platform/models/health_status.g.dart",
+    "code/lib/data/generated/platform/models/me.dart",
+    "code/lib/data/generated/platform/models/me.g.dart",
+    "code/lib/data/generated/platform/models/me_teams_item.dart",
+    "code/lib/data/generated/platform/models/me_teams_item.g.dart",
+    "code/lib/data/generated/platform/models/page_info.dart",
+    "code/lib/data/generated/platform/models/page_info.g.dart",
+    "code/lib/data/generated/platform/models/problem.dart",
+    "code/lib/data/generated/platform/models/problem.g.dart",
+    "code/lib/data/generated/platform/models/role.dart",
+    "code/lib/data/generated/platform/models/role.g.dart",
+    "code/lib/data/generated/platform/models/team_role.dart",
+    "code/lib/data/generated/platform/models/team_role.g.dart",
+    "code/lib/data/generated/platform/models/user_page.dart",
+    "code/lib/data/generated/platform/models/user_page.g.dart",
+    "code/lib/data/generated/platform/models/user_summary.dart",
+    "code/lib/data/generated/platform/models/user_summary.g.dart",
+    "code/lib/data/generated/platform/platform_client.dart",
+    "code/lib/data/generated/projects/models/project_create.dart",
+    "code/lib/data/generated/projects/models/project_create.g.dart",
+    "code/lib/data/generated/projects/models/project_page_request.dart",
+    "code/lib/data/generated/projects/models/project_page_request.g.dart",
+    "code/lib/data/generated/projects/models/project_page_response.dart",
+    "code/lib/data/generated/projects/models/project_page_response.g.dart",
+    "code/lib/data/generated/projects/models/project_request.dart",
+    "code/lib/data/generated/projects/models/project_request.g.dart",
+    "code/lib/data/generated/projects/models/project_response.dart",
+    "code/lib/data/generated/projects/models/project_response.g.dart",
+    "code/lib/data/generated/projects/models/project_update.dart",
+    "code/lib/data/generated/projects/models/project_update.g.dart",
+    "code/lib/data/generated/projects/projects_client.dart",
+    "code/lib/data/generated/tasks/models/list_tasks_sort.dart",
+    "code/lib/data/generated/tasks/models/list_tasks_sort.g.dart",
+    "code/lib/data/generated/tasks/models/reassign_request.dart",
+    "code/lib/data/generated/tasks/models/reassign_request.g.dart",
+    "code/lib/data/generated/tasks/models/task_create.dart",
+    "code/lib/data/generated/tasks/models/task_create.g.dart",
+    "code/lib/data/generated/tasks/models/task_page_request.dart",
+    "code/lib/data/generated/tasks/models/task_page_request.g.dart",
+    "code/lib/data/generated/tasks/models/task_page_response.dart",
+    "code/lib/data/generated/tasks/models/task_page_response.g.dart",
+    "code/lib/data/generated/tasks/models/task_priority.dart",
+    "code/lib/data/generated/tasks/models/task_priority.g.dart",
+    "code/lib/data/generated/tasks/models/task_request.dart",
+    "code/lib/data/generated/tasks/models/task_request.g.dart",
+    "code/lib/data/generated/tasks/models/task_response.dart",
+    "code/lib/data/generated/tasks/models/task_response.g.dart",
+    "code/lib/data/generated/tasks/models/task_status.dart",
+    "code/lib/data/generated/tasks/models/task_status.g.dart",
+    "code/lib/data/generated/tasks/models/task_update.dart",
+    "code/lib/data/generated/tasks/models/task_update.g.dart",
+    "code/lib/data/generated/tasks/tasks_client.dart",
+    "code/lib/data/generated/tasks_api.dart",
+    "code/lib/data/generated/teams/models/list_teams_sort.dart",
+    "code/lib/data/generated/teams/models/list_teams_sort.g.dart",
+    "code/lib/data/generated/teams/models/team_create.dart",
+    "code/lib/data/generated/teams/models/team_create.g.dart",
+    "code/lib/data/generated/teams/models/team_page_request.dart",
+    "code/lib/data/generated/teams/models/team_page_request.g.dart",
+    "code/lib/data/generated/teams/models/team_page_response.dart",
+    "code/lib/data/generated/teams/models/team_page_response.g.dart",
+    "code/lib/data/generated/teams/models/team_request.dart",
+    "code/lib/data/generated/teams/models/team_request.g.dart",
+    "code/lib/data/generated/teams/models/team_response.dart",
+    "code/lib/data/generated/teams/models/team_response.g.dart",
+    "code/lib/data/generated/teams/models/team_update.dart",
+    "code/lib/data/generated/teams/models/team_update.g.dart",
+    "code/lib/data/generated/teams/models/validation_problem.dart",
+    "code/lib/data/generated/teams/models/validation_problem.g.dart",
+    "code/lib/data/generated/teams/models/validation_problem_errors_item.dart",
+    "code/lib/data/generated/teams/models/validation_problem_errors_item.g.dart",
+    "code/lib/data/generated/teams/teams_client.dart",
+    "code/lib/data/local/database.g.dart",
+    "code/pubspec.lock"
+  ]
+}

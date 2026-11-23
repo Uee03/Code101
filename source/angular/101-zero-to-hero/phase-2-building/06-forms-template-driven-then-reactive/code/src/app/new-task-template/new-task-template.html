@@ -1,0 +1,23 @@
+<form #form="ngForm" (ngSubmit)="submit(form)" novalidate>
+  <label for="title-template">New task (template-driven form)</label>
+  <input
+    id="title-template"
+    name="title"
+    type="text"
+    required
+    minlength="3"
+    [(ngModel)]="title"
+    #field="ngModel"
+    [attr.aria-invalid]="field.invalid && (field.touched || form.submitted)"
+    aria-describedby="title-template-error">
+  <button type="submit">Add</button>
+  @if (field.invalid && (field.touched || form.submitted)) {
+    <p id="title-template-error" class="error" role="alert">
+      @if (field.errors?.['required']) {
+        Enter a title.
+      } @else {
+        Use at least 3 characters.
+      }
+    </p>
+  }
+</form>

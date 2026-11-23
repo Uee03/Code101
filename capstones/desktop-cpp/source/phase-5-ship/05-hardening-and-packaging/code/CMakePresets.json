@@ -1,0 +1,74 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 28, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "windows",
+      "displayName": "Windows, Visual Studio generator, static libraries, with tests",
+      "inherits": "base",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "cacheVariables": { "VCPKG_TARGET_TRIPLET": "x64-windows-static-md" }
+    },
+    {
+      "name": "linux",
+      "displayName": "Linux, Ninja Multi-Config, with tests",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": { "VCPKG_TARGET_TRIPLET": "x64-linux" }
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS on Apple silicon, Ninja Multi-Config, with tests",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "cacheVariables": { "VCPKG_TARGET_TRIPLET": "arm64-osx" }
+    },
+    {
+      "name": "ship-windows",
+      "displayName": "Windows release package, no tests",
+      "inherits": "windows",
+      "cacheVariables": { "TASKS_BUILD_TESTS": "OFF", "VCPKG_MANIFEST_NO_DEFAULT_FEATURES": "ON" }
+    },
+    {
+      "name": "ship-linux",
+      "displayName": "Linux release package, no tests",
+      "inherits": "linux",
+      "cacheVariables": { "TASKS_BUILD_TESTS": "OFF", "VCPKG_MANIFEST_NO_DEFAULT_FEATURES": "ON" }
+    },
+    {
+      "name": "ship-macos",
+      "displayName": "macOS release package, no tests",
+      "inherits": "macos",
+      "cacheVariables": { "TASKS_BUILD_TESTS": "OFF", "VCPKG_MANIFEST_NO_DEFAULT_FEATURES": "ON" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "windows-debug", "configurePreset": "windows", "configuration": "Debug" },
+    { "name": "windows-release", "configurePreset": "windows", "configuration": "Release" },
+    { "name": "linux-debug", "configurePreset": "linux", "configuration": "Debug" },
+    { "name": "linux-release", "configurePreset": "linux", "configuration": "Release" },
+    { "name": "macos-debug", "configurePreset": "macos", "configuration": "Debug" },
+    { "name": "macos-release", "configurePreset": "macos", "configuration": "Release" },
+    { "name": "ship-windows", "configurePreset": "ship-windows", "configuration": "Release" },
+    { "name": "ship-linux", "configurePreset": "ship-linux", "configuration": "Release" },
+    { "name": "ship-macos", "configurePreset": "ship-macos", "configuration": "Release" }
+  ],
+  "testPresets": [
+    { "name": "windows", "configurePreset": "windows", "configuration": "Debug", "output": { "outputOnFailure": true } },
+    { "name": "linux", "configurePreset": "linux", "configuration": "Debug", "output": { "outputOnFailure": true } },
+    { "name": "macos", "configurePreset": "macos", "configuration": "Debug", "output": { "outputOnFailure": true } }
+  ],
+  "packagePresets": [
+    { "name": "ship-windows", "configurePreset": "ship-windows", "configurations": ["Release"], "generators": ["ZIP"] },
+    { "name": "ship-linux", "configurePreset": "ship-linux", "configurations": ["Release"], "generators": ["ZIP"] },
+    { "name": "ship-macos", "configurePreset": "ship-macos", "configurations": ["Release"], "generators": ["ZIP"] }
+  ]
+}

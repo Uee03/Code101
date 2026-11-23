@@ -1,0 +1,154 @@
+{
+  "requires": [
+    "go",
+    "curl",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "Docker engine",
+      "cwd": "code",
+      "cmd": "docker info"
+    },
+    {
+      "name": "create .env from .env.example",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start the temporary database",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait db",
+      "timeout": 300,
+      "retries": 2,
+      "retry_delay": 5
+    },
+    {
+      "name": "build",
+      "cwd": "code",
+      "cmd": "go build ./...",
+      "timeout": 300
+    },
+    {
+      "name": "start the API",
+      "cwd": "code",
+      "cmd": "go run ./cmd/api",
+      "bg": true,
+      "wait": 6
+    },
+    {
+      "name": "health with the database",
+      "cwd": "code",
+      "cmd": "curl -s http://127.0.0.1:8000/health",
+      "retries": 40,
+      "retry_delay": 1,
+      "expect_contains": [
+        "\"database\":\"up\""
+      ]
+    },
+    {
+      "name": "me as alice",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "\"username\":\"alice\"",
+        "\"role\":\"lead\"",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "me without credentials",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" http://127.0.0.1:8000/v1/me",
+      "expect_contains": [
+        "HTTP 401"
+      ]
+    },
+    {
+      "name": "create a team as alice",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" --data-binary @requests/team-valid.json http://127.0.0.1:8000/v1/teams",
+      "expect_contains": [
+        "\"name\":\"Demo Team\"",
+        "HTTP 201"
+      ]
+    },
+    {
+      "name": "a member may not create a team",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X POST -H \"X-Dev-User: b0b00000-0000-4000-8000-000000000002\" -H \"Content-Type: application/json\" --data-binary @requests/team-valid.json http://127.0.0.1:8000/v1/teams",
+      "expect_contains": [
+        "HTTP 403"
+      ]
+    },
+    {
+      "name": "patch needs If-Match",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X PATCH -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" --data-binary @requests/team-patch.json http://127.0.0.1:8000/v1/teams/7ea00000-0000-4000-8000-000000000001",
+      "expect_contains": [
+        "HTTP 428"
+      ]
+    },
+    {
+      "name": "patch with a stale ETag",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X PATCH -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H @requests/if-match-99.txt --data-binary @requests/team-patch.json http://127.0.0.1:8000/v1/teams/7ea00000-0000-4000-8000-000000000001",
+      "expect_contains": [
+        "HTTP 412"
+      ]
+    },
+    {
+      "name": "patch with the current ETag",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X PATCH -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" -H \"Content-Type: application/json\" -H @requests/if-match-1.txt --data-binary @requests/team-patch.json http://127.0.0.1:8000/v1/teams/7ea00000-0000-4000-8000-000000000001",
+      "expect_contains": [
+        "\"version\":2",
+        "HTTP 200"
+      ]
+    },
+    {
+      "name": "the last lead stays",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -X DELETE -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" http://127.0.0.1:8000/v1/teams/7ea00000-0000-4000-8000-000000000001/members/a11ce000-0000-4000-8000-000000000001",
+      "expect_contains": [
+        "\"code\":\"last_lead\"",
+        "HTTP 409"
+      ]
+    },
+    {
+      "name": "a bad cursor",
+      "cwd": "code",
+      "cmd": "curl -s -w \"\\nHTTP %{http_code}\\n\" -H \"X-Dev-User: a11ce000-0000-4000-8000-000000000001\" -H \"X-Dev-Roles: admin\" \"http://127.0.0.1:8000/v1/teams?cursor=abc\"",
+      "expect_contains": [
+        "HTTP 400"
+      ]
+    },
+    {
+      "name": "exercise solution",
+      "cwd": "exercise/solution",
+      "cmd": "go run .",
+      "expect_stdout": "Plat     -> plat%\n50%_off  -> 50\\%\\_off%\na\\b      -> a\\\\b%"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove the temporary stack",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans --rmi local"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/db/schema.sql",
+    "code/db/seed.sql",
+    "code/go.sum",
+    "code/internal/http/middleware.go",
+    "code/internal/http/respond.go",
+    "code/internal/http/validate.go",
+    "code/internal/problem/problem.go",
+    "code/keycloak/realm-tasksteams.json",
+    "code/requests/team-invalid.json",
+    "code/requests/team-valid.json",
+    "code/scripts/conformance.py"
+  ],
+  "exclusive": "tasksteams"
+}

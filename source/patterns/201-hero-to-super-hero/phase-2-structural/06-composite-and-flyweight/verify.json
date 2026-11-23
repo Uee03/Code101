@@ -1,0 +1,29 @@
+{
+  "requires": ["python", "dotnet"],
+  "steps": [
+    {
+      "name": "python-run",
+      "cwd": "code/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "--- composite ---\nroot (60)\n  a.txt (10)\n  docs (50)\n    b.txt (20)\n    c.txt (30)\ndocs only: 50\n--- flyweight ---\noak (green) at 1,2\noak (green) at 3,4\npine (dark green) at 5,6\noak (green) at 7,8\npine (dark green) at 9,10\ntrees: 5, shared types: 2\nsame object: True"
+    },
+    {
+      "name": "csharp-run",
+      "cwd": "code/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "--- composite ---\nroot (60)\n  a.txt (10)\n  docs (50)\n    b.txt (20)\n    c.txt (30)\ndocs only: 50\n--- flyweight ---\noak (green) at 1,2\noak (green) at 3,4\npine (dark green) at 5,6\noak (green) at 7,8\npine (dark green) at 9,10\ntrees: 5, shared types: 2\nsame object: True"
+    },
+    {
+      "name": "python-solution",
+      "cwd": "exercise/solution/python",
+      "cmd": "{python} main.py",
+      "expect_stdout": "laptop: 90000\nstarter pack: 92500\ncombo: 94500"
+    },
+    {
+      "name": "csharp-solution",
+      "cwd": "exercise/solution/csharp",
+      "cmd": "dotnet run --project . --nologo",
+      "expect_stdout": "laptop: 90000\nstarter pack: 92500\ncombo: 94500"
+    }
+  ]
+}

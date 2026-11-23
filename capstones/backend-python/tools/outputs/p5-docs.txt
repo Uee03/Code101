@@ -1,0 +1,12 @@
+HTTP/1.1 404 Not Found
+date: Mon, 23 Nov 2026 09:09:36 GMT
+content-length: 176
+content-type: application/problem+json
+vary: Origin
+x-content-type-options: nosniff
+cache-control: no-store
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-site
+x-trace-id: 61a788581d234bd4b7564cdccae526bb
+
+{"type":"https://code101.example/problems/not-found","title":"Not found","status":404,"detail":"No such route.","instance":"/docs","traceId":"61a788581d234bd4b7564cdccae526bb"}

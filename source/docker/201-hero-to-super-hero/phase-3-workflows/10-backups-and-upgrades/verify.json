@@ -1,0 +1,26 @@
+{
+  "requires": ["docker"],
+  "steps": [
+    { "name": "engine", "cwd": "code", "cmd": "docker info" },
+    { "name": "create .env", "cwd": "code", "cmd": "{python} -c \"import shutil, os; shutil.copy('.env.example', '.env'); os.makedirs('backups', exist_ok=True)\"" },
+    { "name": "up", "cwd": "code", "cmd": "docker compose up -d --wait", "timeout": 600 },
+    { "name": "count", "cwd": "code", "cmd": "docker compose exec -T db psql -U learner -d workshop -tAc \"SELECT count(*) FROM notes\"", "expect_stdout": "3" },
+    { "name": "dump", "cwd": "code", "cmd": "docker compose exec -T db pg_dump -U learner -d workshop -Fc -f /tmp/notes.dump" },
+    { "name": "copy out", "cwd": "code", "cmd": "docker compose cp db:/tmp/notes.dump backups/notes.dump" },
+    { "name": "disaster", "cwd": "code", "cmd": "docker compose exec -T db psql -U learner -d workshop -c \"DELETE FROM notes\"", "expect_stdout": "DELETE 3" },
+    { "name": "copy in", "cwd": "code", "cmd": "docker compose cp backups/notes.dump db:/tmp/notes.dump" },
+    { "name": "restore", "cwd": "code", "cmd": "docker compose exec -T db pg_restore -U learner -d workshop --clean --if-exists --single-transaction /tmp/notes.dump" },
+    { "name": "count again", "cwd": "code", "cmd": "docker compose exec -T db psql -U learner -d workshop -tAc \"SELECT count(*) FROM notes\"", "expect_stdout": "3" },
+    { "name": "major version 16", "cwd": "code", "cmd": "docker compose exec -T db psql -U learner -d workshop -tAc \"SELECT current_setting('server_version_num')::int / 10000\"", "expect_stdout": "16" },
+    { "name": "up 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml up -d --wait", "timeout": 600 },
+    { "name": "copy to 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml cp backups/notes.dump db:/tmp/notes.dump" },
+    { "name": "restore into 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml exec -T db pg_restore -U learner -d workshop --no-owner /tmp/notes.dump" },
+    { "name": "count in 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml exec -T db psql -U learner -d workshop -tAc \"SELECT count(*) FROM notes\"", "expect_stdout": "3" },
+    { "name": "major version 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml exec -T db psql -U learner -d workshop -tAc \"SELECT current_setting('server_version_num')::int / 10000\"", "expect_stdout": "17" }
+  ],
+  "cleanup": [
+    { "name": "down 17", "cwd": "code", "cmd": "docker compose -f compose.pg17.yaml down -v --remove-orphans" },
+    { "name": "down 16", "cwd": "code", "cmd": "docker compose down -v --remove-orphans" }
+  ],
+  "skip_lesson_check": []
+}

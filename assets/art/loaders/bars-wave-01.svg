@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Loading (bars-wave-01)">
+  <style>.b0{animation:wv 1s ease-in-out infinite;animation-delay:0s}.b1{animation:wv 1s ease-in-out infinite;animation-delay:0.25s}.b2{animation:wv 1s ease-in-out infinite;animation-delay:0.5s}.b3{animation:wv 1s ease-in-out infinite;animation-delay:0.75s}@keyframes wv{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}</style>
+  <line class="b0" x1="6" y1="9" x2="6" y2="15" stroke-width="2.5"/><line class="b1" x1="10" y1="9" x2="10" y2="15" stroke-width="2.5"/><line class="b2" x1="14" y1="9" x2="14" y2="15" stroke-width="2.5"/><line class="b3" x1="18" y1="9" x2="18" y2="15" stroke-width="2.5"/>
+</svg>

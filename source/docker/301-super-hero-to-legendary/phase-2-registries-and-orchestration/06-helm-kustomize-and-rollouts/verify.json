@@ -1,0 +1,43 @@
+{
+  "requires": ["kubectl", "helm"],
+  "skip_lesson_check": ["code/app.py", "code/Dockerfile"],
+  "steps": [
+    {
+      "name": "render dev overlay (offline)",
+      "cwd": "code",
+      "cmd": "kubectl kustomize kustomize/overlays/dev",
+      "expect_contains": ["namespace: code101-dev", "image: code101/api:1.0.0", "replicas: 1"]
+    },
+    {
+      "name": "render prod overlay (offline)",
+      "cwd": "code",
+      "cmd": "kubectl kustomize kustomize/overlays/prod",
+      "expect_contains": ["namespace: code101-prod", "replicas: 3", "GREETING: hello from prod"]
+    },
+    {
+      "name": "helm lint",
+      "cwd": "code",
+      "cmd": "helm lint helm/code101-api",
+      "expect_contains": ["1 chart(s) linted, 0 chart(s) failed"]
+    },
+    {
+      "name": "helm template deployment",
+      "cwd": "code",
+      "cmd": "helm template demo helm/code101-api --show-only templates/deployment.yaml",
+      "expect_contains": ["name: demo", "replicas: 2", "image: \"code101/api:1.0.0\""]
+    },
+    {
+      "name": "base renders (the staging solution overlay is copied under code/kustomize/overlays by the learner)",
+      "cwd": "exercise/solution",
+      "cmd": "kubectl kustomize ../../code/kustomize/base",
+      "expect_contains": ["kind: Deployment"]
+    },
+    {
+      "name": "exercise solution: helm values",
+      "cwd": "code",
+      "cmd": "helm template demo helm/code101-api -f ../exercise/solution/values-prod.yaml --show-only templates/deployment.yaml",
+      "expect_contains": ["replicas: 3"]
+    }
+  ],
+  "cleanup": []
+}

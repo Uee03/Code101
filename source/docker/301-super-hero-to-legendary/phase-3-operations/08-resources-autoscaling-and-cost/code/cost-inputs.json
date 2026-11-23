@@ -1,0 +1,10 @@
+{
+  "note": "Illustrative placeholder numbers for the exercise, not real prices. Replace them with your own.",
+  "node": {"vcpu": 4, "memory_gib": 16, "price_per_hour": 0.16},
+  "hours_per_month": 730,
+  "cpu_share": 0.5,
+  "workloads": [
+    {"name": "api", "replicas": 4, "cpu_request_m": 250, "memory_request_mib": 512, "cpu_used_p95_m": 100, "memory_used_p95_mib": 256},
+    {"name": "worker", "replicas": 2, "cpu_request_m": 1000, "memory_request_mib": 2048, "cpu_used_p95_m": 250, "memory_used_p95_mib": 1024}
+  ]
+}

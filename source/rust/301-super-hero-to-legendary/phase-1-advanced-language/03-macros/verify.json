@@ -1,0 +1,27 @@
+{
+  "requires": [
+    "cargo"
+  ],
+  "steps": [
+    {
+      "name": "example",
+      "cwd": "code",
+      "cmd": "cargo run --quiet -p macro_demo",
+      "timeout": 600,
+      "expect_stdout": "{\"alice\": 29, \"carol\": 31}\ntokens: 4\nhygiene: 102\nusr-0042 ord-0007\norder fields: [\"id\", \"user\", \"total_cents\"]"
+    },
+    {
+      "name": "example tests",
+      "cwd": "code",
+      "cmd": "cargo test --quiet --workspace",
+      "timeout": 600
+    },
+    {
+      "name": "solution",
+      "cwd": "exercise/solution",
+      "cmd": "cargo run --quiet",
+      "timeout": 300,
+      "expect_stdout": "7\n9\n1.5"
+    }
+  ]
+}

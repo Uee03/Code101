@@ -1,0 +1,11 @@
+<span class="title">
+  <input type="checkbox" [checked]="task().done" [attr.aria-label]="'Done: ' + task().title" (change)="toggle()">
+  <a [routerLink]="['/tasks', task().id]">{{ task().title }}</a>
+  <span class="badge" [class.badge-high]="task().priority === 'high'">{{ task().priority | titlecase }}</span>
+  @if (task().due) {
+    <small class="due">Due {{ task().due | date: 'mediumDate' }}</small>
+  }
+</span>
+<button type="button" class="remove" [attr.aria-label]="'Remove ' + task().title" (click)="remove()">
+  <span class="icon icon-x" aria-hidden="true"></span>
+</button>

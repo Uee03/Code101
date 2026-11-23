@@ -1,0 +1,49 @@
+{
+  "requires": [
+    "dotnet",
+    "docker"
+  ],
+  "steps": [
+    {
+      "name": "env-file",
+      "cwd": "code",
+      "cmd": "{python} -c \"import shutil; shutil.copy('.env.example', '.env')\""
+    },
+    {
+      "name": "database-up",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 240
+    },
+    {
+      "name": "run",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5434;Database=rawsql;Username=rawsql_app;Password=rawsql_local_only\"&& dotnet run --project . --nologo",
+      "timeout": 300,
+      "expect_stdout": "Dapper search 'milk': Buy milk, Milk run plan\nArchived after CALL: 1\nEF SqlQuery 'report': Write report\nArchived after EF CALL: 2\nUnsafe concatenation returned 4 rows\nParameterized query returned 0 rows"
+    },
+    {
+      "name": "apply-solution-file",
+      "cwd": ".",
+      "cmd": "{python} -c \"import shutil; shutil.copytree('exercise/solution', 'code', dirs_exist_ok=True)\""
+    },
+    {
+      "name": "solution-run",
+      "cwd": "code",
+      "cmd": "set \"NOTES_CONNECTION=Host=localhost;Port=5434;Database=rawsql;Username=rawsql_app;Password=rawsql_local_only\"&& dotnet run --project . --nologo",
+      "timeout": 300,
+      "expect_stdout": "Dapper search 'milk': Buy milk, Milk run plan\nArchived after CALL: 1\nEF SqlQuery 'report': Write report\nArchived after EF CALL: 2\nUnsafe concatenation returned 4 rows\nParameterized query returned 0 rows\nDapper search 'call': Call Ada\nNotes about milk: 2\nEF parameterized query returned 0 rows"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "database-down",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ],
+  "skip_lesson_check": [
+    "code/global.json",
+    "code/.gitignore"
+  ]
+}

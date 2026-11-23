@@ -1,0 +1,19 @@
+{
+  "requires": [
+    "python"
+  ],
+  "steps": [
+    {
+      "name": "run: main.py",
+      "cwd": "code",
+      "cmd": "{python} main.py",
+      "expect_stdout": "Holiday: 650 cents\nBooks: 200 cents"
+    },
+    {
+      "name": "solution: step_counter.py",
+      "cwd": "exercise/solution",
+      "cmd": "{python} step_counter.py",
+      "expect_stdout": "Ada: 500\nLin: 0"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "requires": [
+    "docker"
+  ],
+  "exclusive": "tasksteams",
+  "steps": [
+    {
+      "name": "create local environment",
+      "cwd": "code",
+      "cmd": "{python} -c \"from pathlib import Path; Path('.env').write_bytes(Path('.env.example').read_bytes())\""
+    },
+    {
+      "name": "start disposable Postgres",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} up -d --wait",
+      "timeout": 180
+    },
+    {
+      "name": "lesson SQL (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /scripts/lesson.sql",
+      "expect_stdout": "name|setting\narchive_mode|off\nfsync|on\nfull_page_writes|on\nhot_standby|on\nmax_replication_slots|10\nmax_wal_senders|10\nsynchronous_commit|on\nwal_level|replica\nin_recovery|standbys_connected\nf|0\nwal_advanced\nt\nslot_name\ncode101_slot\nslot_name|slot_type|active\ncode101_slot|physical|f\nslots_after_drop\n0\npubname|pubinsert|pubupdate|pubdelete\npub_orders|t|t|t\nupdate_without_identity\nerr:55000\nupdate_with_full_identity\nok:1\norders|total_cents|last_order\n4|4580|4"
+    },
+    {
+      "name": "exercise solution (future execution only)",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} exec -T db psql -X -q -v ON_ERROR_STOP=1 -U learner -d code101 -f /exercises/solution/exercise.sql",
+      "expect_stdout": "slot_name|active|retains_wal\nexercise_slot|f|t"
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "remove disposable resources",
+      "cwd": "code",
+      "cmd": "docker compose -p {project} down -v --remove-orphans"
+    }
+  ]
+}

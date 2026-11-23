@@ -1,0 +1,6 @@
+{
+  "allowed_repositories": ["python", "postgres"],
+  "forbidden_tags": ["latest"],
+  "forbidden_tag_prefixes": ["edge", "nightly"],
+  "require_digest": true
+}

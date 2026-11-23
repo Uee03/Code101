@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+bin/
+obj/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+.env
+!.env.example
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

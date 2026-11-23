@@ -1,0 +1,6 @@
+{
+  "requires": [],
+  "steps": [],
+  "cleanup": [],
+  "notes": "Written, not run. Static text/source comparison only. No Ollama command, API call or program was executed by the author. The code is pure Python with no network access. Offline check for a learner: python -m unittest in the code folder."
+}

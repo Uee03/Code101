@@ -1,0 +1,14 @@
+[
+  {"id": "q01", "question": "How many days of paid annual leave do full-time staff get?", "answerable": true, "gold_sources": ["leave-policy.md"], "must_contain": ["25"]},
+  {"id": "q02", "question": "How long before a holiday must a manager approve it?", "answerable": true, "gold_sources": ["leave-policy.md"], "must_contain": ["two weeks"]},
+  {"id": "q03", "question": "When do carried-over leave days run out?", "answerable": true, "gold_sources": ["leave-policy.md"], "must_contain": ["31 March"]},
+  {"id": "q04", "question": "By what time on the first day must I tell my manager that I am ill?", "answerable": true, "gold_sources": ["leave-policy.md"], "must_contain": ["10:00"]},
+  {"id": "q05", "question": "How soon after buying something must I file an expense claim?", "answerable": true, "gold_sources": ["expenses.md"], "must_contain": ["30 days"]},
+  {"id": "q06", "question": "Can I claim back the cost of alcohol on a client trip?", "answerable": true, "gold_sources": ["expenses.md"], "must_contain": ["alcohol"]},
+  {"id": "q07", "question": "What is the minimum length of a password?", "answerable": true, "gold_sources": ["security.md"], "must_contain": ["14"]},
+  {"id": "q08", "question": "Where may client files be stored?", "answerable": true, "gold_sources": ["security.md"], "must_contain": ["file server"]},
+  {"id": "q09", "question": "Who must I tell about a lost laptop, and how soon?", "answerable": true, "gold_sources": ["security.md"], "must_contain": ["hour"]},
+  {"id": "q10", "question": "What is the firm's policy on working from home?", "answerable": false, "gold_sources": [], "must_contain": []},
+  {"id": "q11", "question": "How large is the annual bonus?", "answerable": false, "gold_sources": [], "must_contain": []},
+  {"id": "q12", "question": "Which VPN software does the firm use?", "answerable": false, "gold_sources": [], "must_contain": []}
+]

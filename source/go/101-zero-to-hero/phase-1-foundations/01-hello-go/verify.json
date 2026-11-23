@@ -1,0 +1,24 @@
+{
+  "requires": [
+    "go"
+  ],
+  "steps": [
+    {
+      "name": "run",
+      "cmd": "go run .",
+      "cwd": "code",
+      "stdin": "",
+      "expect_stdout": "Hello, Go!\nI can write a program."
+    },
+    {
+      "name": "solution",
+      "cmd": "go run .",
+      "cwd": "exercise/solution",
+      "stdin": "",
+      "expect_stdout": "Recipe: tea\n1. Heat water.\n2. Add tea and water to a cup."
+    }
+  ],
+  "skip_lesson_check": [
+    "code/go.mod"
+  ]
+}
